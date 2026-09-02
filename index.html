@@ -101,6 +101,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      text-decoration: none;
       transition: all 0.2s ease;
     }
     .btn:hover {
@@ -277,28 +278,34 @@
     .scale-line::before { left: 0; }
     .scale-line::after { right: 0; }
 
-    /* Floating Keyboard Shortcut Hint */
-    .shortcuts-floating-hint {
+    /* Floating Viewport Bottom-Right Controls */
+    .viewport-bottom-right {
       position: absolute;
       bottom: 20px;
       right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 10;
+    }
+    .shortcuts-floating-hint, .github-floating-link {
       background: var(--bg-glass);
       backdrop-filter: blur(14px);
       border: 1px solid var(--border);
-      padding: 6px 14px;
+      padding: 6px 12px;
       border-radius: 20px;
       font-size: 0.74rem;
       color: var(--text-secondary);
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 6px;
       cursor: pointer;
-      z-index: 10;
+      text-decoration: none;
       transition: all 0.2s ease;
       user-select: none;
       box-shadow: 0 4px 16px rgba(0,0,0,0.4);
     }
-    .shortcuts-floating-hint:hover {
+    .shortcuts-floating-hint:hover, .github-floating-link:hover {
       border-color: var(--accent);
       color: var(--accent);
       background: rgba(229, 184, 66, 0.12);
@@ -841,6 +848,12 @@
       </div>
     </div>
     <div class="header-tools">
+      <a href="https://github.com/aculich/ucb-3dcoffins-viewer" target="_blank" rel="noopener noreferrer" class="btn" title="View Source Code on GitHub">
+        <svg height="15" width="15" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: text-bottom;">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+        <span>GitHub</span>
+      </a>
       <button class="btn" id="btn-toggle-shortcuts" title="Keyboard Shortcuts Reference (?)">⌨ Shortcuts <span class="kbd-hint">?</span></button>
       <button class="btn" id="btn-toggle-zen" title="Toggle Fullscreen 3D View (Z)">⛶ Zen Mode <span class="kbd-hint">z</span></button>
       <button class="btn" id="btn-reset-cam" title="Reset Camera to Upright Front View (R)">↺ Reset <span class="kbd-hint">r</span></button>
@@ -920,9 +933,17 @@
         <span id="scale-text">50 cm (Scale 1:1)</span>
       </div>
 
-      <!-- Persistent Floating Shortcut Hint -->
-      <div class="shortcuts-floating-hint" id="shortcuts-floating-hint" title="View Keyboard Shortcuts Reference" onclick="document.getElementById('modal-shortcuts').style.display = 'flex'">
-        <span>⌨ Press <kbd class="hint-kbd">?</kbd> or <kbd class="hint-kbd">⌘ /</kbd> for shortcuts</span>
+      <!-- Floating Viewport Bottom-Right Controls -->
+      <div class="viewport-bottom-right">
+        <div class="shortcuts-floating-hint" id="shortcuts-floating-hint" title="View Keyboard Shortcuts Reference" onclick="document.getElementById('modal-shortcuts').style.display = 'flex'">
+          <span>⌨ Press <kbd class="hint-kbd">?</kbd> or <kbd class="hint-kbd">⌘ /</kbd> for shortcuts</span>
+        </div>
+        <a href="https://github.com/aculich/ucb-3dcoffins-viewer" target="_blank" rel="noopener noreferrer" class="github-floating-link" title="View Open Source Code on GitHub">
+          <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: text-bottom;">
+            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+          </svg>
+          <span>GitHub</span>
+        </a>
       </div>
 
       <div id="hover-tooltip"></div>
@@ -990,6 +1011,23 @@
           <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary);">
             The inscriptions comprise protective spells from the <strong>Pyramid Texts (PT 630, 637, 638, 639)</strong> and <strong>Book of the Dead (BD 151)</strong>, with speeches by the protective gods (*Nut*, the *Seven Shining Ones*, *Anubis*, *Isis*, *Nephthys*).
           </p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Open Source Repositories & Data</div>
+          <p style="font-size: 0.84rem; line-height: 1.5; color: #e6edf3; margin-bottom: 8px;">
+            This project is open-source and openly licensed for computational Egyptology and digital heritage:
+          </p>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <a href="https://github.com/aculich/ucb-3dcoffins-viewer" target="_blank" rel="noopener noreferrer" class="btn">
+              <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              <span>Viewer Repository</span>
+            </a>
+            <a href="https://github.com/aculich/ucb-3dcoffins-data" target="_blank" rel="noopener noreferrer" class="btn">
+              <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              <span>Open Dataset (3D & Epigraphy)</span>
+            </a>
+          </div>
         </div>
 
         <div class="card">
@@ -2167,7 +2205,6 @@
             clearSearch();
             if (document.activeElement) document.activeElement.blur();
           } else {
-            // Already cleared -> Recenter & rezoom to upright front starting position
             resetCamera();
           }
           return;
