@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>PAHMA-5-522 | 3D Coffin & Epigraphic Annotation Explorer</title>
   
   <!-- Font Definitions -->
@@ -37,17 +37,23 @@
       --text-secondary: #94a3b8;
       --border: rgba(255, 255, 255, 0.12);
       --border-active: #e5b842;
+      --header-height: 58px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    
+    html, body {
       background-color: var(--bg-primary);
       color: var(--text-primary);
+      height: 100%;
       height: 100vh;
+      height: 100dvh;
+      width: 100%;
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     /* Invisible Font Warmup */
@@ -64,71 +70,88 @@
       background: var(--bg-glass);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
-      padding: 10px 20px;
+      padding: 8px 16px;
+      padding-top: max(8px, env(safe-area-inset-top));
       display: flex;
       justify-content: space-between;
       align-items: center;
       z-index: 100;
-      height: 58px;
+      min-height: var(--header-height);
     }
 
     .header-brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      min-width: 0;
     }
     .badge {
       background: linear-gradient(135deg, #e5b842, #b8860b);
       color: #000;
       font-weight: 700;
-      font-size: 0.72rem;
-      padding: 3px 8px;
+      font-size: 0.68rem;
+      padding: 3px 7px;
       border-radius: 4px;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .header-titles {
+      min-width: 0;
     }
     .header-title {
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 600;
       color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .header-subtitle {
-      font-size: 0.8rem;
+      font-size: 0.74rem;
       color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .header-tools {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       align-items: center;
+      flex-shrink: 0;
     }
     .btn {
       background: var(--bg-card);
       color: var(--text-primary);
       border: 1px solid var(--border);
-      padding: 6px 12px;
+      padding: 6px 10px;
+      min-height: 36px;
       border-radius: 6px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
+      gap: 5px;
       text-decoration: none;
       transition: all 0.2s ease;
+      user-select: none;
     }
-    .btn:hover {
+    .btn:hover, .btn:active {
       background: #2b3548;
       border-color: var(--accent);
       color: #fff;
     }
     .btn-active {
-      background: var(--accent);
-      color: #000;
+      background: var(--accent) !important;
+      color: #000 !important;
       font-weight: 600;
-      border-color: var(--accent);
+      border-color: var(--accent) !important;
     }
     .kbd-hint {
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       background: rgba(0,0,0,0.3);
       padding: 1px 4px;
       border-radius: 3px;
@@ -136,22 +159,26 @@
       color: var(--text-secondary);
     }
 
-    /* Main Split Container */
+    /* Main Container */
     #app-container {
       display: flex;
       flex: 1;
-      height: calc(100vh - 58px);
+      height: calc(100% - var(--header-height));
+      height: calc(100dvh - var(--header-height));
       position: relative;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
     }
 
     /* 3D Viewport Area */
     #viewport-container {
       flex: 1;
+      width: 100%;
+      height: 100%;
       position: relative;
       background: radial-gradient(circle at center, #161c26 0%, #05070a 100%);
       overflow: hidden;
       cursor: grab;
+      touch-action: none; /* Prevents mobile scroll gestures from blocking 3D orbit */
     }
     #viewport-container:active {
       cursor: grabbing;
@@ -160,32 +187,33 @@
       width: 100%;
       height: 100%;
       display: block;
+      touch-action: none;
     }
 
     /* Viewport Floating Controls */
     .viewport-controls {
       position: absolute;
-      top: 16px;
-      left: 16px;
+      top: 14px;
+      left: 14px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
       z-index: 10;
+      max-width: 280px;
     }
     .control-panel {
       background: var(--bg-glass);
-      backdrop-filter: blur(14px);
+      backdrop-filter: blur(16px);
       border: 1px solid var(--border);
-      padding: 12px 16px;
+      padding: 10px 14px;
       border-radius: 10px;
-      font-size: 0.8rem;
-      min-width: 250px;
+      font-size: 0.78rem;
       box-shadow: 0 6px 24px rgba(0,0,0,0.5);
     }
     .control-title {
       font-weight: 600;
       color: var(--accent);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -194,22 +222,23 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .control-row:last-child { margin-bottom: 0; }
     
     .preset-btns {
       display: flex;
       gap: 4px;
-      margin: 8px 0 6px 0;
+      margin: 6px 0 4px 0;
     }
     .preset-btn {
       flex: 1;
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.1);
       color: var(--text-secondary);
-      font-size: 0.72rem;
-      padding: 4px 0;
+      font-size: 0.7rem;
+      padding: 5px 0;
+      min-height: 28px;
       border-radius: 4px;
       cursor: pointer;
       text-align: center;
@@ -225,14 +254,15 @@
     input[type=range] {
       accent-color: var(--accent);
       cursor: pointer;
+      min-height: 24px;
     }
     select {
       background: var(--bg-card);
       color: var(--text-primary);
       border: 1px solid var(--border);
       border-radius: 4px;
-      font-size: 0.78rem;
-      padding: 3px 6px;
+      font-size: 0.76rem;
+      padding: 4px 6px;
       outline: none;
     }
 
@@ -244,9 +274,9 @@
       backdrop-filter: blur(10px);
       border: 1px solid var(--accent);
       color: var(--accent);
-      padding: 6px 12px;
+      padding: 5px 10px;
       border-radius: 6px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 600;
       pointer-events: none;
       z-index: 50;
@@ -258,14 +288,14 @@
     /* 3D Scale Bar */
     .scale-bar-overlay {
       position: absolute;
-      bottom: 20px;
-      left: 20px;
+      bottom: max(16px, env(safe-area-inset-bottom));
+      left: 16px;
       background: var(--bg-glass);
       backdrop-filter: blur(10px);
       border: 1px solid var(--border);
-      padding: 6px 12px;
+      padding: 5px 10px;
       border-radius: 6px;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--text-secondary);
       display: flex;
       align-items: center;
@@ -273,7 +303,7 @@
       z-index: 10;
     }
     .scale-line {
-      width: 60px;
+      width: 50px;
       height: 3px;
       background: var(--accent);
       border-radius: 2px;
@@ -293,24 +323,25 @@
     /* Floating Viewport Bottom-Right Controls */
     .viewport-bottom-right {
       position: absolute;
-      bottom: 20px;
-      right: 20px;
+      bottom: max(16px, env(safe-area-inset-bottom));
+      right: 16px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       z-index: 10;
     }
     .shortcuts-floating-hint, .github-floating-link {
       background: var(--bg-glass);
       backdrop-filter: blur(14px);
       border: 1px solid var(--border);
-      padding: 6px 12px;
+      padding: 5px 10px;
+      min-height: 32px;
       border-radius: 20px;
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       color: var(--text-secondary);
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       cursor: pointer;
       text-decoration: none;
       transition: all 0.2s ease;
@@ -326,11 +357,39 @@
     .hint-kbd {
       background: rgba(255,255,255,0.1);
       border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 4px;
-      padding: 1px 5px;
+      border-radius: 3px;
+      padding: 1px 4px;
       font-family: monospace;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: #fff;
+    }
+
+    /* Mobile Bottom Action Bar (Pull-up Trigger for Drawer) */
+    #mobile-bottom-bar {
+      display: none;
+      position: absolute;
+      bottom: max(14px, env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--accent);
+      padding: 8px 16px;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.7), 0 0 16px var(--accent-glow);
+      z-index: 15;
+      cursor: pointer;
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 600;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      min-height: 42px;
+    }
+    #mobile-bottom-bar:active {
+      background: rgba(229, 184, 66, 0.2);
+      transform: translateX(-50%) scale(0.98);
     }
 
     /* Loading Overlay */
@@ -347,8 +406,8 @@
       transition: opacity 0.5s ease;
     }
     .spinner {
-      width: 52px;
-      height: 52px;
+      width: 46px;
+      height: 46px;
       border: 4px solid rgba(229, 184, 66, 0.15);
       border-top-color: var(--accent);
       border-radius: 50%;
@@ -356,7 +415,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Side Inspector Panel */
+    /* Side / Mobile Bottom-Sheet Inspector Panel */
     #inspector-panel {
       width: 580px;
       background: var(--bg-secondary);
@@ -364,17 +423,43 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      z-index: 20;
-      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 30;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s ease;
     }
     #inspector-panel.collapsed {
       width: 0;
       border-left: none;
     }
 
+    /* Mobile Drawer Header with Drag Handle & Close Button */
+    .mobile-drawer-header {
+      display: none;
+      padding: 10px 16px 6px 16px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      justify-content: space-between;
+      align-items: center;
+    }
+    .mobile-drawer-handle {
+      width: 36px;
+      height: 4px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 2px;
+      margin: 0 auto 6px auto;
+    }
+    .btn-close-drawer {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+    .btn-close-drawer:hover { color: #fff; }
+
     /* Global Search Box Above Tabs */
     .global-search-container {
-      padding: 12px 16px 8px 16px;
+      padding: 10px 14px 8px 14px;
       background: var(--bg-primary);
       border-bottom: 1px solid var(--border);
       position: relative;
@@ -390,8 +475,9 @@
       border: 1px solid var(--border);
       color: var(--text-primary);
       padding: 9px 65px 9px 12px;
+      min-height: 40px;
       border-radius: 8px;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       outline: none;
       transition: all 0.2s ease;
     }
@@ -410,9 +496,9 @@
       background: transparent;
       border: none;
       color: var(--text-secondary);
-      font-size: 0.95rem;
+      font-size: 1rem;
       cursor: pointer;
-      padding: 2px 6px;
+      padding: 6px 8px;
       display: none;
       border-radius: 4px;
     }
@@ -421,7 +507,7 @@
       background: rgba(255,255,255,0.1);
     }
     .search-kbd-badge {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       background: rgba(255,255,255,0.08);
       color: var(--text-secondary);
       padding: 2px 5px;
@@ -440,20 +526,21 @@
     #autocomplete-popup {
       position: absolute;
       top: 52px;
-      left: 16px;
-      right: 16px;
+      left: 14px;
+      right: 14px;
       background: var(--bg-glass);
       backdrop-filter: blur(18px);
       border: 1px solid var(--border);
       border-radius: 8px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.7);
-      max-height: 280px;
+      max-height: 260px;
       overflow-y: auto;
       z-index: 150;
       display: none;
     }
     .autocomplete-item {
       padding: 8px 12px;
+      min-height: 42px;
       border-bottom: 1px solid rgba(255,255,255,0.04);
       cursor: pointer;
       display: flex;
@@ -496,14 +583,16 @@
       background: var(--bg-primary);
       border-bottom: 1px solid var(--border);
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
     .tab-btn {
       flex: 1;
-      padding: 11px 8px;
+      padding: 10px 8px;
+      min-height: 44px;
       background: transparent;
       border: none;
       color: var(--text-secondary);
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 500;
       cursor: pointer;
       text-align: center;
@@ -526,7 +615,7 @@
       font-weight: 600;
     }
     .tab-count {
-      font-size: 0.68rem;
+      font-size: 0.66rem;
       background: rgba(255,255,255,0.1);
       padding: 1px 5px;
       border-radius: 10px;
@@ -535,8 +624,9 @@
     .tab-content {
       flex: 1;
       overflow-y: auto;
-      padding: 20px;
+      padding: 16px;
       display: none;
+      -webkit-overflow-scrolling: touch;
     }
     .tab-content.active {
       display: block;
@@ -547,16 +637,18 @@
       display: flex;
       gap: 6px;
       overflow-x: auto;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       padding-bottom: 4px;
+      -webkit-overflow-scrolling: touch;
     }
     .pill {
       background: var(--bg-card);
       border: 1px solid var(--border);
       color: var(--text-secondary);
-      font-size: 0.75rem;
-      padding: 5px 10px;
-      border-radius: 14px;
+      font-size: 0.74rem;
+      padding: 6px 12px;
+      min-height: 32px;
+      border-radius: 16px;
       cursor: pointer;
       white-space: nowrap;
       transition: all 0.15s ease;
@@ -573,14 +665,14 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 16px;
-      margin-bottom: 16px;
+      padding: 14px;
+      margin-bottom: 14px;
     }
     .card-title {
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 600;
       color: var(--accent);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -588,23 +680,23 @@
     .stat-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 10px;
+      gap: 8px;
+      margin-top: 8px;
     }
     .stat-item {
       background: rgba(0, 0, 0, 0.25);
-      padding: 10px;
+      padding: 8px 10px;
       border-radius: 6px;
       border: 1px solid rgba(255,255,255,0.05);
     }
     .stat-label {
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
     .stat-value {
-      font-size: 0.9rem;
+      font-size: 0.86rem;
       font-weight: 600;
       margin-top: 2px;
       color: var(--text-primary);
@@ -615,8 +707,8 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
       cursor: pointer;
       transition: border-color 0.15s ease, background 0.15s ease;
       position: relative;
@@ -637,7 +729,7 @@
       margin-bottom: 8px;
     }
     .column-badge {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       background: rgba(229, 184, 66, 0.15);
       color: var(--accent);
       padding: 2px 6px;
@@ -645,19 +737,20 @@
       font-weight: 600;
     }
     .zoom-hint-badge {
-      font-size: 0.68rem;
+      font-size: 0.66rem;
       background: rgba(56, 189, 248, 0.15);
       color: var(--accent-blue);
       padding: 2px 6px;
       border-radius: 4px;
-      margin-left: 6px;
+      margin-left: 4px;
     }
     .btn-breakdown {
       font-size: 0.72rem;
       background: var(--bg-primary);
       color: var(--accent-blue);
       border: 1px solid rgba(56, 189, 248, 0.3);
-      padding: 3px 8px;
+      padding: 4px 8px;
+      min-height: 28px;
       border-radius: 4px;
       cursor: pointer;
     }
@@ -668,34 +761,36 @@
       background: #090c10;
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 6px;
-      padding: 12px;
+      padding: 10px;
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       overflow-x: auto;
       min-height: 52px;
       display: flex;
       justify-content: center;
       align-items: center;
+      -webkit-overflow-scrolling: touch;
     }
     .hiero-box canvas {
       display: inline-block;
       max-width: 100%;
+      height: auto;
     }
     .transliteration {
       font-family: 'Transliteration', Georgia, serif;
       font-weight: 700;
       color: #e6edf3;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       margin-bottom: 4px;
     }
     .translation {
       font-style: italic;
       color: #c9d1d9;
-      font-size: 0.88rem;
+      font-size: 0.84rem;
       line-height: 1.45;
     }
     .parallel-citation {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--accent-blue);
       margin-top: 8px;
       background: rgba(56, 189, 248, 0.08);
@@ -711,6 +806,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 10px 12px;
+      min-height: 44px;
       border-radius: 6px;
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -733,15 +829,15 @@
       color: var(--accent);
     }
     .lex-pos {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--text-secondary);
       background: rgba(255, 255, 255, 0.06);
       padding: 2px 6px;
       border-radius: 4px;
-      margin-left: 8px;
+      margin-left: 6px;
     }
     .lex-meaning {
-      font-size: 0.84rem;
+      font-size: 0.82rem;
       color: #c9d1d9;
     }
 
@@ -753,9 +849,10 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       padding: 6px 12px;
+      min-height: 36px;
       border-radius: 18px;
-      font-size: 0.82rem;
-      margin: 4px;
+      font-size: 0.8rem;
+      margin: 3px;
       cursor: pointer;
       transition: border-color 0.15s ease, background 0.15s ease;
     }
@@ -775,62 +872,82 @@
     .modal-backdrop {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
+      height: 100dvh;
       background: rgba(0,0,0,0.75);
       backdrop-filter: blur(8px);
       display: none;
       justify-content: center;
       align-items: center;
       z-index: 200;
+      padding: 16px;
     }
     .modal-box {
       background: var(--bg-secondary);
       border: 1px solid var(--border);
       border-radius: 12px;
       width: 580px;
-      max-width: 90vw;
+      max-width: 100%;
       max-height: 85vh;
+      max-height: 85dvh;
       overflow-y: auto;
-      padding: 24px;
+      padding: 20px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.6);
       position: relative;
+      -webkit-overflow-scrolling: touch;
     }
     .modal-close {
       position: absolute;
-      top: 16px;
-      right: 16px;
+      top: 14px;
+      right: 14px;
       background: transparent;
       border: none;
       color: var(--text-secondary);
       font-size: 1.4rem;
       cursor: pointer;
+      min-width: 36px;
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .modal-close:hover { color: #fff; }
 
     .shortcut-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 12px;
-      font-size: 0.84rem;
+      margin-top: 10px;
+      font-size: 0.8rem;
     }
     .shortcut-table th, .shortcut-table td {
-      padding: 8px 10px;
+      padding: 7px 8px;
       text-align: left;
       border-bottom: 1px solid rgba(255,255,255,0.06);
     }
     .shortcut-table th {
       color: var(--accent);
       font-weight: 600;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
     }
     .kbd-key {
       background: rgba(255,255,255,0.1);
       border: 1px solid rgba(255,255,255,0.2);
       border-radius: 4px;
-      padding: 2px 6px;
+      padding: 2px 5px;
       font-family: monospace;
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       color: #fff;
+    }
+
+    /* Mobile Drawer Backdrop */
+    #mobile-drawer-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      height: 100dvh;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      z-index: 25;
     }
 
     /* Scrollbars */
@@ -838,6 +955,106 @@
     ::-webkit-scrollbar-track { background: var(--bg-primary); }
     ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    /* ==========================================================================
+       RESPONSIVE BREAKPOINTS (Mobile & Tablet Optimization)
+       ========================================================================== */
+
+    @media (max-width: 899px) {
+      :root {
+        --header-height: 52px;
+      }
+      
+      header {
+        padding: 6px 12px;
+      }
+      .header-subtitle {
+        display: none; /* Hide subtitle on mobile to save space */
+      }
+      .badge {
+        font-size: 0.62rem;
+        padding: 2px 5px;
+      }
+      .header-title {
+        font-size: 0.88rem;
+      }
+
+      /* Hide keyboard hints on mobile touch */
+      .kbd-hint, .search-kbd-badge, #shortcuts-floating-hint {
+        display: none !important;
+      }
+      
+      /* Hide desktop-only header buttons on mobile */
+      #btn-toggle-zen, #btn-toggle-shortcuts, #btn-open-webxr {
+        display: none;
+      }
+
+      /* Inspector Panel transforms into slide-up Bottom Sheet */
+      #inspector-panel {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100% !important;
+        height: 82vh;
+        height: 82dvh;
+        border-left: none;
+        border-top: 1px solid var(--accent);
+        border-radius: 16px 16px 0 0;
+        box-shadow: 0 -8px 32px rgba(0,0,0,0.75);
+        transform: translateY(100%);
+        z-index: 120;
+      }
+      #inspector-panel.drawer-open {
+        transform: translateY(0);
+      }
+      .mobile-drawer-header {
+        display: flex;
+      }
+
+      /* Viewport Controls on Mobile */
+      .viewport-controls {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        max-width: none;
+        display: none; /* Collapsed by default on mobile */
+      }
+      .viewport-controls.mobile-visible {
+        display: flex;
+      }
+      .control-panel {
+        padding: 10px 12px;
+      }
+
+      /* Floating Bottom Trigger Bar on Mobile */
+      #mobile-bottom-bar {
+        display: flex;
+      }
+
+      .scale-bar-overlay {
+        bottom: max(65px, calc(env(safe-area-inset-bottom) + 55px));
+        left: 12px;
+        font-size: 0.68rem;
+      }
+
+      .viewport-bottom-right {
+        bottom: max(65px, calc(env(safe-area-inset-bottom) + 55px));
+        right: 12px;
+      }
+    }
+
+    @media (min-width: 900px) {
+      #btn-mobile-toggle-light, #btn-mobile-open-drawer {
+        display: none !important;
+      }
+      #mobile-bottom-bar {
+        display: none !important;
+      }
+      #mobile-drawer-backdrop {
+        display: none !important;
+      }
+    }
   </style>
 
   <!-- Three.js & ResLite Libraries -->
@@ -860,23 +1077,28 @@
   <!-- Top App Navigation -->
   <header>
     <div class="header-brand">
-      <span class="badge">UC Berkeley • PAHMA</span>
-      <div>
-        <div class="header-title">PAHMA-5-522: Sarcophagus Lid of Psamtik</div>
+      <span class="badge">PAHMA</span>
+      <div class="header-titles">
+        <div class="header-title">PAHMA-5-522: Lid of Psamtik</div>
         <div class="header-subtitle">3D Coffin & Epigraphic Annotation Explorer (Book of the Dead in 3D)</div>
       </div>
     </div>
     <div class="header-tools">
+      <!-- Mobile Quick Action Buttons -->
+      <button class="btn" id="btn-mobile-toggle-light" title="Toggle RTI Grazing Light Controls">🔦 Light</button>
+      <button class="btn btn-active" id="btn-toggle-annotations" title="Toggle 3D Annotation Outlines (A)">☖ Annotations <span class="kbd-hint">a</span></button>
+      <button class="btn" id="btn-reset-cam" title="Reset Camera to Upright Front View (R)">↺ Reset <span class="kbd-hint">r</span></button>
+      <button class="btn" id="btn-mobile-open-drawer" title="Open Inscriptions & Lexicon Drawer">📖 Texts</button>
+
+      <!-- Desktop Extra Header Buttons -->
+      <button class="btn" id="btn-toggle-zen" title="Toggle Fullscreen 3D View (Z)">⛶ Zen Mode <span class="kbd-hint">z</span></button>
+      <button class="btn" id="btn-toggle-shortcuts" title="Keyboard Shortcuts Reference (?)">⌨ Shortcuts <span class="kbd-hint">?</span></button>
       <a href="https://github.com/aculich/ucb-3dcoffins-viewer" target="_blank" rel="noopener noreferrer" class="btn" title="View Source Code on GitHub">
-        <svg height="15" width="15" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: text-bottom;">
+        <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: text-bottom;">
           <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
         </svg>
         <span>GitHub</span>
       </a>
-      <button class="btn" id="btn-toggle-shortcuts" title="Keyboard Shortcuts Reference (?)">⌨ Shortcuts <span class="kbd-hint">?</span></button>
-      <button class="btn" id="btn-toggle-zen" title="Toggle Fullscreen 3D View (Z)">⛶ Zen Mode <span class="kbd-hint">z</span></button>
-      <button class="btn" id="btn-reset-cam" title="Reset Camera to Upright Front View (R)">↺ Reset <span class="kbd-hint">r</span></button>
-      <button class="btn btn-active" id="btn-toggle-annotations" title="Toggle 3D Annotation Outlines (A)">☖ Annotations <span class="kbd-hint">a</span></button>
       <button class="btn" id="btn-open-webxr" title="Enter VR/AR">🥽 WebXR</button>
     </div>
   </header>
@@ -886,17 +1108,17 @@
     <div id="viewport-container">
       <div id="loading-screen" class="loading-overlay">
         <div class="spinner"></div>
-        <div id="loading-text" style="font-size: 1.05rem; color: var(--accent); font-weight: 500;">
+        <div id="loading-text" style="font-size: 1rem; color: var(--accent); font-weight: 500;">
           Loading Basalt 3D Mesh & Spatial Annotations...
         </div>
       </div>
 
-      <!-- Viewport Controls -->
-      <div class="viewport-controls">
+      <!-- Viewport Floating Controls (RTI Lighting & Material) -->
+      <div class="viewport-controls" id="viewport-controls-panel">
         <div class="control-panel">
           <div class="control-title">
             <span>Raking Light & Surface (RTI)</span>
-            <span id="light-angle-val" style="color: var(--text-secondary); font-size: 0.72rem;">45° (East)</span>
+            <span id="light-angle-val" style="color: var(--text-secondary); font-size: 0.7rem;">45° (East)</span>
           </div>
           <div class="control-row">
             <span>Grazing Direction</span>
@@ -920,7 +1142,7 @@
             <button class="preset-btn" onclick="applyLightPreset(225, 18)">🔦 West</button>
             <button class="preset-btn" id="btn-auto-orbit" onclick="toggleAutoLightOrbit()">🕯 Auto</button>
           </div>
-          <div class="control-row" style="margin-top: 8px;">
+          <div class="control-row" style="margin-top: 6px;">
             <span>Material Mode</span>
             <select id="mat-mode">
               <option value="textured" selected>Photorealistic Basalt</option>
@@ -933,10 +1155,10 @@
         <div class="control-panel">
           <div class="control-title">
             <span>3D Annotations</span>
-            <span id="line-thick-val" style="color: var(--text-secondary); font-size: 0.72rem;">Thick</span>
+            <span id="line-thick-val" style="color: var(--text-secondary); font-size: 0.7rem;">Thick</span>
           </div>
           <div class="control-row">
-            <span>Line Thickness & Glow</span>
+            <span>Line Thickness</span>
             <input type="range" id="line-thickness" min="1" max="4" value="2" style="width: 85px;">
           </div>
           <div class="control-row">
@@ -955,22 +1177,40 @@
       <!-- Floating Viewport Bottom-Right Controls -->
       <div class="viewport-bottom-right">
         <div class="shortcuts-floating-hint" id="shortcuts-floating-hint" title="View Keyboard Shortcuts Reference" onclick="document.getElementById('modal-shortcuts').style.display = 'flex'">
-          <span>⌨ Press <kbd class="hint-kbd">?</kbd> or <kbd class="hint-kbd">⌘ /</kbd> for shortcuts</span>
+          <span>⌨ Press <kbd class="hint-kbd">?</kbd> or <kbd class="hint-kbd">⌘ /</kbd></span>
         </div>
         <a href="https://github.com/aculich/ucb-3dcoffins-viewer" target="_blank" rel="noopener noreferrer" class="github-floating-link" title="View Open Source Code on GitHub">
-          <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: text-bottom;">
+          <svg height="13" width="13" viewBox="0 0 16 16" fill="currentColor" style="vertical-align: text-bottom;">
             <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
           </svg>
           <span>GitHub</span>
         </a>
       </div>
 
+      <!-- Mobile Floating Pull-up Bar -->
+      <div id="mobile-bottom-bar" onclick="openMobileDrawer()">
+        <span>📖 Inscriptions & Lexicon</span>
+        <span style="font-size: 0.72rem; color: var(--accent); background: rgba(0,0,0,0.4); padding: 2px 8px; border-radius: 10px;">Tap to Explore ↑</span>
+      </div>
+
       <div id="hover-tooltip"></div>
       <div id="canvas3d"></div>
     </div>
 
-    <!-- Inspector Panel -->
+    <!-- Mobile Drawer Backdrop Overlay -->
+    <div id="mobile-drawer-backdrop" onclick="closeMobileDrawer()"></div>
+
+    <!-- Inspector Panel (Desktop Sidebar / Mobile Bottom-Sheet Drawer) -->
     <div id="inspector-panel">
+      <!-- Mobile Drawer Handle & Close Bar -->
+      <div class="mobile-drawer-header">
+        <div style="flex: 1;"></div>
+        <div class="mobile-drawer-handle"></div>
+        <div style="flex: 1; text-align: right;">
+          <button class="btn-close-drawer" onclick="closeMobileDrawer()" title="Close Drawer">✕</button>
+        </div>
+      </div>
+
       <!-- Global Context-Sensitive Search Bar Above Tabs -->
       <div class="global-search-container">
         <div class="search-wrapper">
@@ -1002,7 +1242,7 @@
       <div id="tab-overview" class="tab-content active">
         <div class="card">
           <div class="card-title">Object Summary</div>
-          <p style="font-size: 0.88rem; line-height: 1.5; color: #e6edf3;">
+          <p style="font-size: 0.86rem; line-height: 1.5; color: #e6edf3;">
             Anthropoid sarcophagus lid of <strong>Psamtik</strong>, Chief Physician and Overseer of Libyan Mercenaries (*Temehu*). Discovered in 1900 in a room-sized underground tomb at Saqqara, propped above its basin awaiting burial.
           </p>
           <div class="stat-grid">
@@ -1027,14 +1267,14 @@
 
         <div class="card">
           <div class="card-title">Epigraphic Corpus & Parallels</div>
-          <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary);">
+          <p style="font-size: 0.84rem; line-height: 1.5; color: var(--text-secondary);">
             The inscriptions comprise protective spells from the <strong>Pyramid Texts (PT 630, 637, 638, 639)</strong> and <strong>Book of the Dead (BD 151)</strong>, with speeches by the protective gods (*Nut*, the *Seven Shining Ones*, *Anubis*, *Isis*, *Nephthys*).
           </p>
         </div>
 
         <div class="card">
           <div class="card-title">Open Source Repositories & Data</div>
-          <p style="font-size: 0.84rem; line-height: 1.5; color: #e6edf3; margin-bottom: 8px;">
+          <p style="font-size: 0.82rem; line-height: 1.5; color: #e6edf3; margin-bottom: 8px;">
             This project is open-source and openly licensed for computational Egyptology and digital heritage:
           </p>
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
@@ -1052,13 +1292,13 @@
         <div class="card">
           <div class="card-title">Interactive 3D Picking & Navigation</div>
           <p style="font-size: 0.82rem; line-height: 1.45; color: var(--accent-blue);">
-            💡 <strong>Tip:</strong> Hover over sidebar items to see them highlighted on 3D. Click once to select, and click again on the same item to cycle between Overview, Close-Up, and Macro zoom!
+            💡 <strong>Tip:</strong> Tap on any inscription or vocabulary item to highlight it on 3D and zoom in! On desktop, hover highlights annotations in real-time.
           </p>
         </div>
 
         <div class="card">
           <div class="card-title">Bibliography & References</div>
-          <ul style="font-size: 0.8rem; line-height: 1.55; color: var(--text-secondary); padding-left: 18px;">
+          <ul style="font-size: 0.78rem; line-height: 1.55; color: var(--text-secondary); padding-left: 16px;">
             <li>M.A. Barsanti (1900), <em>Fouilles autour de la pyramide d'Ounas</em>, ASAE 1, 161–188.</li>
             <li>L. Gestermann (2001), <em>Grab und Stele von Psametich</em>, RdE 52, 127–149.</li>
             <li>S. Pernigotti (1977), <em>La tomba di Ciennehebu</em>, Pisa: Giardini.</li>
@@ -1090,8 +1330,8 @@
 
         <div class="card">
           <div class="card-title">Protective Deities & Speeches</div>
-          <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 12px;">
-            Hover over any deity to view them on the 3D sarcophagus lid. Click to highlight, and click again to zoom in!
+          <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px;">
+            Tap any deity to view their spatial annotation on the 3D sarcophagus lid and inspect their speeches!
           </p>
           <div id="deities-chips"></div>
         </div>
@@ -1107,7 +1347,7 @@
         <div class="card">
           <div class="card-title">Archaeological Provenance</div>
           <img src="raw_data/psamtik/map.jpg" alt="Saqqara Map" style="width: 100%; border-radius: 6px; margin: 8px 0; border: 1px solid var(--border);">
-          <p style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.45;">
+          <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">
             Tomb of Psamtik located at Saqqara near the Pyramid of Unas. A complementary stela belonging to Psamtik was discovered in the Serapeum of Saqqara.
           </p>
         </div>
@@ -1115,7 +1355,7 @@
         <div class="card">
           <div class="card-title">Chronological Period</div>
           <img src="raw_data/psamtik/timeline.jpg" alt="Egyptian Timeline" style="width: 100%; border-radius: 6px; margin: 8px 0; border: 1px solid var(--border);">
-          <p style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.45;">
+          <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">
             Dated to Year 26 of Pharaoh Amasis (Ahmose II, 570–526 BCE) during the Saite 26th Dynasty.
           </p>
         </div>
@@ -1127,13 +1367,13 @@
   <div id="modal-shortcuts" class="modal-backdrop">
     <div class="modal-box">
       <button class="modal-close" onclick="closeModal()">×</button>
-      <div class="card-title">⌨ Keyboard Shortcuts Reference</div>
+      <div class="card-title">⌨ Keyboard & Touch Shortcuts</div>
       
       <table class="shortcut-table">
         <thead>
           <tr>
             <th>Action</th>
-            <th>Shortcut</th>
+            <th>Shortcut / Gesture</th>
           </tr>
         </thead>
         <tbody>
@@ -1142,44 +1382,32 @@
             <td><span class="kbd-key">/</span> or <span class="kbd-key">Ctrl-S</span> / <span class="kbd-key">Cmd-F</span></td>
           </tr>
           <tr>
-            <td>Navigate Autocomplete Suggestions</td>
-            <td><span class="kbd-key">↓</span> / <span class="kbd-key">↑</span> or <span class="kbd-key">Tab</span> / <span class="kbd-key">Shift-Tab</span></td>
+            <td>3D Orbit / Rotate</td>
+            <td>1-Finger Drag or <span class="kbd-key">h</span> <span class="kbd-key">j</span> <span class="kbd-key">k</span> <span class="kbd-key">l</span></td>
+          </tr>
+          <tr>
+            <td>3D Zoom In / Out</td>
+            <td>2-Finger Pinch or <span class="kbd-key">+</span> / <span class="kbd-key">-</span></td>
+          </tr>
+          <tr>
+            <td>3D Pan / Translate</td>
+            <td>2-Finger Drag / Right-Click Drag</td>
           </tr>
           <tr>
             <td>Select Match & Cycle Next</td>
             <td><span class="kbd-key">Enter</span> or <span class="kbd-key">Ctrl-S</span></td>
           </tr>
           <tr>
-            <td>Cycle Previous Match</td>
-            <td><span class="kbd-key">Shift-Enter</span></td>
-          </tr>
-          <tr>
             <td>1st Esc = Clear Search & Unselect<br>2nd Esc = Recenter & Reset 3D View</td>
             <td><span class="kbd-key">Escape</span></td>
           </tr>
           <tr>
-            <td>3D Orbit / Tilt (Vim Keys)</td>
-            <td><span class="kbd-key">h</span> <span class="kbd-key">j</span> <span class="kbd-key">k</span> <span class="kbd-key">l</span> or Arrow Keys</td>
-          </tr>
-          <tr>
-            <td>Zoom In / Out</td>
-            <td><span class="kbd-key">+</span> / <span class="kbd-key">-</span> or <span class="kbd-key">i</span> / <span class="kbd-key">o</span></td>
-          </tr>
-          <tr>
             <td>Reset View to Upright Front</td>
-            <td><span class="kbd-key">r</span></td>
+            <td><span class="kbd-key">r</span> or Tap Reset Button</td>
           </tr>
           <tr>
-            <td>Toggle Zen Mode (Fullscreen 3D)</td>
-            <td><span class="kbd-key">z</span></td>
-          </tr>
-          <tr>
-            <td>Toggle 3D Annotation Outlines</td>
+            <td>Toggle 3D Annotations</td>
             <td><span class="kbd-key">a</span></td>
-          </tr>
-          <tr>
-            <td>Cycle Material Modes</td>
-            <td><span class="kbd-key">m</span></td>
           </tr>
           <tr>
             <td>Switch Tabs</td>
@@ -1204,12 +1432,12 @@
     <div class="modal-box">
       <button class="modal-close" onclick="closeModal()">×</button>
       <div class="card-title">🥽 WebXR Immersive Experience</div>
-      <p style="font-size: 0.88rem; color: var(--text-primary); line-height: 1.5; margin-bottom: 14px;">
+      <p style="font-size: 0.86rem; color: var(--text-primary); line-height: 1.5; margin-bottom: 12px;">
         This 3D Coffin & Epigraphic platform is architected for <strong>1:1 scale immersive inspection</strong> in WebXR headsets (<strong>Meta Quest 3</strong>, <strong>Apple Vision Pro</strong>) and AR-capable mobile devices.
       </p>
       <div class="card" style="background: rgba(0,0,0,0.3);">
         <div style="font-weight: 600; color: var(--accent); margin-bottom: 6px;">VR Tomb Chamber Simulation</div>
-        <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">
+        <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.45;">
           • Stand directly in front of the 2.46-meter, 3-ton basalt lid at true scale.<br>
           • Use 6DoF hand controllers as a virtual raking torch to cast grazing light across hieroglyphic incisions.<br>
           • Spatial audio recitations for ancient Egyptian spells.
@@ -1285,6 +1513,7 @@
         initThree();
         initGlobalSearch();
         initKeyboardShortcuts();
+        initMobileControls();
 
         // Guaranteed font loading pipeline
         ensureFontsAndRender();
@@ -1441,7 +1670,7 @@
       camera.position.set(0, -0.05, 3.8);
       camera.up.set(0, 1, 0);
 
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
       renderer.setSize(width, height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.shadowMap.enabled = true;
@@ -1451,6 +1680,10 @@
       controls.enableDamping = true;
       controls.dampingFactor = 0.08;
       controls.target.set(0, 0, 0);
+      controls.enableTouch = true;
+      controls.rotateSpeed = 0.8;
+      controls.zoomSpeed = 1.0;
+      controls.panSpeed = 0.8;
 
       // Low Ambient Light for RTI Shadow Depth
       ambientLight = new THREE.AmbientLight(0xffffff, 0.25);
@@ -1545,6 +1778,7 @@
       });
 
       window.addEventListener('resize', onWindowResize);
+      window.addEventListener('orientationchange', () => setTimeout(onWindowResize, 200));
 
       // UI Listeners
       document.getElementById('light-angle').addEventListener('input', () => updateRakingLight());
@@ -1604,12 +1838,60 @@
 
       vContainer.addEventListener('mouseup', (e) => {
         const dist = Math.hypot(e.clientX - mouseDownCoord.x, e.clientY - mouseDownCoord.y);
-        if (dist < 6) {
+        if (dist < 8) {
           handle3DClick(e);
         }
       });
 
+      vContainer.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          mouseDownCoord = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }
+      }, { passive: true });
+
+      vContainer.addEventListener('touchend', (e) => {
+        if (e.changedTouches.length === 1) {
+          const dist = Math.hypot(e.changedTouches[0].clientX - mouseDownCoord.x, e.changedTouches[0].clientY - mouseDownCoord.y);
+          if (dist < 10) {
+            handle3DClick(e.changedTouches[0]);
+          }
+        }
+      });
+
       vContainer.addEventListener('mousemove', handle3DHover);
+    }
+
+    // Mobile specific controls & drawer behavior
+    function initMobileControls() {
+      const btnLight = document.getElementById('btn-mobile-toggle-light');
+      const lightPanel = document.getElementById('viewport-controls-panel');
+      const btnTexts = document.getElementById('btn-mobile-open-drawer');
+
+      if (btnLight && lightPanel) {
+        btnLight.addEventListener('click', () => {
+          lightPanel.classList.toggle('mobile-visible');
+          btnLight.classList.toggle('btn-active', lightPanel.classList.contains('mobile-visible'));
+        });
+      }
+
+      if (btnTexts) {
+        btnTexts.addEventListener('click', openMobileDrawer);
+      }
+    }
+
+    function openMobileDrawer() {
+      const drawer = document.getElementById('inspector-panel');
+      const backdrop = document.getElementById('mobile-drawer-backdrop');
+      drawer.classList.add('drawer-open');
+      backdrop.style.display = 'block';
+      setTimeout(() => renderAllHieroglyphs(true), 100);
+    }
+
+    function closeMobileDrawer() {
+      const drawer = document.getElementById('inspector-panel');
+      const backdrop = document.getElementById('mobile-drawer-backdrop');
+      drawer.classList.remove('drawer-open');
+      backdrop.style.display = 'none';
     }
 
     // Update target-anchored grazing raking light
@@ -2232,6 +2514,9 @@
         if ((e.ctrlKey || e.metaKey) && (e.key === 'f' || e.key === 's')) {
           e.preventDefault();
           const searchInput = document.getElementById('global-search');
+          if (window.innerWidth < 900) {
+            openMobileDrawer();
+          }
           searchInput.focus();
           searchInput.select();
           if (e.key === 's' && searchMatches.length > 0) {
@@ -2243,6 +2528,7 @@
         if (e.key === 'Escape') {
           closeModal();
           hideAutocomplete();
+          closeMobileDrawer();
           const searchInput = document.getElementById('global-search');
           const hasActiveSelectionOrSearch = isInputFocused || (searchInput && searchInput.value) || selectedTag || searchMatches.length > 0;
 
@@ -2260,6 +2546,9 @@
 
         if (e.key === '/' || e.key === 's') {
           e.preventDefault();
+          if (window.innerWidth < 900) {
+            openMobileDrawer();
+          }
           const searchInput = document.getElementById('global-search');
           searchInput.focus();
           searchInput.select();
@@ -2313,8 +2602,10 @@
     function handle3DClick(event) {
       const container = document.getElementById('viewport-container');
       const rect = container.getBoundingClientRect();
-      const mouseX = ((event.clientX - rect.left) / container.clientWidth) * 2 - 1;
-      const mouseY = -((event.clientY - rect.top) / container.clientHeight) * 2 + 1;
+      const clientX = event.clientX !== undefined ? event.clientX : event.pageX;
+      const clientY = event.clientY !== undefined ? event.clientY : event.pageY;
+      const mouseX = ((clientX - rect.left) / container.clientWidth) * 2 - 1;
+      const mouseY = -((clientY - rect.top) / container.clientHeight) * 2 + 1;
 
       let bestTag = null;
       let minDistance = 0.08;
@@ -2336,8 +2627,9 @@
       }
     }
 
-    // Handle 3D Hover Tooltip
+    // Handle 3D Hover Tooltip (Desktop only)
     function handle3DHover(event) {
+      if (window.innerWidth < 900) return;
       const container = document.getElementById('viewport-container');
       const rect = container.getBoundingClientRect();
       const mouseX = ((event.clientX - rect.left) / container.clientWidth) * 2 - 1;
@@ -2373,6 +2665,7 @@
 
     function onWindowResize() {
       const container = document.getElementById('viewport-container');
+      if (!camera || !renderer || !container) return;
       camera.aspect = container.clientWidth / container.clientHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(container.clientWidth, container.clientHeight);
@@ -2604,13 +2897,13 @@
       phrase.words.forEach(word => {
         const row = document.createElement('div');
         row.className = 'word-breakdown-row';
-        row.style.cssText = "display: flex; gap: 14px; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06);";
+        row.style.cssText = "display: flex; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); flex-wrap: wrap;";
         row.innerHTML = `
-          <div style="background: #090c10; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); min-width: 90px; text-align: center;">
+          <div style="background: #090c10; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); min-width: 80px; text-align: center;">
             <canvas class="res" data-res="${word.resEncoding}">${word.resEncoding}</canvas>
           </div>
           <div>
-            <div class="transliteration" style="color: var(--accent); font-size: 1rem;">${word.transliteration}</div>
+            <div class="transliteration" style="color: var(--accent); font-size: 0.95rem;">${word.transliteration}</div>
             <div class="translation">${word.translation}</div>
           </div>
         `;
