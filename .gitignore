@@ -1,0 +1,6 @@
+.DS_Store
+_site/
+_temp_data/
+_data_repo/
+*.log
+*.tmp
