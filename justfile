@@ -28,15 +28,15 @@ fetch-data:
     @rm -rf _temp_data
     @echo "✓ Dataset ready!"
 
-# Start local dev server
+# Start local dev server via portless (https://3dcoffins.localhost)
 serve:
-    python3 serve.py
+    @command -v portless >/dev/null 2>&1 || { echo "portless is required. Install: npm install -g portless"; exit 1; }
+    @portless --name 3dcoffins --force python3 serve.py
 
 # Happy path: ensure data is present, run server, open browser
 doit: doctor
     @if [ ! -d "data" ] || [ ! -d "raw_data" ]; then \
         just fetch-data; \
     fi
-    @echo "Starting 3D Coffin Viewer..."
-    @open http://localhost:8000 || open http://127.0.0.1:8000 || true
-    python3 serve.py
+    @echo "Starting 3D Coffin Viewer at https://3dcoffins.localhost"
+    @just serve

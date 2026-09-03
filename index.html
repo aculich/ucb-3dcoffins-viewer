@@ -2,235 +2,3232 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Book of the Dead in 3D</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>The Book of the Dead in 3D | Collection Platform</title>
+  
+  <!-- Font Definitions -->
   <style>
-    :root {
-      --bg: #0a0c10;
-      --card: #12161f;
-      --accent: #e5b842;
-      --text: #f0f6fc;
-      --muted: #94a3b8;
-      --border: rgba(255,255,255,0.12);
-      --banner: #3b2a0a;
+    @font-face {
+      font-family: 'NewGardiner';
+      src: url('data/fonts/NewGardiner.ttf') format('truetype'),
+           url('raw_data/psamtik/NewGardiner.ttf') format('truetype');
+      font-display: block;
     }
-    * { box-sizing: border-box; }
-    html, body { margin: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; min-height: 100%; }
-    header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); background: rgba(18,22,31,0.94); position: sticky; top: 0; z-index: 10; }
-    h1 { font-size: 1rem; margin: 0; font-weight: 600; }
-    a { color: var(--accent); }
-    select { background: var(--card); color: var(--text); border: 1px solid var(--border); padding: 6px 8px; max-width: min(420px, 70vw); }
-    .nav { display: flex; gap: 12px; align-items: center; }
-    .banner { background: var(--banner); color: #fde68a; padding: 10px 16px; font-size: 0.92rem; border-bottom: 1px solid #854d0e; }
-    main { padding: 16px; display: grid; gap: 16px; }
-    .stage { min-height: 420px; background: #000; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; position: relative; }
-    canvas.view { width: 100%; height: 480px; display: block; }
-    iframe.embed { width: 100%; height: 480px; border: 0; }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
-    .credit { font-size: 0.85rem; color: var(--muted); padding: 0 16px 24px; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
-    th { color: var(--muted); font-weight: 600; }
-    .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #1e293b; color: var(--accent); font-size: 0.75rem; }
-    .counts { color: var(--muted); font-size: 0.9rem; }
-    .pdf a.button { display: inline-block; margin-top: 8px; padding: 8px 12px; border: 1px solid var(--accent); border-radius: 6px; text-decoration: none; }
+    @font-face {
+      font-family: 'HieroglyphicAux';
+      src: url('data/fonts/HieroglyphicAux.ttf') format('truetype'),
+           url('raw_data/psamtik/HieroglyphicAux.ttf') format('truetype');
+      font-display: block;
+    }
+    @font-face {
+      font-family: 'Transliteration';
+      src: url('data/fonts/DejaVuSans-Bold.ttf') format('truetype'),
+           url('raw_data/psamtik/DejaVuSans-Bold.ttf') format('truetype');
+      font-display: swap;
+    }
+
+    :root {
+      --bg-primary: #0a0c10;
+      --bg-secondary: #12161f;
+      --bg-card: #1a202c;
+      --bg-glass: rgba(18, 22, 31, 0.94);
+      --accent: #e5b842;
+      --accent-glow: rgba(229, 184, 66, 0.45);
+      --accent-gold-bright: #ffd700;
+      --accent-blue: #38bdf8;
+      --accent-purple: #c084fc;
+      --accent-green: #3fb950;
+      --text-primary: #f0f6fc;
+      --text-secondary: #94a3b8;
+      --border: rgba(255, 255, 255, 0.12);
+      --border-active: #e5b842;
+      --header-height: 58px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      height: 100vh;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation Header */
+    header {
+      height: var(--header-height);
+      min-height: var(--header-height);
+      background: var(--bg-glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      padding-top: env(safe-area-inset-top, 0px);
+      z-index: 100;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .badge-museum {
+      background: rgba(229, 184, 66, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(229, 184, 66, 0.35);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .header-title-group {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .header-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .header-subtitle {
+      font-size: 0.74rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Object Switcher Picker */
+    .object-switcher-container {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .object-switcher-select {
+      background: #1e2533;
+      color: var(--text-primary);
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      outline: none;
+      cursor: pointer;
+      max-width: 380px;
+    }
+
+    .object-switcher-select:focus {
+      box-shadow: 0 0 0 2px var(--accent-glow);
+    }
+
+    .object-switcher-select optgroup {
+      background: #151a24;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .object-switcher-select option {
+      background: #1e2533;
+      color: var(--text-primary);
+      padding: 4px;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      height: 34px;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-active, .btn.active {
+      background: rgba(229, 184, 66, 0.2);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-icon-only {
+      padding: 6px 9px;
+    }
+
+    /* Main Container Layout */
+    #app-container {
+      flex: 1 1 auto;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+      height: calc(100vh - var(--header-height));
+      height: calc(100dvh - var(--header-height));
+    }
+
+    /* Explorer View Container */
+    #explorer-view {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 3D Viewport Area */
+    #viewport-container {
+      flex: 1 1 auto;
+      position: relative;
+      background: radial-gradient(circle at center, #151a24 0%, #080a0f 100%);
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    #canvas3d {
+      width: 100%;
+      height: 100%;
+      display: block;
+      touch-action: none;
+    }
+
+    /* Sketchfab Embed Viewport */
+    #sketchfab-container {
+      width: 100%;
+      height: 100%;
+      display: none;
+      position: relative;
+      background: #000;
+    }
+
+    #sketchfab-frame {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* 3D-PDF Container */
+    #pdf-container {
+      width: 100%;
+      height: 100%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      text-align: center;
+      background: radial-gradient(circle at center, #1a2333 0%, #0a0d14 100%);
+    }
+
+    .pdf-card-box {
+      background: var(--bg-card);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 28px;
+      max-width: 540px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.5);
+    }
+
+    /* Stage Status / Notice Banner */
+    #stage-status-banner {
+      position: absolute;
+      top: 12px;
+      left: 16px;
+      right: 16px;
+      background: rgba(59, 42, 10, 0.92);
+      border: 1px solid #854d0e;
+      color: #fde68a;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      line-height: 1.4;
+      backdrop-filter: blur(8px);
+      z-index: 40;
+      display: none;
+    }
+
+    /* Floating Lighting Controls */
+    .viewport-controls {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .viewport-controls > * {
+      pointer-events: auto;
+    }
+
+    .control-panel {
+      background: rgba(18, 22, 31, 0.92);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      width: 260px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    .control-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .control-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .control-row input[type="range"] {
+      accent-color: var(--accent);
+    }
+
+    .preset-btns {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      margin-top: 8px;
+    }
+
+    .preset-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 5px 0;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .preset-btn:hover, .preset-btn.active {
+      background: rgba(229, 184, 66, 0.25);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Scale Bar */
+    .scale-bar-overlay {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      z-index: 20;
+      background: rgba(18, 22, 31, 0.85);
+      border: 1px solid var(--border);
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .scale-line {
+      width: 50px;
+      height: 3px;
+      background: var(--accent);
+      position: relative;
+    }
+
+    /* Tooltip */
+    #hover-tooltip {
+      position: absolute;
+      background: rgba(18, 22, 31, 0.95);
+      border: 1px solid var(--accent);
+      color: var(--text-primary);
+      padding: 6px 10px;
+      border-radius: 5px;
+      font-size: 0.78rem;
+      pointer-events: none;
+      z-index: 50;
+      display: none;
+      transform: translate(-50%, -125%);
+      white-space: nowrap;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+    }
+
+    /* Inspector Panel (Sidebar on desktop / Drawer on mobile) */
+    #inspector-panel {
+      width: 560px;
+      min-width: 480px;
+      max-width: 600px;
+      background: var(--bg-secondary);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      z-index: 30;
+      flex-shrink: 0;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #inspector-panel.collapsed {
+      display: none;
+    }
+
+    /* Global Search Box in Inspector */
+    .global-search-container {
+      padding: 12px 14px 8px 14px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(18, 22, 31, 0.6);
+      position: relative;
+    }
+
+    .search-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .global-search-input {
+      width: 100%;
+      background: #171d27;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 36px 8px 12px;
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .global-search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-glow);
+    }
+
+    .btn-clear-search {
+      position: absolute;
+      right: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    /* Autocomplete Popup */
+    #autocomplete-popup {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 14px;
+      right: 14px;
+      background: #1a202c;
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      max-height: 280px;
+      overflow-y: auto;
+      z-index: 100;
+      display: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+
+    .autocomplete-item {
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .autocomplete-item:hover, .autocomplete-item.active {
+      background: rgba(229, 184, 66, 0.18);
+    }
+
+    .autocomplete-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .autocomplete-tag {
+      font-size: 0.72rem;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.08);
+      color: var(--text-secondary);
+    }
+
+    .autocomplete-primary {
+      font-weight: 600;
+      font-size: 0.86rem;
+      color: var(--accent-gold-bright);
+    }
+
+    .autocomplete-secondary {
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+    }
+
+    /* Inspector Tabs Navigation */
+    .tabs-nav {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: rgba(18, 22, 31, 0.85);
+      overflow-x: auto;
+      flex-shrink: 0;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-secondary);
+      padding: 10px 14px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      background: rgba(229, 184, 66, 0.06);
+    }
+
+    .tab-count {
+      font-size: 0.7rem;
+      background: rgba(255,255,255,0.1);
+      padding: 1px 6px;
+      border-radius: 999px;
+    }
+
+    /* Tab Content Area */
+    .tab-content {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      padding: 16px;
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .stat-item {
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px;
+      padding: 8px 10px;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .stat-value {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 2px;
+    }
+
+    /* Epigraphy Fragment Card */
+    .frag-card {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .frag-card:hover, .frag-card.selected {
+      border-color: var(--accent);
+      background: rgba(229, 184, 66, 0.08);
+    }
+
+    .frag-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .column-badge {
+      font-size: 0.72rem;
+      background: #1e293b;
+      color: var(--accent-blue);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .btn-breakdown {
+      background: rgba(229, 184, 66, 0.15);
+      border: 1px solid rgba(229, 184, 66, 0.4);
+      color: var(--accent);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      cursor: pointer;
+    }
+
+    .hiero-box {
+      background: #ffffff;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+      margin: 8px 0;
+      text-align: center;
+      min-height: 48px;
+    }
+
+    .transliteration {
+      font-family: 'Transliteration', serif;
+      font-size: 0.88rem;
+      color: var(--accent-gold-bright);
+      font-style: italic;
+      margin-bottom: 4px;
+    }
+
+    .translation {
+      font-size: 0.84rem;
+      color: #e2e8f0;
+      line-height: 1.45;
+    }
+
+    /* Lexicon Items */
+    .lex-item {
+      background: rgba(0,0,0,0.2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .lex-item:hover, .lex-item.selected {
+      border-color: var(--accent);
+      background: rgba(229, 184, 66, 0.1);
+    }
+
+    .lex-translit {
+      font-family: 'Transliteration', serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--accent-gold-bright);
+    }
+
+    .lex-pos {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-left: 6px;
+      font-style: italic;
+    }
+
+    .lex-meaning {
+      font-size: 0.84rem;
+      color: #cbd5e1;
+    }
+
+    /* Deities / Entities Chips */
+    .entity-chip {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: var(--accent-blue);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      margin: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .entity-chip:hover, .entity-chip.selected {
+      background: rgba(229, 184, 66, 0.25);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Collection Gallery View */
+    #gallery-view {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      padding: 24px;
+      display: none;
+      background: var(--bg-primary);
+    }
+
+    .gallery-hero {
+      max-width: 1200px;
+      margin: 0 auto 24px auto;
+      text-align: center;
+    }
+
+    .gallery-hero h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .gallery-hero p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      max-width: 720px;
+      margin: 0 auto 16px auto;
+      line-height: 1.5;
+    }
+
+    .gallery-search-bar {
+      max-width: 680px;
+      margin: 0 auto 16px auto;
+      position: relative;
+    }
+
+    .gallery-search-input {
+      width: 100%;
+      background: #171d27;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      padding: 12px 18px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      outline: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .gallery-filters {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .filter-pill {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .filter-pill:hover, .filter-pill.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #000;
+      font-weight: 600;
+    }
+
+    .gallery-grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      padding-bottom: 48px;
+    }
+
+    .coffin-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+
+    .coffin-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.5);
+    }
+
+    .coffin-card-thumb {
+      width: 100%;
+      height: 180px;
+      background: #0f131a;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .coffin-card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .badge-delivery {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+
+    .badge-annotated { background: var(--accent); color: #000; }
+    .badge-mesh { background: var(--accent-blue); color: #000; }
+    .badge-embed { background: var(--accent-purple); color: #fff; }
+    .badge-pdf { background: var(--accent-green); color: #000; }
+
+    .coffin-card-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+    }
+
+    .coffin-card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      line-height: 1.35;
+    }
+
+    .coffin-card-meta {
+      font-size: 0.78rem;
+      color: var(--accent-gold-bright);
+      margin-bottom: 8px;
+    }
+
+    .coffin-card-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+      margin-bottom: 12px;
+      flex: 1 1 auto;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .coffin-card-stats {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .coffin-stat-pill {
+      font-size: 0.7rem;
+      background: rgba(255,255,255,0.06);
+      padding: 2px 7px;
+      border-radius: 4px;
+      color: var(--text-secondary);
+    }
+
+    .btn-explore-card {
+      background: rgba(229, 184, 66, 0.15);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .btn-explore-card:hover {
+      background: var(--accent);
+      color: #000;
+    }
+
+    /* Corpus Status View */
+    #status-view {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      padding: 24px;
+      display: none;
+      background: var(--bg-primary);
+    }
+
+    .status-container {
+      max-width: 1100px;
+      margin: 0 auto 40px auto;
+    }
+
+    .status-metrics-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .status-metric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .metric-number {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .metric-label {
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 4px;
+    }
+
+    .status-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+      background: var(--bg-card);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .status-table th, .status-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .status-table th {
+      background: rgba(0,0,0,0.3);
+      color: var(--accent);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+    }
+
+    .status-table tr:hover td {
+      background: rgba(229, 184, 66, 0.05);
+      cursor: pointer;
+    }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-box {
+      background: var(--bg-card);
+      border: 1px solid var(--accent);
+      border-radius: 10px;
+      width: 100%;
+      max-width: 580px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 24px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+
+    .modal-title {
+      font-size: 1.1rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .btn-close-modal {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    /* Loading Screen */
+    .loading-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10, 12, 16, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 60;
+      gap: 16px;
+      transition: opacity 0.5s ease;
+    }
+
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 3px solid rgba(229, 184, 66, 0.2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Mobile Responsive Overrides */
+    @media (max-width: 899px) {
+      header {
+        padding: 0 10px;
+      }
+      
+      .object-switcher-select {
+        max-width: 170px;
+        font-size: 0.78rem;
+        padding: 4px 6px;
+      }
+
+      .desktop-only {
+        display: none !important;
+      }
+
+      #explorer-view {
+        flex-direction: column;
+      }
+
+      #viewport-container {
+        height: 100%;
+        width: 100%;
+      }
+
+      #inspector-panel {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        min-width: 100%;
+        max-width: 100%;
+        height: 82vh;
+        height: 82dvh;
+        border-left: none;
+        border-top: 1px solid var(--accent);
+        border-radius: 16px 16px 0 0;
+        box-shadow: 0 -8px 32px rgba(0,0,0,0.65);
+        transform: translateY(100%);
+        z-index: 200;
+      }
+
+      #inspector-panel.drawer-open {
+        transform: translateY(0);
+      }
+
+      #mobile-drawer-backdrop {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(4px);
+        z-index: 150;
+        display: none;
+      }
+
+      #mobile-drawer-backdrop.active {
+        display: block;
+      }
+
+      .mobile-drawer-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 16px 4px 16px;
+        flex-shrink: 0;
+      }
+
+      .mobile-drawer-handle {
+        width: 42px;
+        height: 4px;
+        background: rgba(255,255,255,0.3);
+        border-radius: 2px;
+      }
+
+      #mobile-bottom-bar {
+        position: absolute;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(18, 22, 31, 0.95);
+        border: 1px solid var(--accent);
+        color: var(--text-primary);
+        padding: 9px 18px;
+        border-radius: 24px;
+        font-size: 0.84rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        z-index: 40;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .viewport-controls {
+        top: auto;
+        bottom: 74px;
+        left: 12px;
+        right: 12px;
+        display: none;
+      }
+
+      .viewport-controls.mobile-open {
+        display: flex;
+      }
+
+      .control-panel {
+        width: 100%;
+      }
+    }
+
+    @media (min-width: 900px) {
+      .mobile-only {
+        display: none !important;
+      }
+      .mobile-drawer-header {
+        display: none;
+      }
+      #mobile-bottom-bar {
+        display: none;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Offscreen font warmup for canvas 2D -->
+  <div id="font-warmup" style="position: absolute; left: -9999px; top: -9999px; visibility: hidden;">
+    <span style="font-family: 'NewGardiner';">𓀀𓀁𓀂𓀃𓀄𓀅𓀆𓀇𓀈𓀉𓀊𓀋𓀌𓀍𓀎𓀏</span>
+    <span style="font-family: 'HieroglyphicAux';">𓀀𓀁𓀂</span>
+    <span style="font-family: 'Transliteration';">Ꜣ Ꜥ ḥ ḫ ẖ š ḳ ṯ ḏ</span>
+  </div>
+
+  <!-- Top Application Header -->
   <header>
-    <h1>The Book of the Dead in 3D</h1>
-    <div class="nav">
-      <label>Object
-        <select id="picker"></select>
-      </label>
-      <a href="?page=status">Status</a>
+    <div class="header-left">
+      <span class="badge-museum" id="header-museum-badge">UC Berkeley</span>
+      <div class="header-title-group">
+        <h1 class="header-title" id="header-object-title">The Book of the Dead in 3D</h1>
+        <span class="header-subtitle" id="header-subtitle">24 Ancient Egyptian Funerary Monuments</span>
+      </div>
+    </div>
+
+    <!-- Object Switcher & View Switcher -->
+    <div class="object-switcher-container">
+      <select id="object-picker" class="object-switcher-select" title="Switch Object or View Gallery">
+        <option value="__gallery__">🏛 All Coffins Gallery (24)</option>
+        <option value="__status__">📊 Corpus Status Overview</option>
+        <optgroup label="3D Annotated (6)" id="optgroup-annotated"></optgroup>
+        <optgroup label="3D Mesh Only (2)" id="optgroup-mesh"></optgroup>
+        <optgroup label="Sketchfab 3D Embeds (15)" id="optgroup-embed"></optgroup>
+        <optgroup label="3D-PDF Archive (1)" id="optgroup-pdf"></optgroup>
+      </select>
+    </div>
+
+    <div class="nav-actions">
+      <button class="btn" id="btn-gallery" title="Open Coffin Gallery">🏛 Gallery</button>
+      <button class="btn desktop-only" id="btn-status" title="Corpus Verification Status">📊 Status</button>
+      <button class="btn mobile-only btn-icon-only" id="btn-mobile-light" title="Toggle Lighting Drawer">🔦</button>
+      <button class="btn btn-icon-only desktop-only" id="btn-toggle-annotations" title="Toggle 3D Vector Outlines">☖</button>
+      <button class="btn btn-icon-only" id="btn-reset-cam" title="Reset Camera View">↺</button>
+      <button class="btn mobile-only" id="btn-mobile-drawer" title="View Inscriptions & Texts">📖 Texts</button>
+      <button class="btn desktop-only btn-icon-only" id="btn-toggle-zen" title="Zen View Mode">⛶</button>
+      <button class="btn desktop-only btn-icon-only" id="btn-shortcuts" title="Keyboard Shortcuts">⌨</button>
+      <button class="btn btn-icon-only" id="btn-datasource" title="Data Source Settings">📦</button>
+      <a href="https://github.com/aculich/ucb-3dcoffins-viewer" target="_blank" rel="noopener noreferrer" class="btn desktop-only" title="View Source on GitHub">
+        <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      </a>
     </div>
   </header>
-  <div id="banner" class="banner" hidden></div>
-  <main id="app"></main>
-  <p id="credit" class="credit"></p>
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-    }
-  }
-  </script>
-  <script type="module">
-    const DEFAULT_ID = "pahma-5-522";
 
-    function params() {
-      const q = new URLSearchParams(location.search);
-      const path = location.pathname.replace(/\/+$/, "");
-      return {
-        status: path.endsWith("/status") || q.get("page") === "status",
-        object: q.get("object") || DEFAULT_ID,
-      };
-    }
-
-    async function loadJSON(url) {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`${res.status} ${url}`);
-      return res.json();
-    }
-
-    function setBanner(text) {
-      const el = document.getElementById("banner");
-      if (!text) { el.hidden = true; el.textContent = ""; return; }
-      el.hidden = false;
-      el.textContent = text;
-    }
-
-    function setCredit(text) {
-      document.getElementById("credit").textContent = text || "";
-    }
-
-    function fillPicker(objects, selected) {
-      const sel = document.getElementById("picker");
-      sel.innerHTML = objects.map((o) =>
-        `<option value="${o.id}" ${o.id === selected ? "selected" : ""}>${o.title} (${o.delivery})</option>`
-      ).join("");
-      sel.onchange = () => {
-        location.search = `?object=${encodeURIComponent(sel.value)}`;
-      };
-    }
-
-    function countsRow(reg) {
-      const c = reg.deliveryCounts || {};
-      return `${c.annotated || 0} annotated · ${c.mesh || 0} mesh · ${c.embed || 0} embed · ${c.pdf || 0} pdf`;
-    }
-
-    function renderStatus(reg) {
-      document.title = "Corpus status";
-      setBanner("");
-      setCredit("Bags listed are the closed sources the pipeline read.");
-      const rows = reg.objects.map((o) => `
-        <tr>
-          <td><a href="?object=${encodeURIComponent(o.id)}">${o.id}</a></td>
-          <td>${o.museum || ""}</td>
-          <td><span class="pill">${o.delivery}</span></td>
-          <td>${o.regions ?? ""}</td>
-          <td>${o.phrases ?? ""}</td>
-          <td>${o.lexicon ?? ""}</td>
-          <td>${o.bag || ""}</td>
-        </tr>`).join("");
-      document.getElementById("app").innerHTML = `
-        <div class="card">
-          <h2>Corpus status</h2>
-          <p class="counts">${countsRow(reg)} (= ${reg.objects.length})</p>
-          <table>
-            <thead><tr><th>id</th><th>museum</th><th>class</th><th>regions</th><th>phrases</th><th>lexicon</th><th>bag</th></tr></thead>
-            <tbody>${rows}</tbody>
-          </table>
-        </div>`;
-    }
-
-    async function renderMesh(container, objUrl) {
-      const THREE = await import("three");
-      const { OBJLoader } = await import("three/addons/loaders/OBJLoader.js");
-      const { MTLLoader } = await import("three/addons/loaders/MTLLoader.js");
-      const { OrbitControls } = await import("three/addons/controls/OrbitControls.js");
-      const canvas = document.createElement("canvas");
-      canvas.className = "view";
-      container.appendChild(canvas);
-      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-      const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x000000);
-      const camera = new THREE.PerspectiveCamera(45, 2, 0.01, 2000);
-      camera.position.set(0, 0.2, 1.4);
-      const controls = new OrbitControls(camera, renderer.domElement);
-      scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-      const key = new THREE.DirectionalLight(0xffffff, 1.1);
-      key.position.set(2, 3, 4);
-      scene.add(key);
-      const base = objUrl.replace(/[^/]+$/, "");
-      const mtlUrl = objUrl.replace(/\.obj$/i, ".mtl");
-      try {
-        const materials = await new MTLLoader().setResourcePath(base).loadAsync(mtlUrl);
-        materials.preload();
-        const obj = await new OBJLoader().setMaterials(materials).loadAsync(objUrl);
-        scene.add(obj);
-      } catch {
-        const obj = await new OBJLoader().loadAsync(objUrl);
-        scene.add(obj);
-      }
-      function frame() {
-        const w = canvas.clientWidth || 640;
-        const h = canvas.clientHeight || 480;
-        renderer.setSize(w, h, false);
-        camera.aspect = w / h;
-        camera.updateProjectionMatrix();
-        renderer.render(scene, camera);
-        requestAnimationFrame(frame);
-      }
-      frame();
-    }
-
-    function epigraphyHTML(bundle) {
-      const sections = bundle.epigraphy?.textSections || [];
-      const phrases = Object.keys(bundle.epigraphy?.phrases || {}).length;
-      const lex = bundle.lexicon?.total || 0;
-      const regions = Object.keys(bundle.spatialAnnotations || {}).length;
-      const body = sections.slice(0, 8).map((s) => {
-        const frags = (s.fragments || []).slice(0, 3).map((f) =>
-          `<div>${f.transliteration || ""} — ${f.translation || ""}</div>`
-        ).join("");
-        return `<section><h3>${s.title || s.id}</h3>${frags}</section>`;
-      }).join("");
-      return `<div class="card">
-        <p class="counts">${regions} regions · ${phrases} phrases · ${lex} lexicon</p>
-        ${body || "<p>No epigraphy text sections in the HTML parse.</p>"}
-      </div>`;
-    }
-
-    async function renderObject(reg, id) {
-      const meta = reg.objects.find((o) => o.id === id) || reg.objects[0];
-      const bundle = await loadJSON(`data/objects/${meta.id}/bundle.json`);
-      document.title = bundle.metadata.title;
-      fillPicker(reg.objects, meta.id);
-      setBanner(bundle.status || "");
-      setCredit(bundle.narrative?.copyright || meta.credit || "");
-      const app = document.getElementById("app");
-      const delivery = bundle.delivery;
-      let stage = `<div class="stage" id="stage"></div>`;
-      if (delivery === "pdf") {
-        const files = (bundle.model3D.pdfFilenames || []).join(", ") || "3D-PDF";
-        stage = `<div class="card pdf">
-          <h2>${bundle.metadata.title}</h2>
-          <p>3D-PDF only; U3D not yet extracted. File: ${files}</p>
-          <a class="button" href="data/objects/${meta.id}/bundle.json">Bundle JSON</a>
-        </div>`;
-      }
-      if (delivery === "embed") {
-        const src = bundle.model3D.sketchfabEmbed;
-        stage = `<div class="stage"><iframe class="embed" title="${bundle.metadata.title}" src="${src}" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe></div>`;
-      }
-      app.innerHTML = `${stage}
-        <div class="card">
-          <h2>${bundle.metadata.title}</h2>
-          <p><span class="pill">${delivery}</span> ${bundle.metadata.museum || ""} ${bundle.metadata.accession || ""}</p>
-          <p>${(bundle.narrative?.summary || "").slice(0, 800)}</p>
+  <!-- Main Container -->
+  <div id="app-container">
+    
+    <!-- 1. Interactive 3D Explorer View -->
+    <div id="explorer-view">
+      <!-- 3D Viewport / Stage -->
+      <div id="viewport-container">
+        <div id="loading-screen" class="loading-overlay">
+          <div class="spinner"></div>
+          <div id="loading-text" style="font-size: 1rem; color: var(--accent); font-weight: 500;">
+            Loading 3D Photogrammetry Mesh & Annotations...
+          </div>
         </div>
-        ${delivery === "annotated" ? epigraphyHTML(bundle) : ""}`;
-      if ((delivery === "annotated" || delivery === "mesh") && bundle.model3D.obj) {
-        await renderMesh(document.getElementById("stage"), `data/objects/${meta.id}/${bundle.model3D.obj}`);
+
+        <!-- Warning / Status Banner for Embed or PDF -->
+        <div id="stage-status-banner"></div>
+
+        <!-- Floating RTI Lighting Controls -->
+        <div class="viewport-controls" id="viewport-controls-panel">
+          <div class="control-panel">
+            <div class="control-title">
+              <span>RTI Grazing Raking Light</span>
+              <span id="light-angle-val" style="color: var(--text-secondary); font-size: 0.7rem;">45° (East)</span>
+            </div>
+            <div class="control-row">
+              <span>Grazing Direction</span>
+              <input type="range" id="light-angle" min="0" max="360" value="45" style="width: 85px;">
+            </div>
+            <div class="control-row">
+              <span>Grazing Pitch</span>
+              <input type="range" id="light-pitch" min="5" max="75" value="20" style="width: 85px;">
+            </div>
+            <div class="control-row">
+              <span>Torch Power</span>
+              <input type="range" id="light-intensity" min="0.2" max="3.5" step="0.1" value="1.6" style="width: 85px;">
+            </div>
+            <div class="control-row">
+              <span>Shadow Depth</span>
+              <input type="range" id="ambient-intensity" min="0.05" max="0.6" step="0.05" value="0.25" style="width: 85px;">
+            </div>
+            <div class="preset-btns">
+              <button class="preset-btn" onclick="applyLightPreset(90, 30)">☀ Top</button>
+              <button class="preset-btn" onclick="applyLightPreset(45, 18)">🔦 East</button>
+              <button class="preset-btn" onclick="applyLightPreset(225, 18)">🔦 West</button>
+              <button class="preset-btn" id="btn-auto-orbit" onclick="toggleAutoLightOrbit()">🕯 Auto</button>
+            </div>
+            <div class="control-row" style="margin-top: 6px;">
+              <span>Material Mode</span>
+              <select id="mat-mode" style="background: #171d27; color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 2px 4px; font-size: 0.75rem;">
+                <option value="textured" selected>Photorealistic</option>
+                <option value="relief">Relief Enhanced (MatCap)</option>
+                <option value="wireframe">Wireframe</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="control-panel" id="annotations-control-card">
+            <div class="control-title">
+              <span>3D Annotations</span>
+              <span id="line-thick-val" style="color: var(--text-secondary); font-size: 0.7rem;">Normal</span>
+            </div>
+            <div class="control-row">
+              <span>Line Thickness</span>
+              <input type="range" id="line-thickness" min="1" max="4" value="2" style="width: 85px;">
+            </div>
+            <div class="control-row">
+              <span>Outline Brightness</span>
+              <input type="range" id="line-opacity" min="0.3" max="1.0" step="0.05" value="0.85" style="width: 85px;">
+            </div>
+          </div>
+        </div>
+
+        <!-- Scale Bar -->
+        <div class="scale-bar-overlay" id="scale-bar-overlay">
+          <div class="scale-line" id="scale-line"></div>
+          <span id="scale-text">50 cm (Scale 1:1)</span>
+        </div>
+
+        <!-- Mobile Floating Trigger -->
+        <div id="mobile-bottom-bar" onclick="openMobileDrawer()">
+          <span>📖 Inscriptions & Lexicon</span>
+          <span style="font-size: 0.72rem; color: var(--accent); background: rgba(0,0,0,0.4); padding: 2px 8px; border-radius: 10px;">Tap to Explore ↑</span>
+        </div>
+
+        <div id="hover-tooltip"></div>
+        <div id="canvas3d"></div>
+
+        <!-- Sketchfab Embed Container -->
+        <div id="sketchfab-container">
+          <iframe id="sketchfab-frame" title="Sketchfab 3D Model" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
+        </div>
+
+        <!-- 3D-PDF Container -->
+        <div id="pdf-container">
+          <div class="pdf-card-box">
+            <div style="font-size: 3rem; margin-bottom: 12px;">📄</div>
+            <h2 id="pdf-title" style="color: var(--accent); margin-bottom: 8px;">UMFA 2008.17.1</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; margin-bottom: 16px;">
+              This funerary monument was archived as a 3D-PDF containing embedded U3D data. You can view its full historical provenance in the Overview tab or download the original 3D-PDF file.
+            </p>
+            <a id="btn-download-pdf" href="#" class="btn btn-explore-card" style="display: inline-block; padding: 10px 20px;">Download 3D-PDF (29.5 MB) 📥</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Drawer Backdrop -->
+      <div id="mobile-drawer-backdrop" onclick="closeMobileDrawer()"></div>
+
+      <!-- Inspector Panel (Desktop Sidebar / Mobile Drawer) -->
+      <div id="inspector-panel">
+        <div class="mobile-drawer-header">
+          <div style="flex: 1;"></div>
+          <div class="mobile-drawer-handle"></div>
+          <div style="flex: 1; text-align: right;">
+            <button class="btn btn-icon-only" onclick="closeMobileDrawer()">✕</button>
+          </div>
+        </div>
+
+        <!-- Global Context-Sensitive Search Bar -->
+        <div class="global-search-container">
+          <div class="search-wrapper">
+            <input type="text" id="global-search" class="global-search-input" placeholder="Search inscriptions, deities, or vocabulary..." autocomplete="off">
+            <button class="btn-clear-search" id="btn-clear-search" title="Clear Search">✕</button>
+          </div>
+          <div id="autocomplete-popup"></div>
+          <div class="search-match-stats" id="search-stats" style="display: none; margin-top: 6px; font-size: 0.74rem; color: var(--accent); display: flex; justify-content: space-between;">
+            <span id="search-match-count">0 matches</span>
+            <span style="color: var(--text-secondary);">Enter to cycle</span>
+          </div>
+        </div>
+
+        <nav class="tabs-nav">
+          <button class="tab-btn active" data-tab="tab-overview">Overview</button>
+          <button class="tab-btn" data-tab="tab-epigraphy">Inscriptions <span class="tab-count" id="count-epigraphy">0</span></button>
+          <button class="tab-btn" data-tab="tab-deities">Deities & Family</button>
+          <button class="tab-btn" data-tab="tab-lexicon">Lexicon <span class="tab-count" id="count-lexicon">0</span></button>
+          <button class="tab-btn" data-tab="tab-context">Provenance</button>
+        </nav>
+
+        <!-- Tab 1: Overview -->
+        <div id="tab-overview" class="tab-content active">
+          <div class="card">
+            <div class="card-title">
+              <span id="overview-card-title">Funerary Monument Summary</span>
+              <span class="badge-delivery badge-annotated" id="overview-delivery-badge">Annotated</span>
+            </div>
+            <p id="overview-narrative" style="font-size: 0.86rem; line-height: 1.55; color: #e6edf3; white-space: pre-line;">
+              Loading scholarly documentation...
+            </p>
+            <div class="stat-grid">
+              <div class="stat-item">
+                <div class="stat-label">Museum</div>
+                <div class="stat-value" id="overview-museum">PAHMA</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">Accession</div>
+                <div class="stat-value" id="overview-accession">5-522</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">Delivery Class</div>
+                <div class="stat-value" id="overview-class">3D Annotated</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">Source Bag</div>
+                <div class="stat-value" id="overview-bag" style="font-size: 0.72rem; word-break: break-all;">standrews-egyptian</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" id="overview-credit-card">
+            <div class="card-title">Rights & Academic Credit</div>
+            <p id="overview-credit" style="font-size: 0.8rem; line-height: 1.5; color: var(--text-secondary);">
+              Images © Phoebe A. Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Open Source Repositories & Data</div>
+            <p style="font-size: 0.82rem; line-height: 1.5; color: #e6edf3; margin-bottom: 8px;">
+              This research platform is open-source and openly licensed:
+            </p>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <a href="https://github.com/aculich/ucb-3dcoffins-viewer" target="_blank" rel="noopener noreferrer" class="btn">
+                <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                <span>Viewer App</span>
+              </a>
+              <a href="https://github.com/aculich/ucb-3dcoffins-data" target="_blank" rel="noopener noreferrer" class="btn">
+                <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                <span>Curated Data Slice</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Epigraphy -->
+        <div id="tab-epigraphy" class="tab-content">
+          <div id="section-pills-container" style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;"></div>
+          <div id="epigraphy-list"></div>
+        </div>
+
+        <!-- Tab 3: Deities & Family -->
+        <div id="tab-deities" class="tab-content">
+          <div class="card">
+            <div class="card-title">Owner & Family</div>
+            <div id="family-chips"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Protective Deities & Speeches</div>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px;">
+              Tap any deity to highlight their spatial annotation on the 3D model!
+            </p>
+            <div id="deities-chips"></div>
+          </div>
+        </div>
+
+        <!-- Tab 4: Lexicon -->
+        <div id="tab-lexicon" class="tab-content">
+          <div id="lexicon-list"></div>
+        </div>
+
+        <!-- Tab 5: Provenance -->
+        <div id="tab-context" class="tab-content">
+          <div class="card">
+            <div class="card-title">Archaeological Provenance</div>
+            <div id="provenance-content" style="font-size: 0.84rem; line-height: 1.5; color: #cbd5e1;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Collection Gallery View -->
+    <div id="gallery-view">
+      <div class="gallery-hero">
+        <h2>The Book of the Dead in 3D: Coffin Collection</h2>
+        <p>
+          Explore 24 photogrammetry models, RTI raking light visualizations, and epigraphic annotations across ancient Egyptian funerary monuments from California and international collections.
+        </p>
+        <div class="gallery-search-bar">
+          <input type="text" id="gallery-search" class="gallery-search-input" placeholder="Search across all 24 coffins by title, museum, accession, or dynasty...">
+        </div>
+        <div class="gallery-filters" id="gallery-filter-pills">
+          <button class="filter-pill active" data-filter="all">All (24)</button>
+          <button class="filter-pill" data-filter="annotated">3D Annotated (6)</button>
+          <button class="filter-pill" data-filter="mesh">3D Mesh Only (2)</button>
+          <button class="filter-pill" data-filter="embed">Sketchfab 3D (15)</button>
+          <button class="filter-pill" data-filter="pdf">3D-PDF (1)</button>
+        </div>
+      </div>
+      <div class="gallery-grid" id="gallery-grid"></div>
+    </div>
+
+    <!-- 3. Corpus Status View -->
+    <div id="status-view">
+      <div class="status-container">
+        <h2 style="font-size: 1.6rem; color: var(--accent); margin-bottom: 8px;">Corpus Verification Status</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px;">
+          Bags listed are the immutable source archives that the derivation pipeline parsed.
+        </p>
+        <div class="status-metrics-row">
+          <div class="status-metric-card">
+            <div class="metric-number">24</div>
+            <div class="metric-label">Total Monuments</div>
+          </div>
+          <div class="status-metric-card">
+            <div class="metric-number">6</div>
+            <div class="metric-label">3D Annotated</div>
+          </div>
+          <div class="status-metric-card">
+            <div class="metric-number">2</div>
+            <div class="metric-label">3D Meshes</div>
+          </div>
+          <div class="status-metric-card">
+            <div class="metric-number">15</div>
+            <div class="metric-label">Sketchfab 3D</div>
+          </div>
+          <div class="status-metric-card">
+            <div class="metric-number">1</div>
+            <div class="metric-label">3D-PDF Archive</div>
+          </div>
+          <div class="status-metric-card">
+            <div class="metric-number">608</div>
+            <div class="metric-label">Spatial Regions</div>
+          </div>
+          <div class="status-metric-card">
+            <div class="metric-number">269</div>
+            <div class="metric-label">Vocabulary Terms</div>
+          </div>
+        </div>
+
+        <table class="status-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Museum</th>
+              <th>Accession</th>
+              <th>Class</th>
+              <th>Regions</th>
+              <th>Phrases</th>
+              <th>Lexicon</th>
+              <th>Source Bag</th>
+            </tr>
+          </thead>
+          <tbody id="status-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <!-- Shortcuts Modal -->
+  <div class="modal-overlay" id="modal-shortcuts" onclick="if(event.target===this) this.style.display='none'">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">Keyboard Shortcuts Reference</div>
+        <button class="btn-close-modal" onclick="document.getElementById('modal-shortcuts').style.display='none'">✕</button>
+      </div>
+      <div style="font-size: 0.85rem; line-height: 1.8; color: #e2e8f0;">
+        <p><strong>Navigation & Views:</strong></p>
+        <p><kbd>?</kbd> or <kbd>⌘ /</kbd> : Toggle shortcuts modal</p>
+        <p><kbd>G</kbd> : Open Coffin Gallery</p>
+        <p><kbd>S</kbd> : Open Corpus Status page</p>
+        <p><kbd>Z</kbd> : Toggle Zen / Split view mode</p>
+        <p><kbd>R</kbd> : Reset 3D camera to front-facing view</p>
+        <p><kbd>A</kbd> : Toggle 3D vector outline annotations</p>
+        <p><strong>Search:</strong></p>
+        <p><kbd>/</kbd> or <kbd>⌘ F</kbd> : Focus search input</p>
+        <p><kbd>Enter</kbd> : Cycle through search matches</p>
+        <p><kbd>Esc</kbd> : Clear search selection / Close drawer</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Word Breakdown Modal -->
+  <div class="modal-overlay" id="modal-phrase" onclick="if(event.target===this) this.style.display='none'">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title" id="phrase-modal-title">Word-by-Word Epigraphic Breakdown</div>
+        <button class="btn-close-modal" onclick="document.getElementById('modal-phrase').style.display='none'">✕</button>
+      </div>
+      <div id="phrase-words-list"></div>
+    </div>
+  </div>
+
+  <!-- Data Source Resolver Modal -->
+  <div class="modal-overlay" id="modal-datasource" onclick="if(event.target===this) this.style.display='none'">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">Data Storage & Asset Source</div>
+        <button class="btn-close-modal" onclick="document.getElementById('modal-datasource').style.display='none'">✕</button>
+      </div>
+      <div style="font-size: 0.86rem; line-height: 1.6; color: #e2e8f0;">
+        <p style="margin-bottom: 12px;">
+          The viewer can resolve photogrammetry meshes and bundles from three storage tiers:
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+          <button class="btn" style="justify-content: flex-start;" onclick="setDataSourceParam('local')">
+            💾 <strong>Local Cache</strong> (./data via portless localhost)
+          </button>
+          <button class="btn" style="justify-content: flex-start;" onclick="setDataSourceParam('gh')">
+            🌐 <strong>GitHub Pages Data Repo</strong> (ucb-3dcoffins-data CDN)
+          </button>
+          <button class="btn" style="justify-content: flex-start;" onclick="setDataSourceParam('gcs')">
+            ☁️ <strong>Google Cloud Storage (GCS)</strong> (project default-1234 Standard Bucket)
+          </button>
+        </div>
+        <div style="font-size: 0.78rem; color: var(--text-secondary);">
+          Current Source Base: <code id="current-datasource-text" style="color: var(--accent);">data</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="data/js/three/three.js" onerror="this.src='raw_data/psamtik/three/three.js'"></script>
+  <script src="data/js/three/controls/OrbitControls.js" onerror="this.src='raw_data/psamtik/three/js/controls/OrbitControls.js'"></script>
+  <script src="data/js/three/loaders/MTLLoader.js" onerror="this.src='raw_data/psamtik/three/js/loaders/MTLLoader.js'"></script>
+  <script src="data/js/three/loaders/OBJLoader.js" onerror="this.src='raw_data/psamtik/three/js/loaders/OBJLoader.js'"></script>
+  <script src="data/js/reslite.js" onerror="this.src='raw_data/psamtik/reslite.js'"></script>
+  <script src="data/js/aux.js" onerror="this.src='raw_data/psamtik/aux.js'"></script>
+
+  <script>
+    // Embedded Canonical Registry for instant initial rendering
+    const EMBEDDED_REGISTRY = {
+  "schemaVersion": 2,
+  "generated": "2026-09-03T11:30:45Z",
+  "deliveryCounts": {
+    "annotated": 6,
+    "mesh": 2,
+    "embed": 15,
+    "pdf": 1
+  },
+  "objects": [
+    {
+      "id": "pahma-5-522",
+      "title": "Sarcophagus lid of Psamtik (the Doctor)",
+      "museum": "PAHMA",
+      "accession": "5-522",
+      "delivery": "annotated",
+      "status": "Full annotated viewer from the St Andrews HTML (regions, phrases, lexicon).",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": null,
+      "stAndrewsSlug": "psamtik",
+      "regions": 204,
+      "phrases": 28,
+      "lexicon": 75,
+      "bag": "standrews-egyptian-2026-09-02T1747",
+      "lastVerified": "2026-09-03T11:30:44Z"
+    },
+    {
+      "id": "pahma-6-19912",
+      "title": "Outer coffin of Iwefaa",
+      "museum": "PAHMA",
+      "accession": "6-19912",
+      "delivery": "annotated",
+      "status": "Full annotated viewer from the St Andrews HTML (regions, phrases, lexicon).",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "0a5c36d1c2614d1bae0c06f8b3ebaff9",
+      "stAndrewsSlug": "iwefaa2",
+      "regions": 34,
+      "phrases": 7,
+      "lexicon": 22,
+      "bag": "standrews-egyptian-2026-09-02T1747",
+      "lastVerified": "2026-09-03T11:30:44Z"
+    },
+    {
+      "id": "pahma-6-19928",
+      "title": "Inner coffin of Iwefaa",
+      "museum": "PAHMA",
+      "accession": "6-19928",
+      "delivery": "mesh",
+      "status": "No region annotations exist upstream. Mesh is St Andrews iwefaa-scaled.obj; Sketchfab title for this uid is 'PAHMA 6-19928, The Inner Coffin of Iwefaa'.",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "064b3bbb63d340a2aff8163920088200",
+      "stAndrewsSlug": null,
+      "regions": 0,
+      "phrases": 0,
+      "lexicon": 0,
+      "bag": "standrews-egyptian-2026-09-02T1747",
+      "lastVerified": "2026-09-03T11:30:44Z"
+    },
+    {
+      "id": "pahma-6-19930.1",
+      "title": "Patjenef",
+      "museum": "PAHMA",
+      "accession": "6-19930.1",
+      "delivery": "mesh",
+      "status": "No region annotations exist upstream. Mesh is St Andrews patjenef3.obj; 3D-PDF is a sidecar.",
+      "thumbnail": null,
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": null,
+      "stAndrewsSlug": "patjenef",
+      "regions": 0,
+      "phrases": 0,
+      "lexicon": 0,
+      "bag": "standrews-egyptian-2026-09-02T1747",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "pahma-6-19927",
+      "title": "Iwesenmin (anonymous1)",
+      "museum": "PAHMA",
+      "accession": "6-19927",
+      "delivery": "annotated",
+      "status": "Full annotated viewer from the St Andrews HTML (regions, phrases, lexicon).",
+      "thumbnail": null,
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": null,
+      "stAndrewsSlug": "anonymous1",
+      "regions": 9,
+      "phrases": 31,
+      "lexicon": 0,
+      "bag": "standrews-egyptian-2026-09-02T1747",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "pahma-5-1404ab",
+      "title": "Amenirdis outer coffin",
+      "museum": "PAHMA",
+      "accession": "5-1404a,b",
+      "delivery": "embed",
+      "status": "Mesh not yet in our archive. This object is shown from Sketchfab (account bookofthedead3d). The original upload has not been downloaded because the owner download requires logging in as that account. Until then: no offline copy, no annotations, and this page breaks if Sketchfab does. Next step: owner download.",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "bedf71b544fe4e47b115578d41644b8c",
+      "stAndrewsSlug": null,
+      "regions": 0,
+      "phrases": 0,
+      "lexicon": 0,
+      "bag": "sketchfab-metadata-2026-09-03T0427",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "pahma-5-1404c",
+      "title": "Amenirdis",
+      "museum": "PAHMA",
+      "accession": "5-1404c",
+      "delivery": "annotated",
+      "status": "Full annotated viewer from the St Andrews HTML (regions, phrases, lexicon).",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "43cfe91d16d64f8b8294c5304c3cdf84",
+      "stAndrewsSlug": "amenirdis",
+      "regions": 2,
+      "phrases": 3,
+      "lexicon": 0,
+      "bag": "standrews-egyptian-2026-09-02T1747",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "sdmom-2001.063.0001",
+      "title": "Irethoreru",
+      "museum": "SDMoM",
+      "accession": "2001.063.0001",
+      "delivery": "embed",
+      "status": "Mesh not yet in our archive. This object is shown from Sketchfab (account bookofthedead3d). The original upload has not been downloaded because the owner download requires logging in as that account. Until then: no offline copy, no annotations, and this page breaks if Sketchfab does. Next step: owner download.",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "6cb871de7a0f4dff935b9b5c7e0aaa01",
+      "stAndrewsSlug": null,
+      "regions": 0,
+      "phrases": 0,
+      "lexicon": 0,
+      "bag": "sketchfab-metadata-2026-09-03T0427",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "sfsu-104.1-104.2",
+      "title": "Anonymous woman yellow coffin",
+      "museum": "SFSU Global Museum",
+      "accession": "104.1,104.2",
+      "delivery": "embed",
+      "status": "Mesh not yet in our archive. This object is shown from Sketchfab (account bookofthedead3d). The original upload has not been downloaded because the owner download requires logging in as that account. Until then: no offline copy, no annotations, and this page breaks if Sketchfab does. Next step: owner download.",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "608d27db96a947c8abc9a0946af29cbc",
+      "stAndrewsSlug": null,
+      "regions": 0,
+      "phrases": 0,
+      "lexicon": 0,
+      "bag": "sketchfab-metadata-2026-09-03T0427",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "sfsu-105.1-105.2",
+      "title": "Nespaperennub outer",
+      "museum": "SFSU Global Museum",
+      "accession": "105.1,2",
+      "delivery": "embed",
+      "status": "Mesh not yet in our archive. This object is shown from Sketchfab (account bookofthedead3d). The original upload has not been downloaded because the owner download requires logging in as that account. Until then: no offline copy, no annotations, and this page breaks if Sketchfab does. Next step: owner download.",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "d2ae3ad656af462b9b7697328f231036",
+      "stAndrewsSlug": null,
+      "regions": 0,
+      "phrases": 0,
+      "lexicon": 0,
+      "bag": "sketchfab-metadata-2026-09-03T0427",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "sfsu-107.1",
+      "title": "Nespaperennub cartonnage",
+      "museum": "SFSU Global Museum",
+      "accession": "107.1",
+      "delivery": "embed",
+      "status": "Mesh not yet in our archive. This object is shown from Sketchfab (account bookofthedead3d). The original upload has not been downloaded because the owner download requires logging in as that account. Until then: no offline copy, no annotations, and this page breaks if Sketchfab does. Next step: owner download.",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "9a822c1eccb14937b5eb81bae00a3523",
+      "stAndrewsSlug": null,
+      "regions": 0,
+      "phrases": 0,
+      "lexicon": 0,
+      "bag": "sketchfab-metadata-2026-09-03T0427",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "sfsu-106.1-106.2",
+      "title": "Nespaperennub middle",
+      "museum": "SFSU Global Museum",
+      "accession": "106.1,2",
+      "delivery": "embed",
+      "status": "Mesh not yet in our archive. This object is shown from Sketchfab (account bookofthedead3d). The original upload has not been downloaded because the owner download requires logging in as that account. Until then: no offline copy, no annotations, and this page breaks if Sketchfab does. Next step: owner download.",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "2383233059654d90b57f63cac06c9911",
+      "stAndrewsSlug": null,
+      "regions": 0,
+      "phrases": 0,
+      "lexicon": 0,
+      "bag": "sketchfab-metadata-2026-09-03T0427",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "cma-71.2254",
+      "title": "Psamtik-Seneb",
+      "museum": "CMA",
+      "accession": "71.2254",
+      "delivery": "annotated",
+      "status": "Full annotated viewer from the St Andrews HTML (regions, phrases, lexicon).",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "33e8ca175ff84d798402fb981cb71cf5",
+      "stAndrewsSlug": "psamtikseneb",
+      "regions": 94,
+      "phrases": 17,
+      "lexicon": 47,
+      "bag": "standrews-egyptian-2026-09-02T1747",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "umfa-2008.17.1",
+      "title": "UMFA coffin",
+      "museum": "UMFA",
+      "accession": "2008.17.1",
+      "delivery": "pdf",
+      "status": "3D-PDF only; U3D not yet extracted.",
+      "thumbnail": null,
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": null,
+      "stAndrewsSlug": null,
+      "regions": 0,
+      "phrases": 0,
+      "lexicon": 0,
+      "bag": "drupal-3dcoffins-2026-09-03T0427",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "rem-rc-2186",
+      "title": "RC 2186",
+      "museum": "REM",
+      "accession": "RC 2186",
+      "delivery": "embed",
+      "status": "Mesh not yet in our archive. This object is shown from Sketchfab (account bookofthedead3d). The original upload has not been downloaded because the owner download requires logging in as that account. Until then: no offline copy, no annotations, and this page breaks if Sketchfab does. Next step: owner download.",
+      "thumbnail": null,
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "1ca8d8b0a28b45f091c9485cea2e3a35",
+      "stAndrewsSlug": null,
+      "regions": 0,
+      "phrases": 0,
+      "lexicon": 0,
+      "bag": "sketchfab-metadata-2026-09-03T0427",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "wshs-ankh-wenennefer-inner",
+      "title": "Ankh-Wenennefer inner coffin",
+      "museum": "WSHS",
+      "accession": null,
+      "delivery": "embed",
+      "status": "Mesh not yet in our archive. This object is shown from Sketchfab (account bookofthedead3d). The original upload has not been downloaded because the owner download requires logging in as that account. Until then: no offline copy, no annotations, and this page breaks if Sketchfab does. Next step: owner download.",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "cde92142987b45e3a3136f41cabf4def",
+      "stAndrewsSlug": null,
+      "regions": 0,
+      "phrases": 0,
+      "lexicon": 0,
+      "bag": "sketchfab-metadata-2026-09-03T0427",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "wshs-ankh-wenennefer-outer",
+      "title": "Ankh-Wenennefer outer coffin and lid",
+      "museum": "WSHS",
+      "accession": null,
+      "delivery": "embed",
+      "status": "Mesh not yet in our archive. This object is shown from Sketchfab (account bookofthedead3d). The original upload has not been downloaded because the owner download requires logging in as that account. Until then: no offline copy, no annotations, and this page breaks if Sketchfab does. Next step: owner download.",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "f9d1b53bbbce4e0c9f0ce32e1951937b",
+      "stAndrewsSlug": null,
+      "regions": 0,
+      "phrases": 0,
+      "lexicon": 0,
+      "bag": "sketchfab-metadata-2026-09-03T0427",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "famsf-2002.2a-b",
+      "title": "Irethoreru / Irethoriru",
+      "museum": "FAMSF",
+      "accession": "2002.2a-b",
+      "delivery": "annotated",
+      "status": "Full annotated viewer from the St Andrews HTML (regions, phrases, lexicon).",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "e1544d6e19b441f1bbe18444a6221b85",
+      "stAndrewsSlug": "irethoreru",
+      "regions": 265,
+      "phrases": 54,
+      "lexicon": 125,
+      "bag": "standrews-egyptian-2026-09-02T1747",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "famsf-42895",
+      "title": "Coffin of Irethoreru",
+      "museum": "FAMSF",
+      "accession": "42895",
+      "delivery": "embed",
+      "status": "Mesh not yet in our archive. This object is shown from Sketchfab (account bookofthedead3d). The original upload has not been downloaded because the owner download requires logging in as that account. Until then: no offline copy, no annotations, and this page breaks if Sketchfab does. Next step: owner download.",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "27dc318154784293971e120130256737",
+      "stAndrewsSlug": null,
+      "regions": 0,
+      "phrases": 0,
+      "lexicon": 0,
+      "bag": "sketchfab-metadata-2026-09-03T0427",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "pahma-5-1405-basin-inner",
+      "title": "PAHMA 5-1405 (outer coffin basin and inner coffin)",
+      "museum": "PAHMA",
+      "accession": "5-1405",
+      "delivery": "embed",
+      "status": "Mesh not yet in our archive. This object is shown from Sketchfab (account bookofthedead3d). The original upload has not been downloaded because the owner download requires logging in as that account. Until then: no offline copy, no annotations, and this page breaks if Sketchfab does. Next step: owner download.",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "3bf6ae308b8940cca05508a197aab02e",
+      "stAndrewsSlug": null,
+      "regions": 0,
+      "phrases": 0,
+      "lexicon": 0,
+      "bag": "sketchfab-metadata-2026-09-03T0427",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "pahma-5-1405-lid-inner",
+      "title": "PAHMA 5-1405 (lid for inner coffin)",
+      "museum": "PAHMA",
+      "accession": "5-1405",
+      "delivery": "embed",
+      "status": "Mesh not yet in our archive. This object is shown from Sketchfab (account bookofthedead3d). The original upload has not been downloaded because the owner download requires logging in as that account. Until then: no offline copy, no annotations, and this page breaks if Sketchfab does. Next step: owner download.",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "00bbebd88e894f5f9163abb7cfd2e8cd",
+      "stAndrewsSlug": null,
+      "regions": 0,
+      "phrases": 0,
+      "lexicon": 0,
+      "bag": "sketchfab-metadata-2026-09-03T0427",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "pahma-5-1405-lid-outer",
+      "title": "PAHMA 5-1405 (lid for outer coffin)",
+      "museum": "PAHMA",
+      "accession": "5-1405",
+      "delivery": "embed",
+      "status": "Mesh not yet in our archive. This object is shown from Sketchfab (account bookofthedead3d). The original upload has not been downloaded because the owner download requires logging in as that account. Until then: no offline copy, no annotations, and this page breaks if Sketchfab does. Next step: owner download.",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "079c0f06bf5446a2805d9034cad49841",
+      "stAndrewsSlug": null,
+      "regions": 0,
+      "phrases": 0,
+      "lexicon": 0,
+      "bag": "sketchfab-metadata-2026-09-03T0427",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "pahma-5-613",
+      "title": "PAHMA 5-613",
+      "museum": "PAHMA",
+      "accession": "5-613",
+      "delivery": "embed",
+      "status": "Mesh not yet in our archive. This object is shown from Sketchfab (account bookofthedead3d). The original upload has not been downloaded because the owner download requires logging in as that account. Until then: no offline copy, no annotations, and this page breaks if Sketchfab does. Next step: owner download.",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "6d8900d9ed68480fa370493f6eaa87c7",
+      "stAndrewsSlug": null,
+      "regions": 0,
+      "phrases": 0,
+      "lexicon": 0,
+      "bag": "sketchfab-metadata-2026-09-03T0427",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    },
+    {
+      "id": "pahma-6-16015",
+      "title": "PAHMA 6-16015",
+      "museum": "PAHMA",
+      "accession": "6-16015",
+      "delivery": "embed",
+      "status": "Mesh not yet in our archive. This object is shown from Sketchfab (account bookofthedead3d). The original upload has not been downloaded because the owner download requires logging in as that account. Until then: no offline copy, no annotations, and this page breaks if Sketchfab does. Next step: owner download.",
+      "thumbnail": "thumbnail.jpg",
+      "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
+      "sketchfabUid": "d2064f7e425b462798c1bfcb3ecacc49",
+      "stAndrewsSlug": null,
+      "regions": 0,
+      "phrases": 0,
+      "lexicon": 0,
+      "bag": "sketchfab-metadata-2026-09-03T0427",
+      "lastVerified": "2026-09-03T11:30:45Z"
+    }
+  ]
+};
+
+    // State
+    let registryData = EMBEDDED_REGISTRY;
+    let bundleData = null;
+    let currentObjectId = 'pahma-5-522';
+    let currentView = 'explorer'; // 'explorer' | 'gallery' | 'status'
+
+    // Three.js Scene State
+    let scene = null, camera = null, renderer = null, controls = null;
+    let object3D = null, annotationGroup = null;
+    let directionalLight = null, pointLight = null, ambientLight = null, lightTargetObj = null;
+    let reliefMaterial = null, wireframeMaterial = null;
+    let originalMaterials = new Map();
+    let globalTransMatrix = new THREE.Matrix4();
+    let rotationMatrix = new THREE.Matrix4();
+    let autoLightOrbit = false, autoLightAngle = 45;
+    let activeAnnotationMesh = null, selectedAnnotationTag = null;
+    let mouseDownCoord = { x: 0, y: 0 };
+    let searchIndex = [];
+    let currentSearchMatchIndex = -1;
+    let searchMatches = [];
+
+    // --- 1. Multi-Tier Data Source Resolver ---
+    function getDataSource() {
+      const q = new URLSearchParams(location.search);
+      const custom = q.get('data_base');
+      if (custom) return custom.replace(/\/+$/, '');
+      const src = q.get('data_source');
+      if (src === 'gcs') return 'https://storage.googleapis.com/ucb-3dcoffins-public/data';
+      if (src === 'gh') return 'https://aculich.github.io/ucb-3dcoffins-data/data';
+      return 'data';
+    }
+
+    function resolveDataPath(relPath) {
+      const base = getDataSource();
+      if (!relPath) return base;
+      if (relPath.startsWith('http://') || relPath.startsWith('https://')) return relPath;
+      const cleanRel = relPath.replace(/^\/+/, '').replace(/^data\//, '');
+      return `${base}/${cleanRel}`;
+    }
+
+    function setDataSourceParam(mode) {
+      const url = new URL(location.href);
+      if (mode === 'local') {
+        url.searchParams.delete('data_source');
+        url.searchParams.delete('data_base');
+      } else {
+        url.searchParams.set('data_source', mode);
+      }
+      location.href = url.toString();
+    }
+
+    // --- 2. URL Routing & Navigation ---
+    function parseRouteParams() {
+      const q = new URLSearchParams(location.search);
+      const path = location.pathname.replace(/\/+$/, '');
+      const viewParam = q.get('view');
+      const objParam = q.get('object');
+      
+      if (viewParam === 'gallery') return { view: 'gallery', object: null };
+      if (viewParam === 'status' || path.endsWith('/status')) return { view: 'status', object: null };
+      return { view: 'explorer', object: objParam || 'pahma-5-522' };
+    }
+
+    function navigate(view, objectId = null, push = true) {
+      currentView = view;
+      if (objectId) currentObjectId = objectId;
+      
+      const url = new URL(location.href);
+      if (view === 'gallery') {
+        url.searchParams.set('view', 'gallery');
+        url.searchParams.delete('object');
+      } else if (view === 'status') {
+        url.searchParams.set('view', 'status');
+        url.searchParams.delete('object');
+      } else {
+        url.searchParams.delete('view');
+        url.searchParams.set('object', currentObjectId);
+      }
+
+      if (push) history.pushState(null, '', url.toString());
+
+      updateViewVisibility();
+      if (view === 'explorer') {
+        loadObject(currentObjectId);
       }
     }
 
-    async function main() {
-      const reg = await loadJSON("data/objects.json");
-      const p = params();
-      fillPicker(reg.objects, p.object);
-      if (p.status) {
-        renderStatus(reg);
+    window.addEventListener('popstate', () => {
+      const route = parseRouteParams();
+      navigate(route.view, route.object, false);
+    });
+
+    function updateViewVisibility() {
+      const explorer = document.getElementById('explorer-view');
+      const gallery = document.getElementById('gallery-view');
+      const status = document.getElementById('status-view');
+      const btnGallery = document.getElementById('btn-gallery');
+      const btnStatus = document.getElementById('btn-status');
+      const picker = document.getElementById('object-picker');
+
+      explorer.style.display = currentView === 'explorer' ? 'flex' : 'none';
+      gallery.style.display = currentView === 'gallery' ? 'block' : 'none';
+      status.style.display = currentView === 'status' ? 'block' : 'none';
+
+      btnGallery.classList.toggle('active', currentView === 'gallery');
+      btnStatus.classList.toggle('active', currentView === 'status');
+
+      if (currentView === 'gallery') {
+        picker.value = '__gallery__';
+        document.title = 'Coffin Collection Gallery | The Book of the Dead in 3D';
+      } else if (currentView === 'status') {
+        picker.value = '__status__';
+        document.title = 'Corpus Status | The Book of the Dead in 3D';
+      } else {
+        picker.value = currentObjectId;
+      }
+    }
+
+    // --- 3. Coffin Picker & Registry Population ---
+    function populateObjectPicker() {
+      const objs = registryData.objects || [];
+      const groups = {
+        annotated: document.getElementById('optgroup-annotated'),
+        mesh: document.getElementById('optgroup-mesh'),
+        embed: document.getElementById('optgroup-embed'),
+        pdf: document.getElementById('optgroup-pdf')
+      };
+
+      Object.values(groups).forEach(g => g.innerHTML = '');
+
+      objs.forEach(o => {
+        const opt = document.createElement('option');
+        opt.value = o.id;
+        const regionText = o.regions ? ` (${o.regions} regions)` : '';
+        opt.textContent = `${o.museum} ${o.accession || ''}: ${o.title}${regionText}`;
+        if (groups[o.delivery]) {
+          groups[o.delivery].appendChild(opt);
+        }
+      });
+
+      const picker = document.getElementById('object-picker');
+      picker.onchange = () => {
+        const val = picker.value;
+        if (val === '__gallery__') navigate('gallery');
+        else if (val === '__status__') navigate('status');
+        else navigate('explorer', val);
+      };
+    }
+
+    // --- 4. Collection Gallery Rendering ---
+    function renderGallery(filter = 'all', query = '') {
+      const container = document.getElementById('gallery-grid');
+      container.innerHTML = '';
+      const objs = registryData.objects || [];
+      const q = query.trim().toLowerCase();
+
+      const filtered = objs.filter(o => {
+        if (filter !== 'all' && o.delivery !== filter) return false;
+        if (!q) return true;
+        return (o.title && o.title.toLowerCase().includes(q)) ||
+               (o.museum && o.museum.toLowerCase().includes(q)) ||
+               (o.accession && o.accession.toLowerCase().includes(q)) ||
+               (o.id && o.id.toLowerCase().includes(q));
+      });
+
+      filtered.forEach(o => {
+        const card = document.createElement('div');
+        card.className = 'coffin-card';
+        card.onclick = () => navigate('explorer', o.id);
+
+        let thumbSrc = 'raw_data/psamtik/doctor-scaled.jpg';
+        if (o.thumbnail) {
+          thumbSrc = resolveDataPath(`objects/${o.id}/${o.thumbnail}`);
+        } else if (o.delivery === 'embed' && o.sketchfabUid) {
+          thumbSrc = `https://media.sketchfab.com/models/${o.sketchfabUid}/thumbnails/800.jpeg`;
+        }
+
+        const deliveryBadges = {
+          annotated: '<span class="badge-delivery badge-annotated">3D Annotated</span>',
+          mesh: '<span class="badge-delivery badge-mesh">3D Mesh</span>',
+          embed: '<span class="badge-delivery badge-embed">Sketchfab 3D</span>',
+          pdf: '<span class="badge-delivery badge-pdf">3D-PDF</span>'
+        };
+
+        const statsPills = [];
+        if (o.regions) statsPills.push(`<span class="coffin-stat-pill">${o.regions} regions</span>`);
+        if (o.lexicon) statsPills.push(`<span class="coffin-stat-pill">${o.lexicon} words</span>`);
+        if (o.phrases) statsPills.push(`<span class="coffin-stat-pill">${o.phrases} phrases</span>`);
+        if (!statsPills.length) statsPills.push(`<span class="coffin-stat-pill">${o.delivery.toUpperCase()}</span>`);
+
+        card.innerHTML = `
+          <div class="coffin-card-thumb">
+            <img src="${thumbSrc}" alt="${o.title}" loading="lazy" onerror="this.onerror=null; this.src='raw_data/psamtik/doctor-scaled.jpg';">
+            ${deliveryBadges[o.delivery] || ''}
+          </div>
+          <div class="coffin-card-body">
+            <div class="coffin-card-title">${o.title}</div>
+            <div class="coffin-card-meta">${o.museum} • ${o.accession || 'Collection Monument'}</div>
+            <div class="coffin-card-stats">${statsPills.join('')}</div>
+            <div class="coffin-card-desc">${o.status || 'Funerary monument photogrammetry and epigraphic corpus.'}</div>
+            <a href="?object=${encodeURIComponent(o.id)}" class="btn-explore-card" onclick="event.stopPropagation(); navigate('explorer', '${o.id}'); return false;">
+              Explore Monument ➔
+            </a>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // --- 5. Corpus Status Rendering ---
+    function renderStatus() {
+      const tbody = document.getElementById('status-table-body');
+      tbody.innerHTML = '';
+      const objs = registryData.objects || [];
+
+      objs.forEach(o => {
+        const tr = document.createElement('tr');
+        tr.onclick = () => navigate('explorer', o.id);
+        tr.innerHTML = `
+          <td><strong>${o.id}</strong></td>
+          <td>${o.museum || ''}</td>
+          <td>${o.accession || ''}</td>
+          <td><span class="badge-delivery badge-${o.delivery}" style="position: static; box-shadow: none;">${o.delivery}</span></td>
+          <td>${o.regions ?? '—'}</td>
+          <td>${o.phrases ?? '—'}</td>
+          <td>${o.lexicon ?? '—'}</td>
+          <td style="font-size: 0.74rem; color: var(--text-secondary);">${o.bag || 'archived'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // --- 6. Coffin Object Loader (Adaptive Stage & Tabs) ---
+    async function loadObject(objectId) {
+      const loader = document.getElementById('loading-screen');
+      loader.style.display = 'flex';
+      loader.style.opacity = '1';
+      document.getElementById('loading-text').innerText = `Loading ${objectId} bundle...`;
+
+      try {
+        const bundleUrl = resolveDataPath(`objects/${objectId}/bundle.json`);
+        const resp = await fetch(bundleUrl);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status} loading ${bundleUrl}`);
+        bundleData = await resp.json();
+
+        // Update Header & Document Title
+        document.title = `${bundleData.metadata.title} | The Book of the Dead in 3D`;
+        document.getElementById('header-object-title').innerText = bundleData.metadata.title;
+        document.getElementById('header-museum-badge').innerText = `${bundleData.metadata.museum} • ${bundleData.metadata.accession || ''}`;
+        document.getElementById('header-subtitle').innerText = `${bundleData.delivery.toUpperCase()} • ${bundleData.status || ''}`;
+        document.getElementById('object-picker').value = objectId;
+
+        // Render Inspector Tabs
+        renderOverviewTab();
+        renderEpigraphyTab();
+        renderDeitiesTab();
+        renderLexiconTab();
+        renderProvenanceTab();
+        buildSearchIndex();
+
+        // Adapt 3D Stage / Viewport
+        await setupStageForDelivery();
+
+        // Guaranteed font loading & hieroglyphic rasterization
+        ensureFontsAndRender();
+      } catch (err) {
+        console.error('Failed to load coffin object:', err);
+        document.getElementById('loading-text').innerText = 'Error loading object: ' + err.message;
+      } finally {
+        setTimeout(() => {
+          loader.style.opacity = '0';
+          setTimeout(() => loader.style.display = 'none', 400);
+        }, 300);
+      }
+    }
+
+    // --- 7. Adaptive 3D Viewport Setup ---
+    async function setupStageForDelivery() {
+      const canvasCont = document.getElementById('canvas3d');
+      const sfCont = document.getElementById('sketchfab-container');
+      const pdfCont = document.getElementById('pdf-container');
+      const banner = document.getElementById('stage-status-banner');
+      const rtiPanel = document.getElementById('viewport-controls-panel');
+      const scaleBar = document.getElementById('scale-bar-overlay');
+      const annotCard = document.getElementById('annotations-control-card');
+      const btnAnnot = document.getElementById('btn-toggle-annotations');
+
+      const delivery = bundleData.delivery;
+
+      if (delivery === 'annotated' || delivery === 'mesh') {
+        canvasCont.style.display = 'block';
+        sfCont.style.display = 'none';
+        pdfCont.style.display = 'none';
+        rtiPanel.style.display = 'flex';
+        scaleBar.style.display = 'flex';
+        banner.style.display = 'none';
+        
+        annotCard.style.display = delivery === 'annotated' ? 'block' : 'none';
+        btnAnnot.style.display = delivery === 'annotated' ? 'inline-flex' : 'none';
+
+        if (!scene) initThree();
+        await load3DMesh();
+      } else if (delivery === 'embed') {
+        canvasCont.style.display = 'none';
+        sfCont.style.display = 'block';
+        pdfCont.style.display = 'none';
+        rtiPanel.style.display = 'none';
+        scaleBar.style.display = 'none';
+
+        banner.style.display = 'block';
+        banner.innerHTML = `⚠️ <strong>Notice:</strong> Mesh not yet in local archive. Rendering public 3D photogrammetry model from Sketchfab (account <em>bookofthedead3d</em>). Full-fidelity mesh download pending owner login.`;
+
+        const uid = bundleData.metadata.sketchfabUid;
+        document.getElementById('sketchfab-frame').src = `https://sketchfab.com/models/${uid}/embed?autostart=1&ui_theme=dark`;
+      } else if (delivery === 'pdf') {
+        canvasCont.style.display = 'none';
+        sfCont.style.display = 'none';
+        pdfCont.style.display = 'flex';
+        rtiPanel.style.display = 'none';
+        scaleBar.style.display = 'none';
+
+        banner.style.display = 'block';
+        banner.innerHTML = `📄 <strong>3D-PDF Archive:</strong> This monument was published as an interactive 3D-PDF containing embedded U3D data.`;
+
+        document.getElementById('pdf-title').innerText = bundleData.metadata.title;
+        const pdfLink = document.getElementById('btn-download-pdf');
+        pdfLink.href = resolveDataPath(`objects/${currentObjectId}/bundle.json`);
+      }
+    }
+
+    // --- 8. Three.js Engine & OBJ/MTL Loading ---
+    function initThree() {
+      const container = document.getElementById('viewport-container');
+      const width = container.clientWidth || window.innerWidth;
+      const height = container.clientHeight || window.innerHeight;
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0a0c10);
+
+      camera = new THREE.PerspectiveCamera(45, width / height, 0.01, 1000);
+      camera.position.set(0, -0.05, 3.8);
+      camera.up.set(0, 1, 0);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      document.getElementById('canvas3d').appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.08;
+      controls.target.set(0, 0, 0);
+      controls.enableTouch = true;
+      controls.rotateSpeed = 0.8;
+      controls.zoomSpeed = 1.0;
+      controls.panSpeed = 0.8;
+
+      ambientLight = new THREE.AmbientLight(0xffffff, 0.25);
+      scene.add(ambientLight);
+
+      lightTargetObj = new THREE.Object3D();
+      scene.add(lightTargetObj);
+
+      directionalLight = new THREE.DirectionalLight(0xfff5dd, 1.6);
+      directionalLight.target = lightTargetObj;
+      scene.add(directionalLight);
+
+      pointLight = new THREE.PointLight(0xffecd0, 1.2, 4.0, 1.5);
+      scene.add(pointLight);
+
+      annotationGroup = new THREE.Group();
+      scene.add(annotationGroup);
+
+      reliefMaterial = new THREE.MeshPhongMaterial({
+        color: 0x888278,
+        specular: 0xffffff,
+        shininess: 45,
+        shading: THREE.SmoothShading
+      });
+
+      wireframeMaterial = new THREE.MeshBasicMaterial({
+        color: 0xe5b842,
+        wireframe: true
+      });
+
+      updateRakingLight();
+      animate();
+
+      window.addEventListener('resize', onWindowResize);
+      window.addEventListener('orientationchange', () => setTimeout(onWindowResize, 200));
+
+      // 3D Canvas Raycasting Click & Hover
+      const vContainer = document.getElementById('viewport-container');
+      vContainer.addEventListener('mousedown', (e) => mouseDownCoord = { x: e.clientX, y: e.clientY });
+      vContainer.addEventListener('mouseup', (e) => {
+        if (Math.hypot(e.clientX - mouseDownCoord.x, e.clientY - mouseDownCoord.y) < 8) {
+          handle3DClick(e);
+        }
+      });
+      vContainer.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) mouseDownCoord = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }, { passive: true });
+      vContainer.addEventListener('touchend', (e) => {
+        if (e.changedTouches.length === 1 && Math.hypot(e.changedTouches[0].clientX - mouseDownCoord.x, e.changedTouches[0].clientY - mouseDownCoord.y) < 10) {
+          handle3DClick(e.changedTouches[0]);
+        }
+      });
+      vContainer.addEventListener('mousemove', handle3DHover);
+    }
+
+    async function load3DMesh() {
+      if (!bundleData.model3D || !bundleData.model3D.obj) return;
+
+      if (object3D) {
+        scene.remove(object3D);
+        object3D = null;
+      }
+      while (annotationGroup.children.length > 0) {
+        annotationGroup.remove(annotationGroup.children[0]);
+      }
+      originalMaterials.clear();
+
+      const objRel = bundleData.model3D.obj;
+      const objUrl = resolveDataPath(`objects/${currentObjectId}/${objRel}`);
+      const baseDir = objUrl.substring(0, objUrl.lastIndexOf('/') + 1);
+      const mtlFile = objRel.substring(objRel.lastIndexOf('/') + 1).replace(/\.obj$/i, '.mtl');
+
+      return new Promise((resolve) => {
+        const mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath(baseDir);
+        mtlLoader.load(mtlFile, (materials) => {
+          materials.preload();
+          const objLoader = new THREE.OBJLoader();
+          objLoader.setMaterials(materials);
+          objLoader.setPath(baseDir);
+          objLoader.load(objRel.substring(objRel.lastIndexOf('/') + 1), (obj) => {
+            object3D = obj;
+            object3D.traverse((child) => {
+              if (child.isMesh) {
+                originalMaterials.set(child.uuid, child.material);
+                if (child.material) {
+                  child.material.shininess = 25;
+                  child.material.specular = new THREE.Color(0x333333);
+                }
+              }
+            });
+
+            // Centering matrix
+            const bbox = new THREE.Box3().setFromObject(object3D);
+            const size = new THREE.Vector3();
+            const center = new THREE.Vector3();
+            bbox.getSize(size);
+            bbox.getCenter(center);
+
+            const mMov = new THREE.Matrix4().makeTranslation(-center.x, -center.y, -center.z);
+            let q = bundleData.model3D.initialCamera?.quaternion;
+            if (q) {
+              rotationMatrix = new THREE.Matrix4().makeRotationFromQuaternion(new THREE.Quaternion(q.x, q.y, q.z, q.w));
+            } else {
+              rotationMatrix = new THREE.Matrix4().identity();
+            }
+            globalTransMatrix = new THREE.Matrix4().multiplyMatrices(rotationMatrix, mMov);
+
+            object3D.position.set(0, 0, 0);
+            object3D.rotation.set(0, 0, 0);
+            object3D.updateMatrix();
+            object3D.applyMatrix(globalTransMatrix);
+            scene.add(object3D);
+
+            if (bundleData.delivery === 'annotated') {
+              rebuildAnnotationLines();
+            }
+
+            const framing = getFrontFacingFraming();
+            camera.position.copy(framing.position);
+            controls.target.copy(framing.target);
+            camera.lookAt(framing.target);
+            resolve();
+          }, undefined, (err) => {
+            console.error('Error loading OBJ:', err);
+            resolve();
+          });
+        }, undefined, () => {
+          // Fallback if MTL fails: load OBJ alone
+          const objLoader = new THREE.OBJLoader();
+          objLoader.setPath(baseDir);
+          objLoader.load(objRel.substring(objRel.lastIndexOf('/') + 1), (obj) => {
+            object3D = obj;
+            scene.add(object3D);
+            resolve();
+          });
+        });
+      });
+    }
+
+    function getFrontFacingFraming() {
+      if (!object3D) return { position: new THREE.Vector3(0, -0.05, 3.8), target: new THREE.Vector3(0, 0, 0) };
+      const bbox = new THREE.Box3().setFromObject(object3D);
+      const size = new THREE.Vector3();
+      const center = new THREE.Vector3();
+      bbox.getSize(size);
+      bbox.getCenter(center);
+
+      const maxDim = Math.max(size.x, size.y, size.z) || 2.5;
+      const fovRad = (camera.fov * Math.PI) / 180;
+      const fitDist = (maxDim / 2) / Math.tan(fovRad / 2) * 1.35;
+      return { position: new THREE.Vector3(center.x, center.y, center.z + Math.max(3.2, fitDist)), target: center };
+    }
+
+    function rebuildAnnotationLines() {
+      if (!bundleData || !bundleData.spatialAnnotations) return;
+      while (annotationGroup.children.length > 0) {
+        annotationGroup.remove(annotationGroup.children[0]);
+      }
+
+      const thickness = parseInt(document.getElementById('line-thickness')?.value || 2);
+      const opacity = parseFloat(document.getElementById('line-opacity')?.value || 0.85);
+
+      Object.entries(bundleData.spatialAnnotations).forEach(([tag, area]) => {
+        if (!area.lines || !area.lines.length) return;
+        const geom = new THREE.Geometry();
+        area.lines.forEach(l => {
+          const v1 = new THREE.Vector3(l.from.x, l.from.y, l.from.z).applyMatrix4(globalTransMatrix);
+          const v2 = new THREE.Vector3(l.to.x, l.to.y, l.to.z).applyMatrix4(globalTransMatrix);
+          geom.vertices.push(v1, v2);
+        });
+
+        const mat = new THREE.LineBasicMaterial({
+          color: (tag === selectedAnnotationTag) ? 0x38bdf8 : 0xe5b842,
+          linewidth: thickness,
+          transparent: true,
+          opacity: (tag === selectedAnnotationTag) ? 1.0 : opacity
+        });
+
+        const lineMesh = new THREE.LineSegments(geom, mat);
+        lineMesh.userData = { tag };
+        annotationGroup.add(lineMesh);
+      });
+    }
+
+    function updateRakingLight() {
+      if (!directionalLight || !pointLight) return;
+      const deg = parseFloat(document.getElementById('light-angle').value);
+      const pitchDeg = parseFloat(document.getElementById('light-pitch')?.value || 20);
+      const intensity = parseFloat(document.getElementById('light-intensity').value);
+
+      document.getElementById('light-angle-val').innerText = `${deg}° (Pitch ${pitchDeg}°)`;
+
+      const rad = (deg * Math.PI) / 180;
+      const pitchRad = (pitchDeg * Math.PI) / 180;
+      const targetPos = controls ? controls.target : new THREE.Vector3(0, 0, 0);
+      lightTargetObj.position.copy(targetPos);
+
+      const torchDist = 1.6;
+      const dx = Math.cos(rad) * Math.cos(pitchRad) * torchDist;
+      const dy = Math.sin(rad) * Math.cos(pitchRad) * torchDist;
+      const dz = Math.sin(pitchRad) * torchDist;
+
+      directionalLight.position.set(targetPos.x + dx, targetPos.y + dy, targetPos.z + dz);
+      pointLight.position.set(targetPos.x + dx * 0.7, targetPos.y + dy * 0.7, targetPos.z + dz * 0.7);
+      directionalLight.intensity = intensity;
+      pointLight.intensity = intensity * 0.85;
+    }
+
+    function applyLightPreset(deg, pitch) {
+      autoLightOrbit = false;
+      document.getElementById('btn-auto-orbit').classList.remove('active');
+      document.getElementById('light-angle').value = deg;
+      if (pitch) document.getElementById('light-pitch').value = pitch;
+      updateRakingLight();
+    }
+
+    function toggleAutoLightOrbit() {
+      autoLightOrbit = !autoLightOrbit;
+      document.getElementById('btn-auto-orbit').classList.toggle('active', autoLightOrbit);
+      if (autoLightOrbit) autoLightAngle = parseFloat(document.getElementById('light-angle').value);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (autoLightOrbit) {
+        autoLightAngle = (autoLightAngle + 0.5) % 360;
+        document.getElementById('light-angle').value = autoLightAngle;
+        updateRakingLight();
+      }
+      if (controls) controls.update();
+      if (renderer && scene && camera && document.getElementById('canvas3d').style.display !== 'none') {
+        renderer.render(scene, camera);
+      }
+    }
+
+    function onWindowResize() {
+      const container = document.getElementById('viewport-container');
+      if (!container || !renderer || !camera) return;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    }
+
+    // --- 9. Raycasting & Picking ---
+    function handle3DClick(event) {
+      if (!scene || !camera || bundleData.delivery !== 'annotated') return;
+      const rect = renderer.domElement.getBoundingClientRect();
+      const mouse = new THREE.Vector2(
+        ((event.clientX - rect.left) / rect.width) * 2 - 1,
+        -((event.clientY - rect.top) / rect.height) * 2 + 1
+      );
+
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse, camera);
+
+      let closestTag = null;
+      let closestDist = Infinity;
+
+      annotationGroup.children.forEach(child => {
+        const intersects = raycaster.intersectObject(child);
+        if (intersects.length > 0 && intersects[0].distance < closestDist) {
+          closestDist = intersects[0].distance;
+          closestTag = child.userData.tag;
+        }
+      });
+
+      if (closestTag) {
+        selectArea(closestTag);
+      }
+    }
+
+    function handle3DHover(event) {
+      if (!scene || !camera || bundleData?.delivery !== 'annotated') return;
+      const rect = renderer.domElement.getBoundingClientRect();
+      const mouse = new THREE.Vector2(
+        ((event.clientX - rect.left) / rect.width) * 2 - 1,
+        -((event.clientY - rect.top) / rect.height) * 2 + 1
+      );
+
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse, camera);
+
+      let hitTag = null;
+      annotationGroup.children.forEach(child => {
+        if (raycaster.intersectObject(child).length > 0) {
+          hitTag = child.userData.tag;
+        }
+      });
+
+      const tooltip = document.getElementById('hover-tooltip');
+      if (hitTag) {
+        tooltip.style.display = 'block';
+        tooltip.style.left = `${event.clientX - rect.left}px`;
+        tooltip.style.top = `${event.clientY - rect.top}px`;
+        tooltip.innerText = hitTag;
+      } else {
+        tooltip.style.display = 'none';
+      }
+    }
+
+    function selectArea(tag) {
+      selectedAnnotationTag = tag;
+      rebuildAnnotationLines();
+
+      // Zoom camera to tag vertices if present
+      const area = bundleData.spatialAnnotations?.[tag];
+      if (area && area.lines && area.lines.length && controls) {
+        const avg = new THREE.Vector3();
+        let count = 0;
+        area.lines.forEach(l => {
+          avg.add(new THREE.Vector3(l.from.x, l.from.y, l.from.z));
+          count++;
+        });
+        avg.divideScalar(count).applyMatrix4(globalTransMatrix);
+        controls.target.copy(avg);
+      }
+
+      // Highlight in sidebar tabs
+      document.querySelectorAll(`[data-tag="${tag}"]`).forEach(el => {
+        el.classList.add('selected');
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    }
+
+    // --- 10. Tab Content Rendering ---
+    function renderOverviewTab() {
+      const meta = bundleData.metadata;
+      document.getElementById('overview-card-title').innerText = meta.title;
+      document.getElementById('overview-delivery-badge').innerText = bundleData.delivery.toUpperCase();
+      document.getElementById('overview-delivery-badge').className = `badge-delivery badge-${bundleData.delivery}`;
+      
+      const narrativeText = bundleData.narrative?.scholarlyText || bundleData.narrative?.summary || meta.title;
+      document.getElementById('overview-narrative').innerText = narrativeText;
+
+      document.getElementById('overview-museum').innerText = meta.museum || 'PAHMA';
+      document.getElementById('overview-accession').innerText = meta.accession || '—';
+      document.getElementById('overview-class').innerText = bundleData.delivery.toUpperCase();
+      document.getElementById('overview-bag').innerText = bundleData.model3D?.sourceBag || 'verified bag';
+      document.getElementById('overview-credit').innerText = bundleData.rights?.credit || bundleData.narrative?.copyright || '';
+    }
+
+    function renderEpigraphyTab() {
+      const list = document.getElementById('epigraphy-list');
+      const pillsCont = document.getElementById('section-pills-container');
+      list.innerHTML = '';
+      pillsCont.innerHTML = '';
+
+      const sections = bundleData.epigraphy?.textSections || [];
+      document.getElementById('count-epigraphy').innerText = sections.length;
+
+      if (!sections.length) {
+        list.innerHTML = `
+          <div class="card">
+            <p style="color: var(--text-secondary); font-size: 0.84rem; line-height: 1.5;">
+              No inscription text tiers are recorded upstream for this monument. Explore the 3D model and Overview tab for historical context.
+            </p>
+          </div>`;
         return;
       }
-      await renderObject(reg, p.object);
+
+      // Section Filter Pills
+      const allPill = document.createElement('button');
+      allPill.className = 'pill active';
+      allPill.innerText = 'All Inscriptions';
+      allPill.onclick = () => filterSections('all');
+      pillsCont.appendChild(allPill);
+
+      sections.forEach((sec, sIdx) => {
+        const pill = document.createElement('button');
+        pill.className = 'pill';
+        pill.innerText = sec.title || `Section ${sIdx + 1}`;
+        pill.onclick = () => filterSections(sec.id || sIdx);
+        pillsCont.appendChild(pill);
+
+        const secDiv = document.createElement('div');
+        secDiv.className = 'card section-group';
+        secDiv.dataset.secid = sec.id || sIdx;
+        secDiv.innerHTML = `<div class="card-title">${sec.title || sec.id}</div>`;
+
+        (sec.fragments || []).forEach((frag, fIdx) => {
+          const fragCard = document.createElement('div');
+          fragCard.className = 'frag-card';
+          fragCard.dataset.tag = frag.phraseRef || sec.id || '';
+          fragCard.innerHTML = `
+            <div class="frag-card-header">
+              <span class="column-badge">Fragment ${fIdx + 1}</span>
+              ${frag.phraseRef ? `<button class="btn-breakdown" onclick="openPhraseModal('${frag.phraseRef}')">Word Breakdown ↗</button>` : ''}
+            </div>
+            ${frag.resEncoding ? `<div class="hiero-box"><canvas class="res" data-res="${frag.resEncoding}">${frag.resEncoding}</canvas></div>` : ''}
+            <div class="transliteration">${frag.transliteration || ''}</div>
+            <div class="translation">${frag.translation || ''}</div>
+          `;
+          fragCard.onclick = () => selectArea(fragCard.dataset.tag);
+          secDiv.appendChild(fragCard);
+        });
+
+        list.appendChild(secDiv);
+      });
     }
 
-    main().catch((err) => {
-      document.getElementById("app").innerHTML = `<div class="card"><p>Failed to load corpus: ${err.message}</p></div>`;
+    function filterSections(secId) {
+      document.querySelectorAll('#section-pills-container .pill').forEach(p => p.classList.remove('active'));
+      event.target.classList.add('active');
+      document.querySelectorAll('.section-group').forEach(sg => {
+        sg.style.display = (secId === 'all' || sg.dataset.secid == secId) ? 'block' : 'none';
+      });
+    }
+
+    function renderDeitiesTab() {
+      const famCont = document.getElementById('family-chips');
+      const deityCont = document.getElementById('deities-chips');
+      famCont.innerHTML = '';
+      deityCont.innerHTML = '';
+
+      // Check entities if present, or extract from spatialAnnotations
+      const entities = bundleData.entities;
+      if (entities && entities.gods && entities.gods.length) {
+        entities.gods.forEach(g => addDeityChip(g.name, g.role, g.regionTags?.[0]));
+      } else if (bundleData.spatialAnnotations) {
+        const DEITY_MAP = {
+          'nut': 'Nut (Sky Goddess)',
+          'osiris': 'Osiris (Lord of the Underworld)',
+          'anubis': 'Anubis (Embalmer & Guide)',
+          'isis': 'Isis (Great Protectress)',
+          'nephthys': 'Nephthys (Mistress of the House)',
+          'hapi': 'Hapi (Son of Horus)',
+          'imset': 'Imsety (Son of Horus)',
+          'duamutef': 'Duamutef (Son of Horus)',
+          'qebehsenuef': 'Qebehsenuef (Son of Horus)',
+          'horus': 'Horus (Avenger & Protector)',
+          're': 'Re (Sun God)'
+        };
+        Object.keys(bundleData.spatialAnnotations).forEach(tag => {
+          for (let [k, label] of Object.entries(DEITY_MAP)) {
+            if (tag.toLowerCase().includes(k)) {
+              addDeityChip(label, 'Protective Entity', tag);
+              break;
+            }
+          }
+        });
+      }
+
+      if (!deityCont.children.length) {
+        deityCont.innerHTML = '<span style="color: var(--text-secondary); font-size: 0.8rem;">No explicit deity tags for this monument.</span>';
+      }
+
+      if (bundleData.narrative?.ownerName) {
+        const chip = document.createElement('span');
+        chip.className = 'entity-chip';
+        chip.innerText = bundleData.narrative.ownerName;
+        famCont.appendChild(chip);
+      } else {
+        famCont.innerHTML = `<span style="color: var(--text-secondary); font-size: 0.8rem;">${bundleData.metadata.title}</span>`;
+      }
+    }
+
+    function addDeityChip(label, role, tag) {
+      const chip = document.createElement('span');
+      chip.className = 'entity-chip';
+      chip.dataset.tag = tag || '';
+      chip.innerText = label;
+      chip.onclick = () => {
+        if (tag) selectArea(tag);
+      };
+      document.getElementById('deities-chips').appendChild(chip);
+    }
+
+    function renderLexiconTab() {
+      const list = document.getElementById('lexicon-list');
+      list.innerHTML = '';
+      const entries = bundleData.lexicon?.entries || [];
+      document.getElementById('count-lexicon').innerText = entries.length;
+
+      if (!entries.length) {
+        list.innerHTML = `
+          <div class="card">
+            <p style="color: var(--text-secondary); font-size: 0.84rem;">
+              No vocabulary lexicon entries recorded for this monument.
+            </p>
+          </div>`;
+        return;
+      }
+
+      entries.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'lex-item';
+        row.dataset.tag = item.id;
+        row.innerHTML = `
+          <div>
+            <span class="lex-translit">${item.transliteration}</span>
+            ${item.partOfSpeech ? `<span class="lex-pos">${item.partOfSpeech}</span>` : ''}
+          </div>
+          <div class="lex-meaning">${item.translation}</div>
+        `;
+        row.onclick = () => selectArea(item.id);
+        list.appendChild(row);
+      });
+    }
+
+    function renderProvenanceTab() {
+      const cont = document.getElementById('provenance-content');
+      cont.innerHTML = `
+        <p style="margin-bottom: 10px;">
+          ${bundleData.narrative?.summary || bundleData.status || 'Archival archaeological monument.'}
+        </p>
+        <p style="font-size: 0.78rem; color: var(--text-secondary);">
+          Accession ID: ${bundleData.metadata.accession || 'N/A'}<br>
+          Collection: ${bundleData.metadata.museum || 'UC Berkeley'}<br>
+          Preservation Source: ${bundleData.model3D?.sourceBag || 'BagIt Vault'}
+        </p>
+      `;
+    }
+
+    // --- 11. Hieroglyph Canvas Rasterization ---
+    function renderAllHieroglyphs(force = false) {
+      if (typeof parseResLite === 'undefined') return;
+      document.querySelectorAll('canvas.res').forEach(hi => {
+        if (!force && hi.dataset.rendered === 'true') return;
+        const code = hi.dataset.res || hi.textContent.trim();
+        if (!code) return;
+        try {
+          const resLite = parseResLite(code);
+          const resContext = new ResContext();
+          resContext.emSize = 38;
+          const div = makeDivision(resLite, Number.MAX_VALUE, resContext, false);
+          const ctx = hi.getContext('2d');
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.clearRect(0, 0, hi.width, hi.height);
+          div.render(hi);
+          hi.dataset.rendered = 'true';
+        } catch (e) {
+          console.warn('RESLite render error:', e);
+        }
+      });
+    }
+
+    async function ensureFontsAndRender() {
+      try {
+        if (document.fonts) {
+          await Promise.all([
+            document.fonts.load('38px NewGardiner'),
+            document.fonts.load('38px HieroglyphicAux'),
+            document.fonts.load('16px Transliteration')
+          ]);
+        }
+      } catch (e) {}
+
+      let attempts = 0;
+      function check() {
+        attempts++;
+        if (typeof fontsLoaded !== 'function' || fontsLoaded() === '' || attempts > 20) {
+          renderAllHieroglyphs(true);
+        } else {
+          setTimeout(check, 80);
+        }
+      }
+      check();
+    }
+
+    // --- 12. Phrase Modal ---
+    function openPhraseModal(phraseId) {
+      const phrase = bundleData.epigraphy?.phrases?.[phraseId];
+      if (!phrase) return;
+      document.getElementById('phrase-modal-title').innerText = `Breakdown: ${phraseId}`;
+      const cont = document.getElementById('phrase-words-list');
+      cont.innerHTML = '';
+
+      (phrase.words || []).forEach(w => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style.marginBottom = '8px';
+        card.innerHTML = `
+          ${w.resEncoding ? `<div class="hiero-box"><canvas class="res" data-res="${w.resEncoding}">${w.resEncoding}</canvas></div>` : ''}
+          <div class="transliteration">${w.transliteration || ''}</div>
+          <div class="translation">${w.translation || ''}</div>
+        `;
+        cont.appendChild(card);
+      });
+
+      document.getElementById('modal-phrase').style.display = 'flex';
+      setTimeout(() => renderAllHieroglyphs(true), 50);
+    }
+
+    // --- 13. Global Search & Autocomplete in Inspector ---
+    function buildSearchIndex() {
+      searchIndex = [];
+      document.querySelectorAll('#lexicon-list .lex-item').forEach(el => {
+        searchIndex.push({
+          el,
+          category: 'Lexicon',
+          primary: el.querySelector('.lex-translit')?.innerText || '',
+          secondary: el.querySelector('.lex-meaning')?.innerText || '',
+          text: (el.textContent || '').toLowerCase()
+        });
+      });
+
+      document.querySelectorAll('#epigraphy-list .frag-card').forEach(el => {
+        searchIndex.push({
+          el,
+          category: 'Inscription',
+          primary: el.querySelector('.transliteration')?.innerText || '',
+          secondary: el.querySelector('.translation')?.innerText || '',
+          text: (el.textContent || '').toLowerCase()
+        });
+      });
+
+      document.querySelectorAll('#deities-chips .entity-chip').forEach(el => {
+        searchIndex.push({
+          el,
+          category: 'Deity',
+          primary: el.innerText,
+          secondary: 'Protective Deity',
+          text: (el.textContent || '').toLowerCase()
+        });
+      });
+    }
+
+    function initGlobalSearch() {
+      const input = document.getElementById('global-search');
+      const popup = document.getElementById('autocomplete-popup');
+      const clearBtn = document.getElementById('btn-clear-search');
+
+      input.addEventListener('input', () => {
+        const q = input.value.trim().toLowerCase();
+        if (!q) {
+          popup.style.display = 'none';
+          document.getElementById('search-stats').style.display = 'none';
+          return;
+        }
+
+        searchMatches = searchIndex.filter(item => item.text.includes(q));
+        document.getElementById('search-match-count').innerText = `${searchMatches.length} matches`;
+        document.getElementById('search-stats').style.display = 'flex';
+
+        if (searchMatches.length > 0) {
+          popup.innerHTML = '';
+          searchMatches.slice(0, 8).forEach((item, idx) => {
+            const div = document.createElement('div');
+            div.className = 'autocomplete-item';
+            div.innerHTML = `
+              <div class="autocomplete-item-header">
+                <span class="autocomplete-primary">${item.primary}</span>
+                <span class="autocomplete-tag">${item.category}</span>
+              </div>
+              <div class="autocomplete-secondary">${item.secondary}</div>
+            `;
+            div.onclick = () => {
+              popup.style.display = 'none';
+              item.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              item.el.click();
+            };
+            popup.appendChild(div);
+          });
+          popup.style.display = 'block';
+        } else {
+          popup.style.display = 'none';
+        }
+      });
+
+      clearBtn.addEventListener('click', () => {
+        input.value = '';
+        popup.style.display = 'none';
+        document.getElementById('search-stats').style.display = 'none';
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          popup.style.display = 'none';
+          if (searchMatches.length > 0) {
+            currentSearchMatchIndex = (currentSearchMatchIndex + 1) % searchMatches.length;
+            const target = searchMatches[currentSearchMatchIndex];
+            target.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            target.el.click();
+          }
+        } else if (e.key === 'Escape') {
+          input.value = '';
+          popup.style.display = 'none';
+          document.getElementById('search-stats').style.display = 'none';
+        }
+      });
+    }
+
+    // --- 14. Mobile Drawer Handling ---
+    function openMobileDrawer() {
+      document.getElementById('inspector-panel').classList.add('drawer-open');
+      document.getElementById('mobile-drawer-backdrop').classList.add('active');
+    }
+
+    function closeMobileDrawer() {
+      document.getElementById('inspector-panel').classList.remove('drawer-open');
+      document.getElementById('mobile-drawer-backdrop').classList.remove('active');
+    }
+
+    // --- 15. UI Listeners & Initialization ---
+    document.addEventListener('DOMContentLoaded', async () => {
+      populateObjectPicker();
+      renderGallery();
+      renderStatus();
+
+      // View Buttons
+      document.getElementById('btn-gallery').onclick = () => navigate('gallery');
+      document.getElementById('btn-status').onclick = () => navigate('status');
+      document.getElementById('btn-mobile-light').onclick = () => {
+        document.getElementById('viewport-controls-panel').classList.toggle('mobile-open');
+      };
+      document.getElementById('btn-mobile-drawer').onclick = openMobileDrawer;
+      document.getElementById('btn-shortcuts').onclick = () => {
+        document.getElementById('modal-shortcuts').style.display = 'flex';
+      };
+      document.getElementById('btn-datasource').onclick = () => {
+        document.getElementById('current-datasource-text').innerText = getDataSource();
+        document.getElementById('modal-datasource').style.display = 'flex';
+      };
+      document.getElementById('btn-reset-cam').onclick = () => {
+        if (object3D && camera && controls) {
+          const framing = getFrontFacingFraming();
+          camera.position.copy(framing.position);
+          controls.target.copy(framing.target);
+          camera.lookAt(framing.target);
+        }
+      };
+      document.getElementById('btn-toggle-annotations').onclick = () => {
+        if (annotationGroup) annotationGroup.visible = !annotationGroup.visible;
+      };
+      document.getElementById('btn-toggle-zen').onclick = () => {
+        document.getElementById('inspector-panel').classList.toggle('collapsed');
+        setTimeout(onWindowResize, 200);
+      };
+
+      // Tab Buttons
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          btn.classList.add('active');
+          const targetTab = document.getElementById(btn.dataset.tab);
+          if (targetTab) targetTab.classList.add('active');
+          if (btn.dataset.tab === 'tab-epigraphy') setTimeout(() => renderAllHieroglyphs(true), 50);
+        };
+      });
+
+      // Gallery Filters & Search
+      let activeFilter = 'all';
+      document.querySelectorAll('#gallery-filter-pills .filter-pill').forEach(pill => {
+        pill.onclick = () => {
+          document.querySelectorAll('#gallery-filter-pills .filter-pill').forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          activeFilter = pill.dataset.filter;
+          renderGallery(activeFilter, document.getElementById('gallery-search').value);
+        };
+      });
+
+      document.getElementById('gallery-search').addEventListener('input', (e) => {
+        renderGallery(activeFilter, e.target.value);
+      });
+
+      // RTI Range inputs
+      document.getElementById('light-angle').addEventListener('input', updateRakingLight);
+      document.getElementById('light-pitch').addEventListener('input', updateRakingLight);
+      document.getElementById('light-intensity').addEventListener('input', updateRakingLight);
+      document.getElementById('ambient-intensity').addEventListener('input', (e) => {
+        if (ambientLight) ambientLight.intensity = parseFloat(e.target.value);
+      });
+
+      document.getElementById('mat-mode').addEventListener('change', (e) => {
+        if (!object3D) return;
+        const mode = e.target.value;
+        object3D.traverse((child) => {
+          if (child.isMesh) {
+            if (mode === 'wireframe') child.material = wireframeMaterial;
+            else if (mode === 'relief') child.material = reliefMaterial;
+            else {
+              const orig = originalMaterials.get(child.uuid);
+              if (orig) child.material = orig;
+            }
+            child.material.needsUpdate = true;
+          }
+        });
+      });
+
+      initGlobalSearch();
+
+      // Keyboard Shortcuts
+      window.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+        if (e.key === '?' || (e.key === '/' && (e.metaKey || e.ctrlKey))) {
+          document.getElementById('modal-shortcuts').style.display = 'flex';
+        } else if (e.key === 'g' || e.key === 'G') {
+          navigate('gallery');
+        } else if (e.key === 's' || e.key === 'S') {
+          navigate('status');
+        } else if (e.key === 'z' || e.key === 'Z') {
+          document.getElementById('inspector-panel').classList.toggle('collapsed');
+          setTimeout(onWindowResize, 200);
+        } else if (e.key === 'r' || e.key === 'R') {
+          document.getElementById('btn-reset-cam').click();
+        } else if (e.key === 'a' || e.key === 'A') {
+          document.getElementById('btn-toggle-annotations').click();
+        }
+      });
+
+      // Initial Route Parse & Boot
+      const route = parseRouteParams();
+      navigate(route.view, route.object, false);
     });
   </script>
 </body>
