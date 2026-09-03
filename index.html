@@ -9,20 +9,17 @@
   <style>
     @font-face {
       font-family: 'NewGardiner';
-      src: url('data/fonts/NewGardiner.ttf') format('truetype'),
-           url('raw_data/psamtik/NewGardiner.ttf') format('truetype');
+      src: url('data/fonts/NewGardiner.ttf') format('truetype');
       font-display: block;
     }
     @font-face {
       font-family: 'HieroglyphicAux';
-      src: url('data/fonts/HieroglyphicAux.ttf') format('truetype'),
-           url('raw_data/psamtik/HieroglyphicAux.ttf') format('truetype');
+      src: url('data/fonts/HieroglyphicAux.ttf') format('truetype');
       font-display: block;
     }
     @font-face {
       font-family: 'Transliteration';
-      src: url('data/fonts/DejaVuSans-Bold.ttf') format('truetype'),
-           url('raw_data/psamtik/DejaVuSans-Bold.ttf') format('truetype');
+      src: url('data/fonts/DejaVuSans-Bold.ttf') format('truetype');
       font-display: swap;
     }
 
@@ -200,20 +197,21 @@
       color: var(--accent);
     }
 
-    /* --- Views Architecture --- */
+    /* --- Views Architecture: Full-Page Isolation --- */
     .platform-view {
-      display: none;
+      display: none !important;
       width: 100%;
       height: calc(100vh - var(--header-height));
       height: calc(100dvh - var(--header-height));
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
     }
-    .platform-view.active {
-      display: block;
+    #gallery-view.active,
+    #status-view.active {
+      display: block !important;
     }
     #explorer-view.active {
-      display: flex;
+      display: flex !important;
       overflow: hidden;
     }
 
@@ -499,7 +497,6 @@
       width: 100%;
       height: calc(100vh - var(--header-height));
       height: calc(100dvh - var(--header-height));
-      display: flex;
     }
 
     #viewport-container {
@@ -1096,7 +1093,7 @@
       height: 100%;
       background: var(--bg-primary);
       z-index: 300;
-      display: flex;
+      display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -1232,8 +1229,8 @@
         </a>
         <div class="header-titles">
           <div class="header-title-row">
-            <span id="header-object-title" class="header-main-title">Loading collection...</span>
-            <span id="header-museum-badge" class="badge-museum">PAHMA</span>
+            <span id="header-object-title" class="header-main-title">Collection Gallery (24 Monuments)</span>
+            <span id="header-museum-badge" class="badge-museum">ALL COLLECTIONS</span>
           </div>
           <span id="header-subtitle" class="header-subtitle">UC Berkeley Book of the Dead in 3D</span>
         </div>
@@ -1250,9 +1247,9 @@
           <optgroup label="3D-PDF Archive" id="optgroup-pdf"></optgroup>
         </select>
 
-        <button class="btn" id="btn-nav-gallery" onclick="navigate('gallery')">🏛 Gallery</button>
+        <button class="btn btn-active" id="btn-nav-gallery" onclick="navigate('gallery')">🏛 Gallery</button>
         <button class="btn" id="btn-nav-status" onclick="navigate('status')">📊 Status</button>
-        <button class="btn" id="btn-data-source" title="Active Data Source: Local Cache (data/)">📦</button>
+        <button class="btn" id="btn-data-source" title="Active Data Source: Bundled relative data/ repository">📦</button>
         <button class="btn" id="btn-shortcuts" title="Keyboard Shortcuts">⌨</button>
         <button class="btn" id="btn-zen" title="Toggle Zen Mode">⛶</button>
         <a href="https://github.com/aculich/ucb-3dcoffins-viewer" target="_blank" rel="noopener noreferrer" class="btn" title="View Source on GitHub">
@@ -1261,8 +1258,8 @@
       </div>
     </header>
 
-    <!-- VIEW 1: Collection Gallery -->
-    <div id="gallery-view" class="platform-view">
+    <!-- VIEW 1: Collection Gallery (Full-Page Default) -->
+    <div id="gallery-view" class="platform-view active">
       <div class="gallery-container">
         <div class="gallery-hero">
           <h1>Corpus of Ancient Egyptian 3D Coffins</h1>
@@ -1288,7 +1285,7 @@
       </div>
     </div>
 
-    <!-- VIEW 2: Corpus Status Table -->
+    <!-- VIEW 2: Corpus Status Table (Full-Page View) -->
     <div id="status-view" class="platform-view">
       <div class="status-container">
         <div class="status-hero">
@@ -1335,8 +1332,8 @@
       </div>
     </div>
 
-    <!-- VIEW 3: Unified 3D Explorer -->
-    <div id="explorer-view" class="platform-view active">
+    <!-- VIEW 3: Unified 3D Explorer (Full-Page Interactive Stage) -->
+    <div id="explorer-view" class="platform-view">
       <!-- 3D Viewport Stage -->
       <div id="viewport-container">
         <div id="canvas3d"></div>
@@ -1445,7 +1442,7 @@
         <!-- Search Bar with Autocomplete Popup -->
         <div class="search-container">
           <div class="search-input-wrapper">
-            <input type="text" id="global-search" class="search-input" placeholder="Search inscriptions, deities, or vocabulary...">
+            <input type="text" id="global-search" class="search-input" placeholder="Search inscriptions, deities, or vocabulary..." autocomplete="off">
             <button id="btn-clear-search" class="btn-clear-search">×</button>
           </div>
           <div id="autocomplete-popup"></div>
@@ -1596,19 +1593,13 @@
       <button class="modal-close" onclick="closeModal()">×</button>
       <div class="card-title">📦 Asset Data Source Resolver</div>
       <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.45;">
-        Configure which asset repository or cloud storage tier supplies 3D photogrammetric meshes, MTL materials, high-res textures, and Gardiner fonts:
+        The viewer resolves all 3D meshes, MTL materials, textures, and Gardiner fonts using relative paths served directly with the application:
       </p>
       <div style="display: flex; flex-direction: column; gap: 10px;">
-        <button class="btn" style="justify-content: flex-start; padding: 10px 14px;" onclick="switchDataSource('local')">
+        <button class="btn btn-active" style="justify-content: flex-start; padding: 10px 14px;" onclick="switchDataSource('bundled')">
           <div>
-            <div style="font-weight: 700;">🏠 Local Cache (data/)</div>
-            <div style="font-size: 0.72rem; color: var(--text-secondary);">Direct filesystem access via portless localhost dev server. Zero latency.</div>
-          </div>
-        </button>
-        <button class="btn" style="justify-content: flex-start; padding: 10px 14px;" onclick="switchDataSource('gh')">
-          <div>
-            <div style="font-weight: 700;">🐙 GitHub Data Repo (ucb-3dcoffins-data)</div>
-            <div style="font-size: 0.72rem; color: var(--text-secondary);">Public GitHub Pages CDN data slice (136 MB). Zero cloud egress fees.</div>
+            <div style="font-weight: 700;">📦 Bundled Data Repo (Default)</div>
+            <div style="font-size: 0.72rem; color: var(--text-secondary);">Direct relative path data/ served directly alongside index.html. Fast and zero-config.</div>
           </div>
         </button>
         <button class="btn" style="justify-content: flex-start; padding: 10px 14px;" onclick="switchDataSource('gcs')">
@@ -1624,7 +1615,7 @@
   <!-- Loading Screen -->
   <div id="loading-screen">
     <div class="spinner"></div>
-    <div id="loading-text" style="color: var(--accent); font-weight: 600; font-size: 0.95rem;">Initializing Book of the Dead in 3D...</div>
+    <div id="loading-text" style="color: var(--accent); font-weight: 600; font-size: 0.95rem;">Loading monument 3D model...</div>
   </div>
 
   <!-- Main Unified JavaScript Application -->
@@ -2051,7 +2042,7 @@
   ]
 };
 
-    // Epigraphy fragment-to-spatial-tag mapping for worked example and generalized lookups
+    // Epigraphy fragment-to-spatial-tag mapping
     const fragmentTagMap = {
       'text:front_0': 'text:psamtik1',
       'text:front_1': 'text:psamtik2',
@@ -2075,8 +2066,8 @@
 
     // Global State
     let bundleData = null;
-    let currentObjectId = 'pahma-5-522';
-    let currentView = 'explorer'; // 'explorer', 'gallery', 'status'
+    let currentObjectId = null;
+    let currentView = 'gallery'; // 'gallery' by default, 'status', or 'explorer'
 
     // Three.js & RTI State
     let scene, camera, renderer, controls, object3D;
@@ -2116,13 +2107,10 @@
     // Raycasting for 3D area picking
     let mouseDownCoord = { x: 0, y: 0 };
 
-    // --- 1. Multi-Tier Data Source Resolver ---
+    // --- 1. Robust Relative Data Path Resolver ---
     function getDataSource() {
       const p = new URLSearchParams(window.location.search);
-      const ds = p.get('data_source');
-      if (ds) return ds;
-      if (window.location.hostname.includes('github.io')) return 'gh';
-      return 'local';
+      return p.get('data_source') || 'bundled';
     }
 
     function resolveDataPath(relPath) {
@@ -2132,18 +2120,20 @@
         return customBase.replace(/\/?$/, '/') + relPath;
       }
       const ds = getDataSource();
-      if (ds === 'gh') {
-        return `https://aculich.github.io/ucb-3dcoffins-data/data/${relPath}`;
-      } else if (ds === 'gcs') {
+      if (ds === 'gcs') {
         return `https://storage.googleapis.com/ucb-3dcoffins-public/data/${relPath}`;
       }
-      // Default: Local development cache
+      // Relative path: works universally on localhost, custom ports, and GitHub Pages!
       return `data/${relPath}`;
     }
 
     function switchDataSource(ds) {
       const url = new URL(window.location.href);
-      url.searchParams.set('data_source', ds);
+      if (ds === 'bundled') {
+        url.searchParams.delete('data_source');
+      } else {
+        url.searchParams.set('data_source', ds);
+      }
       window.location.href = url.toString();
     }
 
@@ -2158,24 +2148,28 @@
       const viewParam = params.get('view');
       const objParam = params.get('object');
 
-      if (viewParam === 'gallery') {
-        navigate('gallery', null, false);
+      if (objParam) {
+        navigate('explorer', objParam, false);
       } else if (viewParam === 'status') {
         navigate('status', null, false);
+      } else if (viewParam === 'explorer') {
+        navigate('explorer', 'pahma-5-522', false);
       } else {
-        const targetId = objParam || 'pahma-5-522';
-        navigate('explorer', targetId, false);
+        // DEFAULT VIEW: Full Collection Gallery
+        navigate('gallery', null, false);
       }
 
-      window.addEventListener('popstate', (e) => {
+      window.addEventListener('popstate', () => {
         const p = new URLSearchParams(window.location.search);
-        const v = p.get('view') || 'explorer';
-        const o = p.get('object') || 'pahma-5-522';
-        if (v === 'gallery') switchView('gallery');
-        else if (v === 'status') switchView('status');
-        else {
+        const obj = p.get('object');
+        const view = p.get('view');
+        if (obj) {
           switchView('explorer');
-          if (o !== currentObjectId) loadObject(o);
+          if (obj !== currentObjectId) loadObject(obj);
+        } else if (view === 'status') {
+          switchView('status');
+        } else {
+          switchView('gallery');
         }
       });
     }
@@ -2284,7 +2278,7 @@
         card.className = 'coffin-card';
         card.onclick = () => navigate('explorer', o.id);
 
-        let thumbSrc = 'raw_data/psamtik/doctor-scaled.jpg';
+        let thumbSrc = resolveDataPath('objects/pahma-5-522/thumbnail.jpg');
         if (o.thumbnail) {
           thumbSrc = resolveDataPath(`objects/${o.id}/${o.thumbnail}`);
         } else if (o.delivery === 'embed' && o.sketchfabUid) {
@@ -2306,7 +2300,7 @@
 
         card.innerHTML = `
           <div class="coffin-card-thumb">
-            <img src="${thumbSrc}" alt="${o.title}" loading="lazy" onerror="this.onerror=null; this.src='raw_data/psamtik/doctor-scaled.jpg';">
+            <img src="${thumbSrc}" alt="${o.title}" loading="lazy" onerror="this.onerror=null; this.src='data/objects/pahma-5-522/thumbnail.jpg';">
             ${deliveryBadges[o.delivery] || ''}
           </div>
           <div class="coffin-card-body">
@@ -2979,8 +2973,10 @@
     function onWindowResize() {
       if (!camera || !renderer) return;
       const container = document.getElementById('viewport-container');
+      if (!container) return;
       const width = container.clientWidth;
       const height = container.clientHeight;
+      if (width === 0 || height === 0) return;
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
@@ -3007,7 +3003,9 @@
       }
 
       if (controls) controls.update();
-      if (renderer && scene && camera) renderer.render(scene, camera);
+      if (renderer && scene && camera && currentView === 'explorer') {
+        renderer.render(scene, camera);
+      }
     }
 
     // --- 11. Inspector Tabs Rendering ---
@@ -3364,26 +3362,40 @@
       const clearBtn = document.getElementById('btn-clear-search');
       const popup = document.getElementById('autocomplete-popup');
 
-      clearBtn.onclick = () => {
+      clearBtn.addEventListener('click', () => {
         input.value = '';
         clearSearch();
         hideAutocomplete();
-      };
+        resetCamera();
+        input.focus();
+      });
 
-      input.oninput = () => {
-        const val = input.value.trim();
+      input.addEventListener('input', (e) => {
+        const val = e.target.value;
         clearBtn.style.display = val ? 'block' : 'none';
         suppressAutocompleteUntilTyping = false;
 
         clearTimeout(searchDebounceTimer);
-        searchDebounceTimer = setTimeout(() => filterGlobalSearch(val), 60);
+        searchDebounceTimer = setTimeout(() => {
+          filterGlobalSearch(val);
+        }, 40);
 
         clearTimeout(autocompleteDebounceTimer);
-        autocompleteDebounceTimer = setTimeout(() => showAutocompleteSuggestions(val), 80);
-      };
+        if (val.trim().length >= 1 && !suppressAutocompleteUntilTyping) {
+          autocompleteDebounceTimer = setTimeout(() => {
+            if (!suppressAutocompleteUntilTyping) {
+              showAutocompleteSuggestions(val.trim());
+            }
+          }, 150);
+        } else {
+          hideAutocomplete();
+        }
+      });
 
-      input.onkeydown = (e) => {
-        if (popup.style.display === 'block') {
+      input.addEventListener('keydown', (e) => {
+        const isPopupVisible = popup.style.display === 'block';
+
+        if (isPopupVisible) {
           if (e.key === 'ArrowDown') {
             e.preventDefault();
             navigateAutocomplete(1);
@@ -3394,32 +3406,52 @@
             return;
           } else if (e.key === 'Enter') {
             e.preventDefault();
+            clearTimeout(autocompleteDebounceTimer);
+            suppressAutocompleteUntilTyping = true;
             if (activeAutocompleteIndex >= 0 && currentCompletions[activeAutocompleteIndex]) {
               selectAutocompleteItem(currentCompletions[activeAutocompleteIndex]);
             } else {
-              cycleSearchMatch();
+              hideAutocomplete();
+              cycleSearchMatch(1);
             }
             return;
           } else if (e.key === 'Escape') {
+            e.preventDefault();
+            clearTimeout(autocompleteDebounceTimer);
             hideAutocomplete();
             return;
           }
-        } else if (e.key === 'Enter') {
+        }
+
+        if (e.key === 'Enter') {
           e.preventDefault();
-          cycleSearchMatch();
+          clearTimeout(autocompleteDebounceTimer);
+          suppressAutocompleteUntilTyping = true;
+          hideAutocomplete();
+          cycleSearchMatch(e.shiftKey ? -1 : 1);
         } else if (e.key === 'Escape') {
-          if (input.value) {
+          clearTimeout(autocompleteDebounceTimer);
+          hideAutocomplete();
+          if (input.value || selectedTag || searchMatches.length > 0) {
             input.value = '';
             clearSearch();
+            input.blur();
           } else {
             resetCamera();
           }
         }
-      };
+      });
+
+      // Dismiss popup when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-container')) {
+          hideAutocomplete();
+        }
+      });
     }
 
     function showAutocompleteSuggestions(query) {
-      if (suppressAutocompleteUntilTyping || !query || query.length < 2) {
+      if (suppressAutocompleteUntilTyping || !query || query.length < 1) {
         hideAutocomplete();
         return;
       }
@@ -3435,11 +3467,21 @@
 
       const popup = document.getElementById('autocomplete-popup');
       popup.innerHTML = '';
+      activeAutocompleteIndex = -1;
+
       currentCompletions.forEach((comp, idx) => {
         const div = document.createElement('div');
         div.className = 'autocomplete-item';
         div.innerHTML = `<span class="autocomplete-badge">${comp.type}</span> <strong>${comp.primary}</strong> — <em>${comp.secondary}</em>`;
-        div.onclick = () => selectAutocompleteItem(comp);
+        div.addEventListener('click', (e) => {
+          e.stopPropagation();
+          selectAutocompleteItem(comp);
+        });
+        div.addEventListener('mouseenter', () => {
+          document.querySelectorAll('.autocomplete-item').forEach(i => i.classList.remove('active'));
+          div.classList.add('active');
+          activeAutocompleteIndex = idx;
+        });
         popup.appendChild(div);
       });
       popup.style.display = 'block';
@@ -3455,8 +3497,11 @@
     }
 
     function selectAutocompleteItem(comp) {
+      clearTimeout(autocompleteDebounceTimer);
+      clearTimeout(searchDebounceTimer);
       suppressAutocompleteUntilTyping = true;
       hideAutocomplete();
+
       const input = document.getElementById('global-search');
       input.value = comp.primary;
       filterGlobalSearch(comp.primary);
@@ -3471,15 +3516,19 @@
     }
 
     function hideAutocomplete() {
+      clearTimeout(autocompleteDebounceTimer);
       const popup = document.getElementById('autocomplete-popup');
-      popup.style.display = 'none';
-      popup.innerHTML = '';
+      if (popup) {
+        popup.style.display = 'none';
+        popup.innerHTML = '';
+      }
       currentCompletions = [];
       activeAutocompleteIndex = -1;
     }
 
     function clearSearch() {
       document.getElementById('btn-clear-search').style.display = 'none';
+      suppressAutocompleteUntilTyping = false;
       hideAutocomplete();
       searchMatches = [];
       currentSearchIndex = -1;
@@ -3512,9 +3561,9 @@
       }
     }
 
-    function cycleSearchMatch() {
+    function cycleSearchMatch(step = 1) {
       if (!searchMatches.length) return;
-      currentSearchIndex = (currentSearchIndex + 1) % searchMatches.length;
+      currentSearchIndex = (currentSearchIndex + step + searchMatches.length) % searchMatches.length;
       focusSearchMatch(searchMatches[currentSearchIndex]);
     }
 
