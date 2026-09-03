@@ -32,16 +32,14 @@
       --bg-card: #1a202c;
       --bg-glass: rgba(18, 22, 31, 0.94);
       --accent: #e5b842;
-      --accent-glow: rgba(229, 184, 66, 0.45);
-      --accent-gold-bright: #ffd700;
+      --accent-glow: rgba(229, 184, 66, 0.25);
       --accent-blue: #38bdf8;
-      --accent-purple: #c084fc;
-      --accent-green: #3fb950;
       --text-primary: #f0f6fc;
-      --text-secondary: #94a3b8;
-      --border: rgba(255, 255, 255, 0.12);
-      --border-active: #e5b842;
-      --header-height: 58px;
+      --text-secondary: #8b949e;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(229, 184, 66, 0.6);
+      --header-height: 54px;
+      --sidebar-width: 440px;
     }
 
     * {
@@ -51,21 +49,38 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    html, body {
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
       background-color: var(--bg-primary);
       color: var(--text-primary);
-      overflow-x: hidden;
-      height: 100vh;
-      height: 100dvh;
-      display: flex;
-      flex-direction: column;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 14px;
     }
 
-    /* Top Navigation Header */
+    #app-container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      position: relative;
+    }
+
+    /* Invisible Font Warmup */
+    #font-warmup {
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* --- Top Navigation Header --- */
     header {
       height: var(--header-height);
-      min-height: var(--header-height);
       background: var(--bg-glass);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
@@ -74,9 +89,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 16px;
-      padding-top: env(safe-area-inset-top, 0px);
       z-index: 100;
-      gap: 12px;
       flex-shrink: 0;
     }
 
@@ -85,30 +98,35 @@
       align-items: center;
       gap: 12px;
       min-width: 0;
-      flex: 1 1 auto;
     }
 
-    .badge-museum {
-      background: rgba(229, 184, 66, 0.15);
+    .brand-mark {
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: 0.5px;
       color: var(--accent);
-      border: 1px solid rgba(229, 184, 66, 0.35);
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
       white-space: nowrap;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
     }
 
-    .header-title-group {
+    .header-titles {
       display: flex;
       flex-direction: column;
       min-width: 0;
     }
 
-    .header-title {
-      font-size: 0.95rem;
+    .header-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-main-title {
+      font-size: 0.92rem;
       font-weight: 600;
       color: var(--text-primary);
       white-space: nowrap;
@@ -117,116 +135,381 @@
     }
 
     .header-subtitle {
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       color: var(--text-secondary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    /* Object Switcher Picker */
-    .object-switcher-container {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .object-switcher-select {
-      background: #1e2533;
-      color: var(--text-primary);
-      border: 1px solid var(--accent);
-      border-radius: 6px;
-      padding: 6px 12px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      outline: none;
-      cursor: pointer;
-      max-width: 380px;
-    }
-
-    .object-switcher-select:focus {
-      box-shadow: 0 0 0 2px var(--accent-glow);
-    }
-
-    .object-switcher-select optgroup {
-      background: #151a24;
+    .badge-museum {
+      font-size: 0.68rem;
+      background: rgba(229, 184, 66, 0.15);
       color: var(--accent);
-      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      white-space: nowrap;
     }
 
-    .object-switcher-select option {
-      background: #1e2533;
-      color: var(--text-primary);
-      padding: 4px;
-    }
-
-    .nav-actions {
+    .header-right {
       display: flex;
       align-items: center;
-      gap: 6px;
-      flex-shrink: 0;
+      gap: 8px;
+    }
+
+    .object-select {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      max-width: 280px;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .object-select:focus {
+      border-color: var(--accent);
     }
 
     .btn {
-      background: rgba(255, 255, 255, 0.06);
+      background: var(--bg-card);
       color: var(--text-primary);
       border: 1px solid var(--border);
-      padding: 6px 12px;
       border-radius: 6px;
+      padding: 6px 10px;
       font-size: 0.82rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      text-decoration: none;
       transition: all 0.15s ease;
+      text-decoration: none;
       white-space: nowrap;
-      height: 34px;
     }
-
     .btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.25);
+      background: #252d3d;
+      border-color: var(--border-focus);
+      color: var(--accent);
     }
-
-    .btn-active, .btn.active {
-      background: rgba(229, 184, 66, 0.2);
+    .btn-active {
+      background: rgba(229, 184, 66, 0.15);
       border-color: var(--accent);
       color: var(--accent);
     }
 
-    .btn-icon-only {
-      padding: 6px 9px;
-    }
-
-    /* Main Container Layout */
-    #app-container {
-      flex: 1 1 auto;
-      display: flex;
-      position: relative;
-      overflow: hidden;
+    /* --- Views Architecture --- */
+    .platform-view {
+      display: none;
+      width: 100%;
       height: calc(100vh - var(--header-height));
       height: calc(100dvh - var(--header-height));
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
-
-    /* Explorer View Container */
-    #explorer-view {
+    .platform-view.active {
+      display: block;
+    }
+    #explorer-view.active {
       display: flex;
-      width: 100%;
-      height: 100%;
-      position: relative;
       overflow: hidden;
     }
 
-    /* 3D Viewport Area */
-    #viewport-container {
-      flex: 1 1 auto;
+    /* --- View 1: Collection Gallery --- */
+    .gallery-container {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 24px 20px 60px 20px;
+    }
+    .gallery-hero {
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .gallery-hero h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .gallery-hero p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      max-width: 680px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    .gallery-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .gallery-filter-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .pill:hover {
+      border-color: var(--border-focus);
+      color: var(--text-primary);
+    }
+    .pill.active {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    .gallery-search-box {
+      display: flex;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      width: 260px;
+    }
+    .gallery-search-box input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-primary);
+      font-size: 0.82rem;
+      width: 100%;
+      margin-left: 6px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 20px;
+    }
+
+    .coffin-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      cursor: pointer;
       position: relative;
-      background: radial-gradient(circle at center, #151a24 0%, #080a0f 100%);
+    }
+    .coffin-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px var(--accent-glow);
+    }
+    .coffin-card-thumb {
+      width: 100%;
+      height: 180px;
+      background: #000;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .coffin-card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .coffin-card:hover .coffin-card-thumb img {
+      transform: scale(1.05);
+    }
+    .badge-delivery {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+    }
+    .badge-annotated {
+      background: #10b981;
+      color: #fff;
+    }
+    .badge-mesh {
+      background: var(--accent-blue);
+      color: #000;
+    }
+    .badge-embed {
+      background: #8b5cf6;
+      color: #fff;
+    }
+    .badge-pdf {
+      background: #f59e0b;
+      color: #000;
+    }
+
+    .coffin-card-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .coffin-card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      line-height: 1.35;
+    }
+    .coffin-card-meta {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .coffin-card-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .coffin-stat-pill {
+      font-size: 0.7rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #cbd5e1;
+    }
+    .coffin-card-desc {
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+      margin-bottom: 12px;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .btn-explore-card {
+      margin-top: auto;
+      background: rgba(229, 184, 66, 0.15);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+    .coffin-card:hover .btn-explore-card {
+      background: var(--accent);
+      color: #000;
+    }
+
+    /* --- View 2: Corpus Status Table --- */
+    .status-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 20px 60px 20px;
+    }
+    .status-hero {
+      margin-bottom: 24px;
+    }
+    .status-hero h1 {
+      font-size: 1.6rem;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .status-summary-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .status-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .status-card-num {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    .status-card-label {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .status-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      text-align: left;
+    }
+    .status-table th {
+      background: #151a24;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+    .status-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .status-table tr:hover td {
+      background: #232a38;
+      cursor: pointer;
+    }
+
+    /* --- View 3: Unified 3D Explorer --- */
+    #explorer-view {
+      position: relative;
+      width: 100%;
+      height: calc(100vh - var(--header-height));
+      height: calc(100dvh - var(--header-height));
+      display: flex;
+    }
+
+    #viewport-container {
+      flex: 1;
+      height: 100%;
+      position: relative;
+      background-color: #0a0c10;
       overflow: hidden;
       touch-action: none;
     }
-
     #canvas3d {
       width: 100%;
       height: 100%;
@@ -234,850 +517,592 @@
       touch-action: none;
     }
 
-    /* Sketchfab Embed Viewport */
+    /* Non-3D Canvas Delivery Stages */
     #sketchfab-container {
+      display: none;
       width: 100%;
       height: 100%;
-      display: none;
-      position: relative;
       background: #000;
+      position: relative;
     }
-
     #sketchfab-frame {
       width: 100%;
       height: 100%;
-      border: 0;
+      border: none;
     }
 
-    /* 3D-PDF Container */
     #pdf-container {
+      display: none;
       width: 100%;
       height: 100%;
-      display: none;
+      background: #0d1117;
+      display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 32px;
+      padding: 24px;
       text-align: center;
-      background: radial-gradient(circle at center, #1a2333 0%, #0a0d14 100%);
     }
-
-    .pdf-card-box {
+    .pdf-card {
       background: var(--bg-card);
-      border: 1px solid var(--accent);
+      border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 28px;
+      padding: 32px;
       max-width: 540px;
-      box-shadow: 0 12px 36px rgba(0,0,0,0.5);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
     }
 
-    /* Stage Status / Notice Banner */
     #stage-status-banner {
-      position: absolute;
-      top: 12px;
-      left: 16px;
-      right: 16px;
-      background: rgba(59, 42, 10, 0.92);
-      border: 1px solid #854d0e;
-      color: #fde68a;
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: 0.84rem;
-      line-height: 1.4;
-      backdrop-filter: blur(8px);
-      z-index: 40;
-      display: none;
-    }
-
-    /* Floating Lighting Controls */
-    .viewport-controls {
       position: absolute;
       top: 14px;
       left: 14px;
-      z-index: 30;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      pointer-events: none;
-      transition: opacity 0.25s ease, transform 0.25s ease;
+      right: 14px;
+      max-width: 600px;
+      background: rgba(26, 32, 44, 0.94);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(229, 184, 66, 0.4);
+      color: #e2e8f0;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      z-index: 20;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+      display: none;
     }
 
-    .viewport-controls > * {
-      pointer-events: auto;
-    }
-
-    .control-panel {
-      background: rgba(18, 22, 31, 0.92);
+    /* Raking Grazing RTI Controls Overlay */
+    #viewport-controls-panel {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: var(--bg-glass);
       backdrop-filter: blur(10px);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 12px;
-      width: 260px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      padding: 12px 14px;
+      width: 230px;
+      z-index: 20;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
-
-    .control-title {
-      font-size: 0.78rem;
-      font-weight: 600;
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      font-weight: 700;
       color: var(--accent);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      letter-spacing: 0.5px;
     }
-
     .control-row {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.78rem;
-      color: var(--text-secondary);
-      margin-bottom: 6px;
+      flex-direction: column;
+      gap: 4px;
     }
-
+    .control-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+    }
     .control-row input[type="range"] {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
       accent-color: var(--accent);
     }
-
-    .preset-btns {
+    .preset-btn-group {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 4px;
-      margin-top: 8px;
+      margin-top: 2px;
     }
-
-    .preset-btn {
-      background: rgba(255, 255, 255, 0.08);
+    .btn-preset {
+      background: var(--bg-card);
       border: 1px solid var(--border);
-      color: var(--text-primary);
-      padding: 5px 0;
+      color: var(--text-secondary);
       border-radius: 4px;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
+      padding: 4px 2px;
       cursor: pointer;
       text-align: center;
     }
-
-    .preset-btn:hover, .preset-btn.active {
-      background: rgba(229, 184, 66, 0.25);
+    .btn-preset:hover {
       border-color: var(--accent);
       color: var(--accent);
     }
-
-    /* Scale Bar */
-    .scale-bar-overlay {
-      position: absolute;
-      bottom: 16px;
-      left: 16px;
-      z-index: 20;
-      background: rgba(18, 22, 31, 0.85);
+    .mat-select {
+      background: var(--bg-card);
       border: 1px solid var(--border);
-      padding: 5px 10px;
+      color: var(--text-primary);
       border-radius: 4px;
+      padding: 4px 6px;
       font-size: 0.72rem;
+      outline: none;
+    }
+
+    #annotations-control-card {
+      margin-top: 6px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* 3D Viewport Floating Badges & Tooltips */
+    #scale-bar-overlay {
+      position: absolute;
+      bottom: 14px;
+      left: 14px;
+      background: rgba(10, 12, 16, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 0.68rem;
       color: var(--text-secondary);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      z-index: 10;
+      pointer-events: none;
     }
-
     .scale-line {
-      width: 50px;
-      height: 3px;
+      width: 40px;
+      height: 2px;
       background: var(--accent);
-      position: relative;
     }
 
-    /* Tooltip */
     #hover-tooltip {
       position: absolute;
+      display: none;
       background: rgba(18, 22, 31, 0.95);
       border: 1px solid var(--accent);
       color: var(--text-primary);
-      padding: 6px 10px;
-      border-radius: 5px;
-      font-size: 0.78rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
       pointer-events: none;
       z-index: 50;
-      display: none;
-      transform: translate(-50%, -125%);
-      white-space: nowrap;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      transform: translate(-50%, -120%);
     }
 
-    /* Inspector Panel (Sidebar on desktop / Drawer on mobile) */
-    #inspector-panel {
-      width: 560px;
-      min-width: 480px;
-      max-width: 600px;
+    /* Floating Buttons for Mobile */
+    #mobile-fab-bar {
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      display: none;
+      gap: 8px;
+      z-index: 30;
+    }
+
+    /* --- Right Inspector Panel --- */
+    #sidebar {
+      width: var(--sidebar-width);
+      height: 100%;
       background: var(--bg-secondary);
       border-left: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      height: 100%;
-      z-index: 30;
       flex-shrink: 0;
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    #inspector-panel.collapsed {
-      display: none;
-    }
-
-    /* Global Search Box in Inspector */
-    .global-search-container {
-      padding: 12px 14px 8px 14px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(18, 22, 31, 0.6);
+      z-index: 40;
       position: relative;
     }
 
-    .search-wrapper {
+    /* Search Container with Autocomplete */
+    .search-container {
+      padding: 12px 14px 10px 14px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-secondary);
+      position: relative;
+    }
+    .search-input-wrapper {
       position: relative;
       display: flex;
       align-items: center;
     }
-
-    .global-search-input {
+    .search-input {
       width: 100%;
-      background: #171d27;
+      background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 8px 36px 8px 12px;
+      padding: 8px 30px 8px 10px;
       color: var(--text-primary);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       outline: none;
+      transition: border-color 0.15s;
     }
-
-    .global-search-input:focus {
+    .search-input:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 2px var(--accent-glow);
     }
-
     .btn-clear-search {
       position: absolute;
-      right: 10px;
+      right: 8px;
       background: transparent;
       border: none;
       color: var(--text-secondary);
+      font-size: 1rem;
       cursor: pointer;
-      font-size: 0.9rem;
+      display: none;
     }
 
-    /* Autocomplete Popup */
     #autocomplete-popup {
       position: absolute;
-      top: calc(100% + 4px);
+      top: 50px;
       left: 14px;
       right: 14px;
-      background: #1a202c;
+      background: #171d27;
       border: 1px solid var(--accent);
       border-radius: 6px;
-      max-height: 280px;
+      max-height: 240px;
       overflow-y: auto;
-      z-index: 100;
+      z-index: 150;
       display: none;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
     }
-
     .autocomplete-item {
-      padding: 8px 12px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
+      font-size: 0.78rem;
     }
-
     .autocomplete-item:hover, .autocomplete-item.active {
-      background: rgba(229, 184, 66, 0.18);
+      background: #252d3d;
+      color: var(--accent);
     }
-
-    .autocomplete-item-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .autocomplete-tag {
-      font-size: 0.72rem;
-      padding: 2px 6px;
+    .autocomplete-badge {
+      font-size: 0.65rem;
+      background: rgba(229, 184, 66, 0.2);
+      color: var(--accent);
+      padding: 1px 5px;
       border-radius: 3px;
-      background: rgba(255,255,255,0.08);
-      color: var(--text-secondary);
+      margin-right: 6px;
     }
 
-    .autocomplete-primary {
-      font-weight: 600;
-      font-size: 0.86rem;
-      color: var(--accent-gold-bright);
-    }
-
-    .autocomplete-secondary {
-      font-size: 0.76rem;
-      color: var(--text-secondary);
-    }
-
-    /* Inspector Tabs Navigation */
-    .tabs-nav {
+    /* Tabs Bar */
+    .tabs-bar {
       display: flex;
       border-bottom: 1px solid var(--border);
-      background: rgba(18, 22, 31, 0.85);
+      background: var(--bg-secondary);
       overflow-x: auto;
       flex-shrink: 0;
     }
-
     .tab-btn {
       background: transparent;
       border: none;
       border-bottom: 2px solid transparent;
       color: var(--text-secondary);
-      padding: 10px 14px;
-      font-size: 0.82rem;
-      font-weight: 500;
+      padding: 10px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
       cursor: pointer;
       white-space: nowrap;
       transition: all 0.15s ease;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
-
     .tab-btn:hover {
       color: var(--text-primary);
     }
-
     .tab-btn.active {
       color: var(--accent);
       border-bottom-color: var(--accent);
-      background: rgba(229, 184, 66, 0.06);
     }
 
-    .tab-count {
-      font-size: 0.7rem;
-      background: rgba(255,255,255,0.1);
-      padding: 1px 6px;
-      border-radius: 999px;
-    }
-
-    /* Tab Content Area */
-    .tab-content {
-      flex: 1 1 auto;
+    /* Tab Contents Area */
+    .tab-content-area {
+      flex: 1;
       overflow-y: auto;
-      padding: 16px;
+      padding: 14px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tab-content {
       display: none;
     }
-
     .tab-content.active {
       display: block;
     }
 
+    /* Cards in Inspector */
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 14px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
     }
-
     .card-title {
-      font-size: 0.9rem;
-      font-weight: 600;
+      font-size: 0.86rem;
+      font-weight: 700;
       color: var(--accent);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    .stat-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 10px;
+    /* Section Group & Inscription Fragment Cards */
+    .section-pills {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .section-pills .pill {
+      font-size: 0.72rem;
+      padding: 3px 8px;
     }
 
-    .stat-item {
-      background: rgba(0,0,0,0.2);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 6px;
-      padding: 8px 10px;
-    }
-
-    .stat-label {
-      font-size: 0.7rem;
-      color: var(--text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .stat-value {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-top: 2px;
-    }
-
-    /* Epigraphy Fragment Card */
     .frag-card {
-      background: rgba(0,0,0,0.25);
-      border: 1px solid var(--border);
-      border-radius: 6px;
+      background: #141824;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
       padding: 12px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       cursor: pointer;
       transition: all 0.15s ease;
+      position: relative;
     }
-
-    .frag-card:hover, .frag-card.selected {
+    .frag-card:hover {
+      border-color: rgba(56, 189, 248, 0.6);
+      background: #1b2130;
+    }
+    .frag-card.selected {
       border-color: var(--accent);
-      background: rgba(229, 184, 66, 0.08);
+      box-shadow: 0 0 16px var(--accent-glow);
+      background: #202738;
     }
-
     .frag-card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
-
     .column-badge {
-      font-size: 0.72rem;
-      background: #1e293b;
-      color: var(--accent-blue);
-      padding: 2px 7px;
+      font-size: 0.7rem;
+      background: rgba(229, 184, 66, 0.15);
+      color: var(--accent);
+      padding: 2px 6px;
       border-radius: 4px;
       font-weight: 600;
     }
-
-    .btn-breakdown {
-      background: rgba(229, 184, 66, 0.15);
-      border: 1px solid rgba(229, 184, 66, 0.4);
-      color: var(--accent);
-      padding: 2px 8px;
+    .zoom-hint-badge {
+      font-size: 0.66rem;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-blue);
+      padding: 2px 6px;
       border-radius: 4px;
+      margin-left: 4px;
+    }
+    .btn-breakdown {
       font-size: 0.72rem;
+      background: var(--bg-primary);
+      color: var(--accent-blue);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 3px 8px;
+      border-radius: 4px;
       cursor: pointer;
     }
+    .btn-breakdown:hover {
+      background: rgba(56, 189, 248, 0.15);
+    }
 
+    /* Hieroglyph Canvas Container: High-contrast Dark Mode with RESLite numToColor */
     .hiero-box {
-      background: #ffffff;
-      padding: 10px;
-      border-radius: 4px;
-      overflow-x: auto;
+      background: #090c10;
+      border: 1px solid rgba(229, 184, 66, 0.3);
+      box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
+      border-radius: 6px;
+      padding: 10px 14px;
       margin: 8px 0;
       text-align: center;
-      min-height: 48px;
+      min-height: 52px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .hiero-box canvas {
+      display: inline-block;
+      max-width: 100%;
+      height: auto;
     }
 
     .transliteration {
-      font-family: 'Transliteration', serif;
-      font-size: 0.88rem;
-      color: var(--accent-gold-bright);
-      font-style: italic;
+      font-family: 'Transliteration', Georgia, serif;
+      font-weight: 700;
+      color: #ffd700;
+      font-size: 0.94rem;
       margin-bottom: 4px;
+      letter-spacing: 0.2px;
+    }
+    .translation {
+      font-style: italic;
+      color: #e2e8f0;
+      font-size: 0.85rem;
+      line-height: 1.45;
+    }
+    .parallel-citation {
+      font-size: 0.72rem;
+      color: var(--accent-blue);
+      margin-top: 8px;
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      padding: 4px 8px;
+      border-radius: 4px;
     }
 
-    .translation {
-      font-size: 0.84rem;
-      color: #e2e8f0;
-      line-height: 1.45;
+    /* Deities & Entities Chips */
+    .chips-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .entity-chip {
+      background: #141824;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .entity-chip:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      background: #1e2638;
+    }
+    .entity-chip.selected {
+      border-color: var(--accent);
+      background: rgba(229, 184, 66, 0.2);
+      color: var(--accent);
     }
 
     /* Lexicon Items */
     .lex-item {
-      background: rgba(0,0,0,0.2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 10px 12px;
-      margin-bottom: 8px;
-      cursor: pointer;
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      cursor: pointer;
+      transition: background 0.15s;
     }
-
-    .lex-item:hover, .lex-item.selected {
-      border-color: var(--accent);
-      background: rgba(229, 184, 66, 0.1);
+    .lex-item:hover {
+      background: #1f2736;
     }
-
+    .lex-item.selected {
+      background: #252d3d;
+      border-left: 3px solid var(--accent);
+    }
     .lex-translit {
       font-family: 'Transliteration', serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--accent-gold-bright);
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 0.9rem;
     }
-
     .lex-pos {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: var(--text-secondary);
-      margin-left: 6px;
       font-style: italic;
+      margin-left: 6px;
     }
-
     .lex-meaning {
-      font-size: 0.84rem;
-      color: #cbd5e1;
-    }
-
-    /* Deities / Entities Chips */
-    .entity-chip {
-      display: inline-flex;
-      align-items: center;
-      background: rgba(56, 189, 248, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.35);
-      color: var(--accent-blue);
-      padding: 5px 10px;
-      border-radius: 20px;
-      font-size: 0.78rem;
-      margin: 4px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .entity-chip:hover, .entity-chip.selected {
-      background: rgba(229, 184, 66, 0.25);
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    /* Collection Gallery View */
-    #gallery-view {
-      width: 100%;
-      height: 100%;
-      overflow-y: auto;
-      padding: 24px;
-      display: none;
-      background: var(--bg-primary);
-    }
-
-    .gallery-hero {
-      max-width: 1200px;
-      margin: 0 auto 24px auto;
-      text-align: center;
-    }
-
-    .gallery-hero h2 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-
-    .gallery-hero p {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      max-width: 720px;
-      margin: 0 auto 16px auto;
-      line-height: 1.5;
-    }
-
-    .gallery-search-bar {
-      max-width: 680px;
-      margin: 0 auto 16px auto;
-      position: relative;
-    }
-
-    .gallery-search-input {
-      width: 100%;
-      background: #171d27;
-      border: 1px solid var(--accent);
-      border-radius: 8px;
-      padding: 12px 18px;
-      color: var(--text-primary);
-      font-size: 1rem;
-      outline: none;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    }
-
-    .gallery-filters {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 24px;
-    }
-
-    .filter-pill {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid var(--border);
-      color: var(--text-secondary);
-      padding: 6px 14px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .filter-pill:hover, .filter-pill.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #000;
-      font-weight: 600;
-    }
-
-    .gallery-grid {
-      max-width: 1280px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
-      padding-bottom: 48px;
-    }
-
-    .coffin-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-      cursor: pointer;
-    }
-
-    .coffin-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--accent);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.5);
-    }
-
-    .coffin-card-thumb {
-      width: 100%;
-      height: 180px;
-      background: #0f131a;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .coffin-card-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .badge-delivery {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
-    }
-
-    .badge-annotated { background: var(--accent); color: #000; }
-    .badge-mesh { background: var(--accent-blue); color: #000; }
-    .badge-embed { background: var(--accent-purple); color: #fff; }
-    .badge-pdf { background: var(--accent-green); color: #000; }
-
-    .coffin-card-body {
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      flex: 1 1 auto;
-    }
-
-    .coffin-card-title {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 4px;
-      line-height: 1.35;
-    }
-
-    .coffin-card-meta {
-      font-size: 0.78rem;
-      color: var(--accent-gold-bright);
-      margin-bottom: 8px;
-    }
-
-    .coffin-card-desc {
       font-size: 0.8rem;
       color: var(--text-secondary);
-      line-height: 1.45;
-      margin-bottom: 12px;
-      flex: 1 1 auto;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
     }
 
-    .coffin-card-stats {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-    }
-
-    .coffin-stat-pill {
-      font-size: 0.7rem;
-      background: rgba(255,255,255,0.06);
-      padding: 2px 7px;
-      border-radius: 4px;
-      color: var(--text-secondary);
-    }
-
-    .btn-explore-card {
-      background: rgba(229, 184, 66, 0.15);
-      border: 1px solid var(--accent);
-      color: var(--accent);
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      text-align: center;
-      text-decoration: none;
-    }
-
-    .btn-explore-card:hover {
-      background: var(--accent);
-      color: #000;
-    }
-
-    /* Corpus Status View */
-    #status-view {
-      width: 100%;
-      height: 100%;
-      overflow-y: auto;
-      padding: 24px;
-      display: none;
-      background: var(--bg-primary);
-    }
-
-    .status-container {
-      max-width: 1100px;
-      margin: 0 auto 40px auto;
-    }
-
-    .status-metrics-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px;
-      margin-bottom: 24px;
-    }
-
-    .status-metric-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
-      text-align: center;
-    }
-
-    .metric-number {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    .metric-label {
-      font-size: 0.76rem;
-      color: var(--text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-top: 4px;
-    }
-
-    .status-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.84rem;
-      background: var(--bg-card);
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-    }
-
-    .status-table th, .status-table td {
-      padding: 10px 14px;
-      border-bottom: 1px solid var(--border);
-      text-align: left;
-    }
-
-    .status-table th {
-      background: rgba(0,0,0,0.3);
-      color: var(--accent);
-      font-size: 0.76rem;
-      text-transform: uppercase;
-    }
-
-    .status-table tr:hover td {
-      background: rgba(229, 184, 66, 0.05);
-      cursor: pointer;
-    }
-
-    /* Modals */
-    .modal-overlay {
+    /* --- Modals --- */
+    .modal-backdrop {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(8px);
-      z-index: 1000;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 200;
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 16px;
+      padding: 20px;
     }
-
     .modal-box {
-      background: var(--bg-card);
-      border: 1px solid var(--accent);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
       border-radius: 10px;
       width: 100%;
       max-width: 580px;
       max-height: 85vh;
       overflow-y: auto;
-      padding: 24px;
-      box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+      padding: 20px;
+      position: relative;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
     }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 10px;
-    }
-
-    .modal-title {
-      font-size: 1.1rem;
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    .btn-close-modal {
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
       background: transparent;
       border: none;
       color: var(--text-secondary);
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       cursor: pointer;
     }
 
-    /* Loading Screen */
-    .loading-overlay {
+    /* Word Breakdown Rows in Modal */
+    .word-breakdown-row {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* Shortcuts Table */
+    .shortcut-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      margin-top: 10px;
+    }
+    .shortcut-table td {
+      padding: 6px 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .kbd-key {
+      background: #090c10;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-family: monospace;
+      font-size: 0.78rem;
+      color: var(--accent);
+    }
+
+    /* Loading Overlay */
+    #loading-screen {
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(10, 12, 16, 0.95);
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-primary);
+      z-index: 300;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 60;
       gap: 16px;
-      transition: opacity 0.5s ease;
+      transition: opacity 0.4s ease;
     }
-
     .spinner {
       width: 44px;
       height: 44px;
@@ -1086,567 +1111,528 @@
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
-
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
 
-    /* Mobile Responsive Overrides */
-    @media (max-width: 899px) {
+    /* --- Mobile Responsive Drawer Behavior --- */
+    @media (max-width: 900px) {
       header {
         padding: 0 10px;
       }
-      
-      .object-switcher-select {
-        max-width: 170px;
-        font-size: 0.78rem;
-        padding: 4px 6px;
+      .brand-title-full {
+        display: none;
       }
-
-      .desktop-only {
-        display: none !important;
+      .object-select {
+        max-width: 150px;
       }
-
       #explorer-view {
         flex-direction: column;
       }
-
       #viewport-container {
-        height: 100%;
-        width: 100%;
+        height: 100% !important;
+      }
+      #mobile-fab-bar {
+        display: flex;
       }
 
-      #inspector-panel {
-        position: fixed;
+      /* Sliding Bottom Sheet Drawer */
+      #sidebar {
+        position: absolute;
         bottom: 0;
         left: 0;
-        right: 0;
         width: 100%;
-        min-width: 100%;
-        max-width: 100%;
-        height: 82vh;
-        height: 82dvh;
+        height: 75vh;
         border-left: none;
-        border-top: 1px solid var(--accent);
+        border-top: 1px solid var(--border);
         border-radius: 16px 16px 0 0;
-        box-shadow: 0 -8px 32px rgba(0,0,0,0.65);
-        transform: translateY(100%);
-        z-index: 200;
+        box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.7);
+        transform: translateY(105%);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 80;
       }
-
-      #inspector-panel.drawer-open {
+      #sidebar.drawer-open {
         transform: translateY(0);
       }
-
-      #mobile-drawer-backdrop {
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,0.6);
-        backdrop-filter: blur(4px);
-        z-index: 150;
-        display: none;
+      .drawer-drag-handle {
+        width: 36px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 2px;
+        margin: 8px auto 4px auto;
+        cursor: pointer;
       }
-
+      #mobile-drawer-backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        z-index: 70;
+      }
       #mobile-drawer-backdrop.active {
         display: block;
       }
 
-      .mobile-drawer-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px 16px 4px 16px;
-        flex-shrink: 0;
-      }
-
-      .mobile-drawer-handle {
-        width: 42px;
-        height: 4px;
-        background: rgba(255,255,255,0.3);
-        border-radius: 2px;
-      }
-
-      #mobile-bottom-bar {
-        position: absolute;
-        bottom: 16px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(18, 22, 31, 0.95);
-        border: 1px solid var(--accent);
-        color: var(--text-primary);
-        padding: 9px 18px;
-        border-radius: 24px;
-        font-size: 0.84rem;
-        font-weight: 600;
-        cursor: pointer;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-        z-index: 40;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .viewport-controls {
+      /* Mobile RTI Light Drawer */
+      #viewport-controls-panel {
         top: auto;
-        bottom: 74px;
-        left: 12px;
-        right: 12px;
+        bottom: 70px;
+        left: 10px;
+        right: 10px;
+        width: auto;
         display: none;
       }
-
-      .viewport-controls.mobile-open {
+      #viewport-controls-panel.mobile-visible {
         display: flex;
-      }
-
-      .control-panel {
-        width: 100%;
-      }
-    }
-
-    @media (min-width: 900px) {
-      .mobile-only {
-        display: none !important;
-      }
-      .mobile-drawer-header {
-        display: none;
-      }
-      #mobile-bottom-bar {
-        display: none;
       }
     }
   </style>
+
+  <!-- External & Bundled Dependencies -->
+  <script src="data/js/three/three.js"></script>
+  <script src="data/js/three/controls/OrbitControls.js"></script>
+  <script src="data/js/three/loaders/MTLLoader.js"></script>
+  <script src="data/js/three/loaders/OBJLoader.js"></script>
+  <script src="data/js/reslite.js"></script>
+  <script src="data/js/aux.js"></script>
+
+  <!-- High-Contrast Color Override for RESLite in Dark Mode -->
+  <script>
+    if (typeof numToColor === 'function') {
+      window.numToColor = function(num) {
+        if (num === 15 || num === 0) return "#f0f6fc"; // Crisp glowing white-silver
+        if (num === 1) return "#e5b842"; // Egyptian Gold
+        if (num === 9) return "#ff7b72"; // Red
+        if (num === 11) return "#38bdf8"; // Blue
+        if (num === 13) return "#3fb950"; // Green
+        return "#e5b842";
+      };
+    }
+  </script>
 </head>
 <body>
-  <!-- Offscreen font warmup for canvas 2D -->
-  <div id="font-warmup" style="position: absolute; left: -9999px; top: -9999px; visibility: hidden;">
-    <span style="font-family: 'NewGardiner';">𓀀𓀁𓀂𓀃𓀄𓀅𓀆𓀇𓀈𓀉𓀊𓀋𓀌𓀍𓀎𓀏</span>
-    <span style="font-family: 'HieroglyphicAux';">𓀀𓀁𓀂</span>
-    <span style="font-family: 'Transliteration';">Ꜣ Ꜥ ḥ ḫ ẖ š ḳ ṯ ḏ</span>
+
+  <!-- Hidden font warmup elements -->
+  <div id="font-warmup">
+    <span style="font-family: 'NewGardiner';">&#57344;&#57406;&#57407;&#57350;</span>
+    <span style="font-family: 'HieroglyphicAux';">&#35;&#40;&#41;</span>
+    <span style="font-family: 'Transliteration';">aAbcdefghijklmnopqrstuvwxyz</span>
   </div>
 
-  <!-- Top Application Header -->
-  <header>
-    <div class="header-left">
-      <span class="badge-museum" id="header-museum-badge">UC Berkeley</span>
-      <div class="header-title-group">
-        <h1 class="header-title" id="header-object-title">The Book of the Dead in 3D</h1>
-        <span class="header-subtitle" id="header-subtitle">24 Ancient Egyptian Funerary Monuments</span>
+  <div id="app-container">
+    <!-- Top Navigation Header -->
+    <header>
+      <div class="header-left">
+        <a href="?view=gallery" class="brand-mark" onclick="event.preventDefault(); navigate('gallery');">
+          <span>☥</span>
+          <span class="brand-title-full">3D Coffins</span>
+        </a>
+        <div class="header-titles">
+          <div class="header-title-row">
+            <span id="header-object-title" class="header-main-title">Loading collection...</span>
+            <span id="header-museum-badge" class="badge-museum">PAHMA</span>
+          </div>
+          <span id="header-subtitle" class="header-subtitle">UC Berkeley Book of the Dead in 3D</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Header Object Switcher -->
+        <select id="object-picker" class="object-select" aria-label="Select monument">
+          <option value="__gallery__">🏛 All Coffins Gallery (24)</option>
+          <option value="__status__">📊 Corpus Status Table</option>
+          <optgroup label="3D Annotated (St Andrews)" id="optgroup-annotated"></optgroup>
+          <optgroup label="3D Photogrammetry Mesh" id="optgroup-mesh"></optgroup>
+          <optgroup label="Sketchfab 3D Embeds" id="optgroup-embed"></optgroup>
+          <optgroup label="3D-PDF Archive" id="optgroup-pdf"></optgroup>
+        </select>
+
+        <button class="btn" id="btn-nav-gallery" onclick="navigate('gallery')">🏛 Gallery</button>
+        <button class="btn" id="btn-nav-status" onclick="navigate('status')">📊 Status</button>
+        <button class="btn" id="btn-data-source" title="Active Data Source: Local Cache (data/)">📦</button>
+        <button class="btn" id="btn-shortcuts" title="Keyboard Shortcuts">⌨</button>
+        <button class="btn" id="btn-zen" title="Toggle Zen Mode">⛶</button>
+        <a href="https://github.com/aculich/ucb-3dcoffins-viewer" target="_blank" rel="noopener noreferrer" class="btn" title="View Source on GitHub">
+          <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <!-- VIEW 1: Collection Gallery -->
+    <div id="gallery-view" class="platform-view">
+      <div class="gallery-container">
+        <div class="gallery-hero">
+          <h1>Corpus of Ancient Egyptian 3D Coffins</h1>
+          <p>Explore 24 photogrammetric 3D models, vector spatial inscription annotations, hieroglyphic transcriptions, and lexicon from the UC Berkeley archaeological collection.</p>
+        </div>
+
+        <div class="gallery-toolbar">
+          <div class="gallery-filter-pills">
+            <button class="pill active" data-filter="all">All (24)</button>
+            <button class="pill" data-filter="annotated">3D Annotated (6)</button>
+            <button class="pill" data-filter="mesh">3D Mesh (2)</button>
+            <button class="pill" data-filter="embed">Sketchfab 3D (15)</button>
+            <button class="pill" data-filter="pdf">3D-PDF (1)</button>
+          </div>
+
+          <div class="gallery-search-box">
+            <span>🔍</span>
+            <input type="text" id="gallery-search-input" placeholder="Search coffins, museums, names...">
+          </div>
+        </div>
+
+        <div id="gallery-grid" class="gallery-grid"></div>
       </div>
     </div>
 
-    <!-- Object Switcher & View Switcher -->
-    <div class="object-switcher-container">
-      <select id="object-picker" class="object-switcher-select" title="Switch Object or View Gallery">
-        <option value="__gallery__">🏛 All Coffins Gallery (24)</option>
-        <option value="__status__">📊 Corpus Status Overview</option>
-        <optgroup label="3D Annotated (6)" id="optgroup-annotated"></optgroup>
-        <optgroup label="3D Mesh Only (2)" id="optgroup-mesh"></optgroup>
-        <optgroup label="Sketchfab 3D Embeds (15)" id="optgroup-embed"></optgroup>
-        <optgroup label="3D-PDF Archive (1)" id="optgroup-pdf"></optgroup>
-      </select>
-    </div>
+    <!-- VIEW 2: Corpus Status Table -->
+    <div id="status-view" class="platform-view">
+      <div class="status-container">
+        <div class="status-hero">
+          <h1>Corpus Status & Data Governance</h1>
+          <p style="color: var(--text-secondary); font-size: 0.88rem;">24 objects cataloged across 4 delivery classes. Immutable BagIt archives preserved in private Coldline vault.</p>
+        </div>
 
-    <div class="nav-actions">
-      <button class="btn" id="btn-gallery" title="Open Coffin Gallery">🏛 Gallery</button>
-      <button class="btn desktop-only" id="btn-status" title="Corpus Verification Status">📊 Status</button>
-      <button class="btn mobile-only btn-icon-only" id="btn-mobile-light" title="Toggle Lighting Drawer">🔦</button>
-      <button class="btn btn-icon-only desktop-only" id="btn-toggle-annotations" title="Toggle 3D Vector Outlines">☖</button>
-      <button class="btn btn-icon-only" id="btn-reset-cam" title="Reset Camera View">↺</button>
-      <button class="btn mobile-only" id="btn-mobile-drawer" title="View Inscriptions & Texts">📖 Texts</button>
-      <button class="btn desktop-only btn-icon-only" id="btn-toggle-zen" title="Zen View Mode">⛶</button>
-      <button class="btn desktop-only btn-icon-only" id="btn-shortcuts" title="Keyboard Shortcuts">⌨</button>
-      <button class="btn btn-icon-only" id="btn-datasource" title="Data Source Settings">📦</button>
-      <a href="https://github.com/aculich/ucb-3dcoffins-viewer" target="_blank" rel="noopener noreferrer" class="btn desktop-only" title="View Source on GitHub">
-        <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-      </a>
-    </div>
-  </header>
-
-  <!-- Main Container -->
-  <div id="app-container">
-    
-    <!-- 1. Interactive 3D Explorer View -->
-    <div id="explorer-view">
-      <!-- 3D Viewport / Stage -->
-      <div id="viewport-container">
-        <div id="loading-screen" class="loading-overlay">
-          <div class="spinner"></div>
-          <div id="loading-text" style="font-size: 1rem; color: var(--accent); font-weight: 500;">
-            Loading 3D Photogrammetry Mesh & Annotations...
+        <div class="status-summary-cards">
+          <div class="status-card">
+            <div class="status-card-num" id="metric-total-objs">24</div>
+            <div class="status-card-label">Total Monuments</div>
+          </div>
+          <div class="status-card">
+            <div class="status-card-num" id="metric-annotated-objs">6</div>
+            <div class="status-card-label">3D Vector Annotated</div>
+          </div>
+          <div class="status-card">
+            <div class="status-card-num" id="metric-total-regions">608</div>
+            <div class="status-card-label">Spatial Inscription Regions</div>
+          </div>
+          <div class="status-card">
+            <div class="status-card-num" id="metric-total-lexicon">269</div>
+            <div class="status-card-label">Lexicon Vocabulary Terms</div>
           </div>
         </div>
 
-        <!-- Warning / Status Banner for Embed or PDF -->
+        <div class="table-responsive">
+          <table class="status-table">
+            <thead>
+              <tr>
+                <th>Object ID</th>
+                <th>Museum</th>
+                <th>Accession</th>
+                <th>Delivery Class</th>
+                <th>Spatial Regions</th>
+                <th>Phrases</th>
+                <th>Lexicon</th>
+                <th>Source Bag</th>
+              </tr>
+            </thead>
+            <tbody id="status-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: Unified 3D Explorer -->
+    <div id="explorer-view" class="platform-view active">
+      <!-- 3D Viewport Stage -->
+      <div id="viewport-container">
+        <div id="canvas3d"></div>
+        <div id="sketchfab-container">
+          <iframe id="sketchfab-frame" allow="autoplay; fullscreen; vr" allowfullscreen></iframe>
+        </div>
+        <div id="pdf-container">
+          <div class="pdf-card">
+            <div style="font-size: 3rem; margin-bottom: 12px;">📄</div>
+            <h2 id="pdf-title" style="color: var(--accent); margin-bottom: 8px;">3D-PDF Archive Document</h2>
+            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.5; margin-bottom: 20px;">
+              This monument was published as an interactive 3D-PDF with embedded U3D geometry. To view full 3D interaction, download and open in Adobe Acrobat Reader.
+            </p>
+            <a id="btn-download-pdf" href="#" class="btn btn-active" style="display: inline-flex; padding: 10px 20px; font-size: 0.9rem;" download>
+              ⬇ Download 3D-PDF Archive
+            </a>
+          </div>
+        </div>
+
+        <!-- Academic Status Banner -->
         <div id="stage-status-banner"></div>
 
-        <!-- Floating RTI Lighting Controls -->
-        <div class="viewport-controls" id="viewport-controls-panel">
-          <div class="control-panel">
-            <div class="control-title">
-              <span>RTI Grazing Raking Light</span>
-              <span id="light-angle-val" style="color: var(--text-secondary); font-size: 0.7rem;">45° (East)</span>
+        <!-- Raking Grazing RTI Controls Panel -->
+        <div id="viewport-controls-panel">
+          <div class="panel-header">
+            <span>RTI Grazing Raking Light</span>
+            <span id="light-stats">45° | 30°</span>
+          </div>
+          <div class="control-row">
+            <div class="control-label-row">
+              <span>Direction</span>
+              <span id="light-dir-val">45°</span>
             </div>
-            <div class="control-row">
-              <span>Grazing Direction</span>
-              <input type="range" id="light-angle" min="0" max="360" value="45" style="width: 85px;">
+            <input type="range" id="light-dir" min="0" max="360" value="45">
+          </div>
+          <div class="control-row">
+            <div class="control-label-row">
+              <span>Pitch Angle</span>
+              <span id="light-pitch-val">30°</span>
             </div>
-            <div class="control-row">
-              <span>Grazing Pitch</span>
-              <input type="range" id="light-pitch" min="5" max="75" value="20" style="width: 85px;">
-            </div>
-            <div class="control-row">
+            <input type="range" id="light-pitch" min="5" max="85" value="30">
+          </div>
+          <div class="control-row">
+            <div class="control-label-row">
               <span>Torch Power</span>
-              <input type="range" id="light-intensity" min="0.2" max="3.5" step="0.1" value="1.6" style="width: 85px;">
+              <span id="light-power-val">1.6x</span>
             </div>
+            <input type="range" id="light-power" min="0.2" max="3.5" step="0.1" value="1.6">
+          </div>
+          <div class="preset-btn-group">
+            <button class="btn-preset" data-preset="top">Top</button>
+            <button class="btn-preset" data-preset="east">East</button>
+            <button class="btn-preset" data-preset="west">West</button>
+            <button class="btn-preset" id="btn-light-orbit">Auto</button>
+          </div>
+          <div class="control-row" style="margin-top: 4px;">
+            <div class="control-label-row">
+              <span>Material Mode</span>
+            </div>
+            <select id="mat-mode" class="mat-select">
+              <option value="photo">Photorealistic</option>
+              <option value="relief">Relief MatCap</option>
+              <option value="wireframe">Wireframe</option>
+            </select>
+          </div>
+
+          <!-- 3D Vector Annotations Controls -->
+          <div id="annotations-control-card">
             <div class="control-row">
-              <span>Shadow Depth</span>
-              <input type="range" id="ambient-intensity" min="0.05" max="0.6" step="0.05" value="0.25" style="width: 85px;">
-            </div>
-            <div class="preset-btns">
-              <button class="preset-btn" onclick="applyLightPreset(90, 30)">☀ Top</button>
-              <button class="preset-btn" onclick="applyLightPreset(45, 18)">🔦 East</button>
-              <button class="preset-btn" onclick="applyLightPreset(225, 18)">🔦 West</button>
-              <button class="preset-btn" id="btn-auto-orbit" onclick="toggleAutoLightOrbit()">🕯 Auto</button>
+              <div class="control-label-row">
+                <span>3D Annotations</span>
+                <span id="line-thick-val">Normal (2px)</span>
+              </div>
+              <input type="range" id="line-thickness" min="1" max="4" value="2">
             </div>
             <div class="control-row" style="margin-top: 6px;">
-              <span>Material Mode</span>
-              <select id="mat-mode" style="background: #171d27; color: var(--text-primary); border: 1px solid var(--border); border-radius: 4px; padding: 2px 4px; font-size: 0.75rem;">
-                <option value="textured" selected>Photorealistic</option>
-                <option value="relief">Relief Enhanced (MatCap)</option>
-                <option value="wireframe">Wireframe</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="control-panel" id="annotations-control-card">
-            <div class="control-title">
-              <span>3D Annotations</span>
-              <span id="line-thick-val" style="color: var(--text-secondary); font-size: 0.7rem;">Normal</span>
-            </div>
-            <div class="control-row">
-              <span>Line Thickness</span>
-              <input type="range" id="line-thickness" min="1" max="4" value="2" style="width: 85px;">
-            </div>
-            <div class="control-row">
-              <span>Outline Brightness</span>
-              <input type="range" id="line-opacity" min="0.3" max="1.0" step="0.05" value="0.85" style="width: 85px;">
+              <div class="control-label-row">
+                <span>Outline Brightness</span>
+              </div>
+              <input type="range" id="line-opacity" min="0.2" max="1.0" step="0.05" value="0.85">
             </div>
           </div>
         </div>
 
-        <!-- Scale Bar -->
-        <div class="scale-bar-overlay" id="scale-bar-overlay">
-          <div class="scale-line" id="scale-line"></div>
-          <span id="scale-text">50 cm (Scale 1:1)</span>
-        </div>
-
-        <!-- Mobile Floating Trigger -->
-        <div id="mobile-bottom-bar" onclick="openMobileDrawer()">
-          <span>📖 Inscriptions & Lexicon</span>
-          <span style="font-size: 0.72rem; color: var(--accent); background: rgba(0,0,0,0.4); padding: 2px 8px; border-radius: 10px;">Tap to Explore ↑</span>
+        <div id="scale-bar-overlay">
+          <div class="scale-line"></div>
+          <span>50 cm (Scale 1:1)</span>
         </div>
 
         <div id="hover-tooltip"></div>
-        <div id="canvas3d"></div>
 
-        <!-- Sketchfab Embed Container -->
-        <div id="sketchfab-container">
-          <iframe id="sketchfab-frame" title="Sketchfab 3D Model" allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
-        </div>
-
-        <!-- 3D-PDF Container -->
-        <div id="pdf-container">
-          <div class="pdf-card-box">
-            <div style="font-size: 3rem; margin-bottom: 12px;">📄</div>
-            <h2 id="pdf-title" style="color: var(--accent); margin-bottom: 8px;">UMFA 2008.17.1</h2>
-            <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; margin-bottom: 16px;">
-              This funerary monument was archived as a 3D-PDF containing embedded U3D data. You can view its full historical provenance in the Overview tab or download the original 3D-PDF file.
-            </p>
-            <a id="btn-download-pdf" href="#" class="btn btn-explore-card" style="display: inline-block; padding: 10px 20px;">Download 3D-PDF (29.5 MB) 📥</a>
-          </div>
+        <!-- Mobile Floating Trigger Buttons -->
+        <div id="mobile-fab-bar">
+          <button class="btn" id="btn-mobile-toggle-light">💡 Light</button>
+          <button class="btn btn-active" id="btn-mobile-open-drawer">📖 Inscriptions & Lexicon ↑</button>
         </div>
       </div>
 
-      <!-- Mobile Drawer Backdrop -->
-      <div id="mobile-drawer-backdrop" onclick="closeMobileDrawer()"></div>
+      <!-- Backdrop for mobile drawer -->
+      <div id="mobile-drawer-backdrop"></div>
 
-      <!-- Inspector Panel (Desktop Sidebar / Mobile Drawer) -->
-      <div id="inspector-panel">
-        <div class="mobile-drawer-header">
-          <div style="flex: 1;"></div>
-          <div class="mobile-drawer-handle"></div>
-          <div style="flex: 1; text-align: right;">
-            <button class="btn btn-icon-only" onclick="closeMobileDrawer()">✕</button>
-          </div>
-        </div>
+      <!-- Right Inspector Panel -->
+      <div id="sidebar">
+        <div class="drawer-drag-handle" id="drawer-handle"></div>
 
-        <!-- Global Context-Sensitive Search Bar -->
-        <div class="global-search-container">
-          <div class="search-wrapper">
-            <input type="text" id="global-search" class="global-search-input" placeholder="Search inscriptions, deities, or vocabulary..." autocomplete="off">
-            <button class="btn-clear-search" id="btn-clear-search" title="Clear Search">✕</button>
+        <!-- Search Bar with Autocomplete Popup -->
+        <div class="search-container">
+          <div class="search-input-wrapper">
+            <input type="text" id="global-search" class="search-input" placeholder="Search inscriptions, deities, or vocabulary...">
+            <button id="btn-clear-search" class="btn-clear-search">×</button>
           </div>
           <div id="autocomplete-popup"></div>
-          <div class="search-match-stats" id="search-stats" style="display: none; margin-top: 6px; font-size: 0.74rem; color: var(--accent); display: flex; justify-content: space-between;">
-            <span id="search-match-count">0 matches</span>
-            <span style="color: var(--text-secondary);">Enter to cycle</span>
-          </div>
         </div>
 
-        <nav class="tabs-nav">
+        <!-- Navigation Tabs -->
+        <div class="tabs-bar">
           <button class="tab-btn active" data-tab="tab-overview">Overview</button>
-          <button class="tab-btn" data-tab="tab-epigraphy">Inscriptions <span class="tab-count" id="count-epigraphy">0</span></button>
-          <button class="tab-btn" data-tab="tab-deities">Deities & Family</button>
-          <button class="tab-btn" data-tab="tab-lexicon">Lexicon <span class="tab-count" id="count-lexicon">0</span></button>
-          <button class="tab-btn" data-tab="tab-context">Provenance</button>
-        </nav>
+          <button class="tab-btn" data-tab="tab-epigraphy" id="tab-btn-epigraphy">Inscriptions</button>
+          <button class="tab-btn" data-tab="tab-deities" id="tab-btn-deities">Deities & Family</button>
+          <button class="tab-btn" data-tab="tab-lexicon" id="tab-btn-lexicon">Lexicon</button>
+          <button class="tab-btn" data-tab="tab-provenance">Provenance</button>
+        </div>
 
-        <!-- Tab 1: Overview -->
-        <div id="tab-overview" class="tab-content active">
-          <div class="card">
-            <div class="card-title">
-              <span id="overview-card-title">Funerary Monument Summary</span>
-              <span class="badge-delivery badge-annotated" id="overview-delivery-badge">Annotated</span>
+        <!-- Tab Content Panes -->
+        <div class="tab-content-area">
+          <!-- Overview Tab -->
+          <div id="tab-overview" class="tab-content active">
+            <div class="card">
+              <div class="card-title">
+                <span id="overview-card-title">Monument Overview</span>
+                <span id="overview-delivery-badge" class="badge-delivery" style="position: static; box-shadow: none;">ANNOTATED</span>
+              </div>
+              <p id="overview-summary-text" style="font-size: 0.86rem; line-height: 1.5; color: #e2e8f0; margin-bottom: 12px;"></p>
+              
+              <div class="table-responsive" style="border: 1px solid var(--border); border-radius: 6px; margin-bottom: 12px;">
+                <table style="width: 100%; font-size: 0.78rem; border-collapse: collapse;">
+                  <tr>
+                    <td style="padding: 6px 10px; color: var(--text-secondary); width: 35%;">Museum Holding</td>
+                    <td id="meta-museum" style="padding: 6px 10px; font-weight: 600;">PAHMA</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 6px 10px; color: var(--text-secondary);">Accession Number</td>
+                    <td id="meta-accession" style="padding: 6px 10px; font-weight: 600;">5-522</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 6px 10px; color: var(--text-secondary);">Source BagIt</td>
+                    <td id="meta-source-bag" style="padding: 6px 10px; font-family: monospace; font-size: 0.72rem;">standrews-latest</td>
+                  </tr>
+                </table>
+              </div>
+
+              <div id="overview-footnotes-box" style="display: none; border-top: 1px solid var(--border); padding-top: 8px; margin-top: 8px;">
+                <div style="font-size: 0.74rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 4px;">Scholarly Footnotes</div>
+                <div id="overview-footnotes-list" style="font-size: 0.74rem; color: var(--text-secondary); line-height: 1.45;"></div>
+              </div>
             </div>
-            <p id="overview-narrative" style="font-size: 0.86rem; line-height: 1.55; color: #e6edf3; white-space: pre-line;">
-              Loading scholarly documentation...
-            </p>
-            <div class="stat-grid">
-              <div class="stat-item">
-                <div class="stat-label">Museum</div>
-                <div class="stat-value" id="overview-museum">PAHMA</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-label">Accession</div>
-                <div class="stat-value" id="overview-accession">5-522</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-label">Delivery Class</div>
-                <div class="stat-value" id="overview-class">3D Annotated</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-label">Source Bag</div>
-                <div class="stat-value" id="overview-bag" style="font-size: 0.72rem; word-break: break-all;">standrews-egyptian</div>
+
+            <div class="card">
+              <div class="card-title">Interactive 3D Controls</div>
+              <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.45;">
+                💡 <strong>Tip:</strong> Click on any inscription fragment or lexicon entry in the sidebar to rotate and zoom straight to that section on the 3D coffin! On desktop, hover over 3D vector outlines to see real-time tooltips.
+              </p>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Open Source Repositories & Data</div>
+              <p style="font-size: 0.8rem; color: #e2e8f0; margin-bottom: 8px;">
+                This project is open-source and openly licensed for computational Egyptology:
+              </p>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <a href="https://github.com/aculich/ucb-3dcoffins-viewer" target="_blank" rel="noopener noreferrer" class="btn">
+                  <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                  <span>Viewer App</span>
+                </a>
+                <a href="https://github.com/aculich/ucb-3dcoffins-data" target="_blank" rel="noopener noreferrer" class="btn">
+                  <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                  <span>Open Dataset</span>
+                </a>
               </div>
             </div>
           </div>
 
-          <div class="card" id="overview-credit-card">
-            <div class="card-title">Rights & Academic Credit</div>
-            <p id="overview-credit" style="font-size: 0.8rem; line-height: 1.5; color: var(--text-secondary);">
-              Images © Phoebe A. Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)
-            </p>
+          <!-- Inscriptions Tab -->
+          <div id="tab-epigraphy" class="tab-content">
+            <div id="section-pills-container" class="section-pills"></div>
+            <div id="epigraphy-list"></div>
           </div>
 
-          <div class="card">
-            <div class="card-title">Open Source Repositories & Data</div>
-            <p style="font-size: 0.82rem; line-height: 1.5; color: #e6edf3; margin-bottom: 8px;">
-              This research platform is open-source and openly licensed:
-            </p>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              <a href="https://github.com/aculich/ucb-3dcoffins-viewer" target="_blank" rel="noopener noreferrer" class="btn">
-                <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-                <span>Viewer App</span>
-              </a>
-              <a href="https://github.com/aculich/ucb-3dcoffins-data" target="_blank" rel="noopener noreferrer" class="btn">
-                <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-                <span>Curated Data Slice</span>
-              </a>
+          <!-- Deities & Family Tab -->
+          <div id="tab-deities" class="tab-content">
+            <div class="card">
+              <div class="card-title">Family & Beneficiary</div>
+              <div id="family-chips" class="chips-grid"></div>
+            </div>
+            <div class="card">
+              <div class="card-title">Protective Deities & Speeches</div>
+              <p style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 8px;">
+                Tap any deity to orient the 3D model directly to their invocation scene:
+              </p>
+              <div id="deities-chips" class="chips-grid"></div>
+            </div>
+          </div>
+
+          <!-- Lexicon Tab -->
+          <div id="tab-lexicon" class="tab-content">
+            <div id="lexicon-list"></div>
+          </div>
+
+          <!-- Provenance Tab -->
+          <div id="tab-provenance" class="tab-content">
+            <div class="card">
+              <div class="card-title">Archaeological Findspot & Context</div>
+              <p id="provenance-context-text" style="font-size: 0.84rem; line-height: 1.5; color: #e2e8f0;"></p>
+            </div>
+            <div class="card">
+              <div class="card-title">Bibliographic References</div>
+              <ul id="provenance-bib-list" style="font-size: 0.8rem; line-height: 1.55; color: var(--text-secondary); padding-left: 16px;"></ul>
             </div>
           </div>
         </div>
-
-        <!-- Tab 2: Epigraphy -->
-        <div id="tab-epigraphy" class="tab-content">
-          <div id="section-pills-container" style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;"></div>
-          <div id="epigraphy-list"></div>
-        </div>
-
-        <!-- Tab 3: Deities & Family -->
-        <div id="tab-deities" class="tab-content">
-          <div class="card">
-            <div class="card-title">Owner & Family</div>
-            <div id="family-chips"></div>
-          </div>
-          <div class="card">
-            <div class="card-title">Protective Deities & Speeches</div>
-            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px;">
-              Tap any deity to highlight their spatial annotation on the 3D model!
-            </p>
-            <div id="deities-chips"></div>
-          </div>
-        </div>
-
-        <!-- Tab 4: Lexicon -->
-        <div id="tab-lexicon" class="tab-content">
-          <div id="lexicon-list"></div>
-        </div>
-
-        <!-- Tab 5: Provenance -->
-        <div id="tab-context" class="tab-content">
-          <div class="card">
-            <div class="card-title">Archaeological Provenance</div>
-            <div id="provenance-content" style="font-size: 0.84rem; line-height: 1.5; color: #cbd5e1;"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2. Collection Gallery View -->
-    <div id="gallery-view">
-      <div class="gallery-hero">
-        <h2>The Book of the Dead in 3D: Coffin Collection</h2>
-        <p>
-          Explore 24 photogrammetry models, RTI raking light visualizations, and epigraphic annotations across ancient Egyptian funerary monuments from California and international collections.
-        </p>
-        <div class="gallery-search-bar">
-          <input type="text" id="gallery-search" class="gallery-search-input" placeholder="Search across all 24 coffins by title, museum, accession, or dynasty...">
-        </div>
-        <div class="gallery-filters" id="gallery-filter-pills">
-          <button class="filter-pill active" data-filter="all">All (24)</button>
-          <button class="filter-pill" data-filter="annotated">3D Annotated (6)</button>
-          <button class="filter-pill" data-filter="mesh">3D Mesh Only (2)</button>
-          <button class="filter-pill" data-filter="embed">Sketchfab 3D (15)</button>
-          <button class="filter-pill" data-filter="pdf">3D-PDF (1)</button>
-        </div>
-      </div>
-      <div class="gallery-grid" id="gallery-grid"></div>
-    </div>
-
-    <!-- 3. Corpus Status View -->
-    <div id="status-view">
-      <div class="status-container">
-        <h2 style="font-size: 1.6rem; color: var(--accent); margin-bottom: 8px;">Corpus Verification Status</h2>
-        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px;">
-          Bags listed are the immutable source archives that the derivation pipeline parsed.
-        </p>
-        <div class="status-metrics-row">
-          <div class="status-metric-card">
-            <div class="metric-number">24</div>
-            <div class="metric-label">Total Monuments</div>
-          </div>
-          <div class="status-metric-card">
-            <div class="metric-number">6</div>
-            <div class="metric-label">3D Annotated</div>
-          </div>
-          <div class="status-metric-card">
-            <div class="metric-number">2</div>
-            <div class="metric-label">3D Meshes</div>
-          </div>
-          <div class="status-metric-card">
-            <div class="metric-number">15</div>
-            <div class="metric-label">Sketchfab 3D</div>
-          </div>
-          <div class="status-metric-card">
-            <div class="metric-number">1</div>
-            <div class="metric-label">3D-PDF Archive</div>
-          </div>
-          <div class="status-metric-card">
-            <div class="metric-number">608</div>
-            <div class="metric-label">Spatial Regions</div>
-          </div>
-          <div class="status-metric-card">
-            <div class="metric-number">269</div>
-            <div class="metric-label">Vocabulary Terms</div>
-          </div>
-        </div>
-
-        <table class="status-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Museum</th>
-              <th>Accession</th>
-              <th>Class</th>
-              <th>Regions</th>
-              <th>Phrases</th>
-              <th>Lexicon</th>
-              <th>Source Bag</th>
-            </tr>
-          </thead>
-          <tbody id="status-table-body"></tbody>
-        </table>
       </div>
     </div>
   </div>
 
-  <!-- Modals -->
-  <!-- Shortcuts Modal -->
-  <div class="modal-overlay" id="modal-shortcuts" onclick="if(event.target===this) this.style.display='none'">
+  <!-- Modal: Word Breakdown -->
+  <div id="modal-phrase" class="modal-backdrop">
     <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-title">Keyboard Shortcuts Reference</div>
-        <button class="btn-close-modal" onclick="document.getElementById('modal-shortcuts').style.display='none'">✕</button>
-      </div>
-      <div style="font-size: 0.85rem; line-height: 1.8; color: #e2e8f0;">
-        <p><strong>Navigation & Views:</strong></p>
-        <p><kbd>?</kbd> or <kbd>⌘ /</kbd> : Toggle shortcuts modal</p>
-        <p><kbd>G</kbd> : Open Coffin Gallery</p>
-        <p><kbd>S</kbd> : Open Corpus Status page</p>
-        <p><kbd>Z</kbd> : Toggle Zen / Split view mode</p>
-        <p><kbd>R</kbd> : Reset 3D camera to front-facing view</p>
-        <p><kbd>A</kbd> : Toggle 3D vector outline annotations</p>
-        <p><strong>Search:</strong></p>
-        <p><kbd>/</kbd> or <kbd>⌘ F</kbd> : Focus search input</p>
-        <p><kbd>Enter</kbd> : Cycle through search matches</p>
-        <p><kbd>Esc</kbd> : Clear search selection / Close drawer</p>
-      </div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <div class="card-title" id="phrase-modal-title">Word-by-Word Epigraphic Analysis</div>
+      <div id="phrase-words-list" style="margin-top: 12px;"></div>
     </div>
   </div>
 
-  <!-- Word Breakdown Modal -->
-  <div class="modal-overlay" id="modal-phrase" onclick="if(event.target===this) this.style.display='none'">
+  <!-- Modal: Keyboard Shortcuts -->
+  <div id="modal-shortcuts" class="modal-backdrop">
     <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-title" id="phrase-modal-title">Word-by-Word Epigraphic Breakdown</div>
-        <button class="btn-close-modal" onclick="document.getElementById('modal-phrase').style.display='none'">✕</button>
-      </div>
-      <div id="phrase-words-list"></div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <div class="card-title">⌨ Keyboard & Touch Shortcuts</div>
+      <table class="shortcut-table">
+        <tr><td>Focus Search</td><td><span class="kbd-key">/</span> or <span class="kbd-key">Ctrl-S</span></td></tr>
+        <tr><td>Cycle Search Matches</td><td><span class="kbd-key">Enter</span></td></tr>
+        <tr><td>1st Esc: Clear Search / 2nd Esc: Recenter</td><td><span class="kbd-key">Escape</span></td></tr>
+        <tr><td>3D Camera Orbit</td><td><span class="kbd-key">h</span> <span class="kbd-key">j</span> <span class="kbd-key">k</span> <span class="kbd-key">l</span> or 1-Finger Drag</td></tr>
+        <tr><td>3D Zoom In / Out</td><td><span class="kbd-key">+</span> / <span class="kbd-key">-</span> or Pinch</td></tr>
+        <tr><td>Reset Upright Front Camera</td><td><span class="kbd-key">r</span></td></tr>
+        <tr><td>Toggle 3D Annotations</td><td><span class="kbd-key">a</span></td></tr>
+        <tr><td>Toggle Material Mode</td><td><span class="kbd-key">m</span></td></tr>
+        <tr><td>Toggle Zen Mode</td><td><span class="kbd-key">z</span></td></tr>
+        <tr><td>Switch Tabs (Overview..Provenance)</td><td><span class="kbd-key">1</span> - <span class="kbd-key">5</span> or <span class="kbd-key">[</span> / <span class="kbd-key">]</span></td></tr>
+      </table>
     </div>
   </div>
 
-  <!-- Data Source Resolver Modal -->
-  <div class="modal-overlay" id="modal-datasource" onclick="if(event.target===this) this.style.display='none'">
+  <!-- Modal: Asset Data Source Chooser -->
+  <div id="modal-data-source" class="modal-backdrop">
     <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-title">Data Storage & Asset Source</div>
-        <button class="btn-close-modal" onclick="document.getElementById('modal-datasource').style.display='none'">✕</button>
-      </div>
-      <div style="font-size: 0.86rem; line-height: 1.6; color: #e2e8f0;">
-        <p style="margin-bottom: 12px;">
-          The viewer can resolve photogrammetry meshes and bundles from three storage tiers:
-        </p>
-        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
-          <button class="btn" style="justify-content: flex-start;" onclick="setDataSourceParam('local')">
-            💾 <strong>Local Cache</strong> (./data via portless localhost)
-          </button>
-          <button class="btn" style="justify-content: flex-start;" onclick="setDataSourceParam('gh')">
-            🌐 <strong>GitHub Pages Data Repo</strong> (ucb-3dcoffins-data CDN)
-          </button>
-          <button class="btn" style="justify-content: flex-start;" onclick="setDataSourceParam('gcs')">
-            ☁️ <strong>Google Cloud Storage (GCS)</strong> (project default-1234 Standard Bucket)
-          </button>
-        </div>
-        <div style="font-size: 0.78rem; color: var(--text-secondary);">
-          Current Source Base: <code id="current-datasource-text" style="color: var(--accent);">data</code>
-        </div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <div class="card-title">📦 Asset Data Source Resolver</div>
+      <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.45;">
+        Configure which asset repository or cloud storage tier supplies 3D photogrammetric meshes, MTL materials, high-res textures, and Gardiner fonts:
+      </p>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button class="btn" style="justify-content: flex-start; padding: 10px 14px;" onclick="switchDataSource('local')">
+          <div>
+            <div style="font-weight: 700;">🏠 Local Cache (data/)</div>
+            <div style="font-size: 0.72rem; color: var(--text-secondary);">Direct filesystem access via portless localhost dev server. Zero latency.</div>
+          </div>
+        </button>
+        <button class="btn" style="justify-content: flex-start; padding: 10px 14px;" onclick="switchDataSource('gh')">
+          <div>
+            <div style="font-weight: 700;">🐙 GitHub Data Repo (ucb-3dcoffins-data)</div>
+            <div style="font-size: 0.72rem; color: var(--text-secondary);">Public GitHub Pages CDN data slice (136 MB). Zero cloud egress fees.</div>
+          </div>
+        </button>
+        <button class="btn" style="justify-content: flex-start; padding: 10px 14px;" onclick="switchDataSource('gcs')">
+          <div>
+            <div style="font-weight: 700;">☁ Google Cloud Storage Standard Bucket</div>
+            <div style="font-size: 0.72rem; color: var(--text-secondary);">Dedicated GCS Standard bucket in project default-1234.</div>
+          </div>
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="data/js/three/three.js" onerror="this.src='raw_data/psamtik/three/three.js'"></script>
-  <script src="data/js/three/controls/OrbitControls.js" onerror="this.src='raw_data/psamtik/three/js/controls/OrbitControls.js'"></script>
-  <script src="data/js/three/loaders/MTLLoader.js" onerror="this.src='raw_data/psamtik/three/js/loaders/MTLLoader.js'"></script>
-  <script src="data/js/three/loaders/OBJLoader.js" onerror="this.src='raw_data/psamtik/three/js/loaders/OBJLoader.js'"></script>
-  <script src="data/js/reslite.js" onerror="this.src='raw_data/psamtik/reslite.js'"></script>
-  <script src="data/js/aux.js" onerror="this.src='raw_data/psamtik/aux.js'"></script>
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="spinner"></div>
+    <div id="loading-text" style="color: var(--accent); font-weight: 600; font-size: 0.95rem;">Initializing Book of the Dead in 3D...</div>
+  </div>
 
+  <!-- Main Unified JavaScript Application -->
   <script>
-    // Embedded Canonical Registry for instant initial rendering
-    const EMBEDDED_REGISTRY = {
+    // Embedded Corpus Registry (All 24 Monuments)
+    const registryData = {
   "schemaVersion": 2,
-  "generated": "2026-09-03T11:30:45Z",
+  "generated": "2026-09-03T12:06:23Z",
   "deliveryCounts": {
     "annotated": 6,
     "mesh": 2,
@@ -1669,7 +1655,7 @@
       "phrases": 28,
       "lexicon": 75,
       "bag": "standrews-egyptian-2026-09-02T1747",
-      "lastVerified": "2026-09-03T11:30:44Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "pahma-6-19912",
@@ -1686,7 +1672,7 @@
       "phrases": 7,
       "lexicon": 22,
       "bag": "standrews-egyptian-2026-09-02T1747",
-      "lastVerified": "2026-09-03T11:30:44Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "pahma-6-19928",
@@ -1703,7 +1689,7 @@
       "phrases": 0,
       "lexicon": 0,
       "bag": "standrews-egyptian-2026-09-02T1747",
-      "lastVerified": "2026-09-03T11:30:44Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "pahma-6-19930.1",
@@ -1712,7 +1698,7 @@
       "accession": "6-19930.1",
       "delivery": "mesh",
       "status": "No region annotations exist upstream. Mesh is St Andrews patjenef3.obj; 3D-PDF is a sidecar.",
-      "thumbnail": null,
+      "thumbnail": "thumbnail.jpg",
       "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
       "sketchfabUid": null,
       "stAndrewsSlug": "patjenef",
@@ -1720,7 +1706,7 @@
       "phrases": 0,
       "lexicon": 0,
       "bag": "standrews-egyptian-2026-09-02T1747",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "pahma-6-19927",
@@ -1729,7 +1715,7 @@
       "accession": "6-19927",
       "delivery": "annotated",
       "status": "Full annotated viewer from the St Andrews HTML (regions, phrases, lexicon).",
-      "thumbnail": null,
+      "thumbnail": "thumbnail.jpg",
       "credit": "Images \u00a9 Phoebe A Hearst Museum of Anthropology 2017 (per Drupal credit lines; confirm per object)",
       "sketchfabUid": null,
       "stAndrewsSlug": "anonymous1",
@@ -1737,7 +1723,7 @@
       "phrases": 31,
       "lexicon": 0,
       "bag": "standrews-egyptian-2026-09-02T1747",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "pahma-5-1404ab",
@@ -1754,7 +1740,7 @@
       "phrases": 0,
       "lexicon": 0,
       "bag": "sketchfab-metadata-2026-09-03T0427",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "pahma-5-1404c",
@@ -1771,7 +1757,7 @@
       "phrases": 3,
       "lexicon": 0,
       "bag": "standrews-egyptian-2026-09-02T1747",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "sdmom-2001.063.0001",
@@ -1788,7 +1774,7 @@
       "phrases": 0,
       "lexicon": 0,
       "bag": "sketchfab-metadata-2026-09-03T0427",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "sfsu-104.1-104.2",
@@ -1805,7 +1791,7 @@
       "phrases": 0,
       "lexicon": 0,
       "bag": "sketchfab-metadata-2026-09-03T0427",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "sfsu-105.1-105.2",
@@ -1822,7 +1808,7 @@
       "phrases": 0,
       "lexicon": 0,
       "bag": "sketchfab-metadata-2026-09-03T0427",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "sfsu-107.1",
@@ -1839,7 +1825,7 @@
       "phrases": 0,
       "lexicon": 0,
       "bag": "sketchfab-metadata-2026-09-03T0427",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "sfsu-106.1-106.2",
@@ -1856,7 +1842,7 @@
       "phrases": 0,
       "lexicon": 0,
       "bag": "sketchfab-metadata-2026-09-03T0427",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "cma-71.2254",
@@ -1873,7 +1859,7 @@
       "phrases": 17,
       "lexicon": 47,
       "bag": "standrews-egyptian-2026-09-02T1747",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "umfa-2008.17.1",
@@ -1890,7 +1876,7 @@
       "phrases": 0,
       "lexicon": 0,
       "bag": "drupal-3dcoffins-2026-09-03T0427",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "rem-rc-2186",
@@ -1907,7 +1893,7 @@
       "phrases": 0,
       "lexicon": 0,
       "bag": "sketchfab-metadata-2026-09-03T0427",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "wshs-ankh-wenennefer-inner",
@@ -1924,7 +1910,7 @@
       "phrases": 0,
       "lexicon": 0,
       "bag": "sketchfab-metadata-2026-09-03T0427",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "wshs-ankh-wenennefer-outer",
@@ -1941,7 +1927,7 @@
       "phrases": 0,
       "lexicon": 0,
       "bag": "sketchfab-metadata-2026-09-03T0427",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "famsf-2002.2a-b",
@@ -1958,7 +1944,7 @@
       "phrases": 54,
       "lexicon": 125,
       "bag": "standrews-egyptian-2026-09-02T1747",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "famsf-42895",
@@ -1975,7 +1961,7 @@
       "phrases": 0,
       "lexicon": 0,
       "bag": "sketchfab-metadata-2026-09-03T0427",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "pahma-5-1405-basin-inner",
@@ -1992,7 +1978,7 @@
       "phrases": 0,
       "lexicon": 0,
       "bag": "sketchfab-metadata-2026-09-03T0427",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "pahma-5-1405-lid-inner",
@@ -2009,7 +1995,7 @@
       "phrases": 0,
       "lexicon": 0,
       "bag": "sketchfab-metadata-2026-09-03T0427",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "pahma-5-1405-lid-outer",
@@ -2026,7 +2012,7 @@
       "phrases": 0,
       "lexicon": 0,
       "bag": "sketchfab-metadata-2026-09-03T0427",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "pahma-5-613",
@@ -2043,7 +2029,7 @@
       "phrases": 0,
       "lexicon": 0,
       "bag": "sketchfab-metadata-2026-09-03T0427",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     },
     {
       "id": "pahma-6-16015",
@@ -2060,130 +2046,195 @@
       "phrases": 0,
       "lexicon": 0,
       "bag": "sketchfab-metadata-2026-09-03T0427",
-      "lastVerified": "2026-09-03T11:30:45Z"
+      "lastVerified": "2026-09-03T12:06:23Z"
     }
   ]
 };
 
-    // State
-    let registryData = EMBEDDED_REGISTRY;
+    // Epigraphy fragment-to-spatial-tag mapping for worked example and generalized lookups
+    const fragmentTagMap = {
+      'text:front_0': 'text:psamtik1',
+      'text:front_1': 'text:psamtik2',
+      'text:front_2': 'text:psamtik3',
+      'text:front_3': 'text:nut',
+      'text:front_4': 'text:psamtik4',
+      'text:front_5': 'text:psamtik5',
+      'text:right_0': 'text:imset',
+      'text:right_1': 'text:duamutef',
+      'text:right_2': 'text:maitef',
+      'text:right_3': 'text:horkhentyirty',
+      'text:left_0': 'text:hapi',
+      'text:left_1': 'text:qebehsenuef',
+      'text:left_2': 'text:kherybaqef',
+      'text:left_3': 'text:anubis',
+      'text:bottomright_0': 'text:isis',
+      'text:bottomleft_0': 'text:nephthys',
+      'text:feet_0': 'text:feet',
+      'text:feet_1': 'text:feet'
+    };
+
+    // Global State
     let bundleData = null;
     let currentObjectId = 'pahma-5-522';
-    let currentView = 'explorer'; // 'explorer' | 'gallery' | 'status'
+    let currentView = 'explorer'; // 'explorer', 'gallery', 'status'
 
-    // Three.js Scene State
-    let scene = null, camera = null, renderer = null, controls = null;
-    let object3D = null, annotationGroup = null;
-    let directionalLight = null, pointLight = null, ambientLight = null, lightTargetObj = null;
-    let reliefMaterial = null, wireframeMaterial = null;
-    let originalMaterials = new Map();
+    // Three.js & RTI State
+    let scene, camera, renderer, controls, object3D;
+    let ambientLight, directionalLight, pointLight, lightTargetObj;
+    let selectedTag = null;
+    let hoveredSidebarTag = null;
+    let showAnnotations = true;
+    let annotationGroup = new THREE.Group();
     let globalTransMatrix = new THREE.Matrix4();
     let rotationMatrix = new THREE.Matrix4();
-    let autoLightOrbit = false, autoLightAngle = 45;
-    let activeAnnotationMesh = null, selectedAnnotationTag = null;
-    let mouseDownCoord = { x: 0, y: 0 };
+
+    // Click Zoom Tier State Machine: tag -> zoomTier (0 = maintain/highlight, 1 = close inspection, 2 = macro)
+    let zoomTierMap = new Map();
+
+    // Materials
+    let originalMaterials = new Map();
+    let reliefMaterial, wireframeMaterial;
+
+    // Target camera positions for smooth interpolation
+    let targetCameraPos = null;
+    let targetLookAt = null;
+
+    // Auto Light Orbit State
+    let autoLightOrbit = false;
+    let autoLightAngle = 45;
+
+    // Search Index & Autocomplete
     let searchIndex = [];
-    let currentSearchMatchIndex = -1;
     let searchMatches = [];
+    let currentSearchIndex = -1;
+    let activeAutocompleteIndex = -1;
+    let currentCompletions = [];
+    let suppressAutocompleteUntilTyping = false;
+    let searchDebounceTimer = null;
+    let autocompleteDebounceTimer = null;
+
+    // Raycasting for 3D area picking
+    let mouseDownCoord = { x: 0, y: 0 };
 
     // --- 1. Multi-Tier Data Source Resolver ---
     function getDataSource() {
-      const q = new URLSearchParams(location.search);
-      const custom = q.get('data_base');
-      if (custom) return custom.replace(/\/+$/, '');
-      const src = q.get('data_source');
-      if (src === 'gcs') return 'https://storage.googleapis.com/ucb-3dcoffins-public/data';
-      if (src === 'gh') return 'https://aculich.github.io/ucb-3dcoffins-data/data';
-      return 'data';
+      const p = new URLSearchParams(window.location.search);
+      const ds = p.get('data_source');
+      if (ds) return ds;
+      if (window.location.hostname.includes('github.io')) return 'gh';
+      return 'local';
     }
 
     function resolveDataPath(relPath) {
-      const base = getDataSource();
-      if (!relPath) return base;
-      if (relPath.startsWith('http://') || relPath.startsWith('https://')) return relPath;
-      const cleanRel = relPath.replace(/^\/+/, '').replace(/^data\//, '');
-      return `${base}/${cleanRel}`;
-    }
-
-    function setDataSourceParam(mode) {
-      const url = new URL(location.href);
-      if (mode === 'local') {
-        url.searchParams.delete('data_source');
-        url.searchParams.delete('data_base');
-      } else {
-        url.searchParams.set('data_source', mode);
+      const p = new URLSearchParams(window.location.search);
+      const customBase = p.get('data_base');
+      if (customBase) {
+        return customBase.replace(/\/?$/, '/') + relPath;
       }
-      location.href = url.toString();
+      const ds = getDataSource();
+      if (ds === 'gh') {
+        return `https://aculich.github.io/ucb-3dcoffins-data/data/${relPath}`;
+      } else if (ds === 'gcs') {
+        return `https://storage.googleapis.com/ucb-3dcoffins-public/data/${relPath}`;
+      }
+      // Default: Local development cache
+      return `data/${relPath}`;
     }
 
-    // --- 2. URL Routing & Navigation ---
-    function parseRouteParams() {
-      const q = new URLSearchParams(location.search);
-      const path = location.pathname.replace(/\/+$/, '');
-      const viewParam = q.get('view');
-      const objParam = q.get('object');
-      
-      if (viewParam === 'gallery') return { view: 'gallery', object: null };
-      if (viewParam === 'status' || path.endsWith('/status')) return { view: 'status', object: null };
-      return { view: 'explorer', object: objParam || 'pahma-5-522' };
+    function switchDataSource(ds) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('data_source', ds);
+      window.location.href = url.toString();
     }
 
-    function navigate(view, objectId = null, push = true) {
-      currentView = view;
-      if (objectId) currentObjectId = objectId;
-      
-      const url = new URL(location.href);
+    // --- 2. Application Boot & Routing ---
+    async function init() {
+      populateObjectPicker();
+      setupEventListeners();
+      initKeyboardShortcuts();
+      initMobileControls();
+
+      const params = new URLSearchParams(window.location.search);
+      const viewParam = params.get('view');
+      const objParam = params.get('object');
+
+      if (viewParam === 'gallery') {
+        navigate('gallery', null, false);
+      } else if (viewParam === 'status') {
+        navigate('status', null, false);
+      } else {
+        const targetId = objParam || 'pahma-5-522';
+        navigate('explorer', targetId, false);
+      }
+
+      window.addEventListener('popstate', (e) => {
+        const p = new URLSearchParams(window.location.search);
+        const v = p.get('view') || 'explorer';
+        const o = p.get('object') || 'pahma-5-522';
+        if (v === 'gallery') switchView('gallery');
+        else if (v === 'status') switchView('status');
+        else {
+          switchView('explorer');
+          if (o !== currentObjectId) loadObject(o);
+        }
+      });
+    }
+
+    function navigate(view, objectId = null, pushState = true) {
+      const url = new URL(window.location.href);
       if (view === 'gallery') {
         url.searchParams.set('view', 'gallery');
         url.searchParams.delete('object');
+        switchView('gallery');
       } else if (view === 'status') {
         url.searchParams.set('view', 'status');
         url.searchParams.delete('object');
+        switchView('status');
       } else {
         url.searchParams.delete('view');
-        url.searchParams.set('object', currentObjectId);
+        const targetObj = objectId || currentObjectId || 'pahma-5-522';
+        url.searchParams.set('object', targetObj);
+        switchView('explorer');
+        loadObject(targetObj);
       }
-
-      if (push) history.pushState(null, '', url.toString());
-
-      updateViewVisibility();
-      if (view === 'explorer') {
-        loadObject(currentObjectId);
-      }
-    }
-
-    window.addEventListener('popstate', () => {
-      const route = parseRouteParams();
-      navigate(route.view, route.object, false);
-    });
-
-    function updateViewVisibility() {
-      const explorer = document.getElementById('explorer-view');
-      const gallery = document.getElementById('gallery-view');
-      const status = document.getElementById('status-view');
-      const btnGallery = document.getElementById('btn-gallery');
-      const btnStatus = document.getElementById('btn-status');
-      const picker = document.getElementById('object-picker');
-
-      explorer.style.display = currentView === 'explorer' ? 'flex' : 'none';
-      gallery.style.display = currentView === 'gallery' ? 'block' : 'none';
-      status.style.display = currentView === 'status' ? 'block' : 'none';
-
-      btnGallery.classList.toggle('active', currentView === 'gallery');
-      btnStatus.classList.toggle('active', currentView === 'status');
-
-      if (currentView === 'gallery') {
-        picker.value = '__gallery__';
-        document.title = 'Coffin Collection Gallery | The Book of the Dead in 3D';
-      } else if (currentView === 'status') {
-        picker.value = '__status__';
-        document.title = 'Corpus Status | The Book of the Dead in 3D';
-      } else {
-        picker.value = currentObjectId;
+      if (pushState) {
+        window.history.pushState({}, '', url.toString());
       }
     }
 
-    // --- 3. Coffin Picker & Registry Population ---
+    function switchView(view) {
+      currentView = view;
+      document.querySelectorAll('.platform-view').forEach(el => el.classList.remove('active'));
+      const activeEl = document.getElementById(`${view}-view`);
+      if (activeEl) activeEl.classList.add('active');
+
+      document.getElementById('btn-nav-gallery').classList.toggle('btn-active', view === 'gallery');
+      document.getElementById('btn-nav-status').classList.toggle('btn-active', view === 'status');
+
+      if (view === 'gallery') {
+        document.getElementById('header-object-title').innerText = 'Collection Gallery (24 Monuments)';
+        document.getElementById('header-subtitle').innerText = 'UC Berkeley Book of the Dead in 3D';
+        document.getElementById('header-museum-badge').innerText = 'ALL COLLECTIONS';
+        document.getElementById('object-picker').value = '__gallery__';
+        renderGallery();
+      } else if (view === 'status') {
+        document.getElementById('header-object-title').innerText = 'Corpus Status & Data Governance';
+        document.getElementById('header-subtitle').innerText = 'Archaeological Provenance & BagIt Archives';
+        document.getElementById('header-museum-badge').innerText = 'ALL COLLECTIONS';
+        document.getElementById('object-picker').value = '__status__';
+        renderStatus();
+      } else if (view === 'explorer') {
+        if (bundleData) {
+          document.getElementById('header-object-title').innerText = bundleData.metadata.title;
+          document.getElementById('header-museum-badge').innerText = `${bundleData.metadata.museum} • ${bundleData.metadata.accession || ''}`;
+          document.getElementById('header-subtitle').innerText = `${bundleData.delivery.toUpperCase()} • ${bundleData.status || ''}`;
+          document.getElementById('object-picker').value = bundleData.id;
+        }
+        if (renderer) onWindowResize();
+      }
+    }
+
+    // --- 3. Header Object Switcher ---
     function populateObjectPicker() {
       const objs = registryData.objects || [];
       const groups = {
@@ -2193,12 +2244,10 @@
         pdf: document.getElementById('optgroup-pdf')
       };
 
-      Object.values(groups).forEach(g => g.innerHTML = '');
-
       objs.forEach(o => {
         const opt = document.createElement('option');
         opt.value = o.id;
-        const regionText = o.regions ? ` (${o.regions} regions)` : '';
+        const regionText = o.regions ? ` (${o.regions} reg)` : '';
         opt.textContent = `${o.museum} ${o.accession || ''}: ${o.title}${regionText}`;
         if (groups[o.delivery]) {
           groups[o.delivery].appendChild(opt);
@@ -2299,6 +2348,9 @@
 
     // --- 6. Coffin Object Loader (Adaptive Stage & Tabs) ---
     async function loadObject(objectId) {
+      if (bundleData && bundleData.id === objectId) return;
+      currentObjectId = objectId;
+
       const loader = document.getElementById('loading-screen');
       loader.style.display = 'flex';
       loader.style.opacity = '1';
@@ -2316,6 +2368,11 @@
         document.getElementById('header-museum-badge').innerText = `${bundleData.metadata.museum} • ${bundleData.metadata.accession || ''}`;
         document.getElementById('header-subtitle').innerText = `${bundleData.delivery.toUpperCase()} • ${bundleData.status || ''}`;
         document.getElementById('object-picker').value = objectId;
+
+        // Reset click zoom tier map
+        zoomTierMap.clear();
+        selectedTag = null;
+        hoveredSidebarTag = null;
 
         // Render Inspector Tabs
         renderOverviewTab();
@@ -2350,8 +2407,6 @@
       const rtiPanel = document.getElementById('viewport-controls-panel');
       const scaleBar = document.getElementById('scale-bar-overlay');
       const annotCard = document.getElementById('annotations-control-card');
-      const btnAnnot = document.getElementById('btn-toggle-annotations');
-
       const delivery = bundleData.delivery;
 
       if (delivery === 'annotated' || delivery === 'mesh') {
@@ -2363,7 +2418,6 @@
         banner.style.display = 'none';
         
         annotCard.style.display = delivery === 'annotated' ? 'block' : 'none';
-        btnAnnot.style.display = delivery === 'annotated' ? 'inline-flex' : 'none';
 
         if (!scene) initThree();
         await load3DMesh();
@@ -2484,7 +2538,9 @@
         object3D = null;
       }
       while (annotationGroup.children.length > 0) {
-        annotationGroup.remove(annotationGroup.children[0]);
+        const c = annotationGroup.children[0];
+        annotationGroup.remove(c);
+        if (c.geometry) c.geometry.dispose();
       }
       originalMaterials.clear();
 
@@ -2502,50 +2558,10 @@
           objLoader.setMaterials(materials);
           objLoader.setPath(baseDir);
           objLoader.load(objRel.substring(objRel.lastIndexOf('/') + 1), (obj) => {
-            object3D = obj;
-            object3D.traverse((child) => {
-              if (child.isMesh) {
-                originalMaterials.set(child.uuid, child.material);
-                if (child.material) {
-                  child.material.shininess = 25;
-                  child.material.specular = new THREE.Color(0x333333);
-                }
-              }
-            });
-
-            // Centering matrix
-            const bbox = new THREE.Box3().setFromObject(object3D);
-            const size = new THREE.Vector3();
-            const center = new THREE.Vector3();
-            bbox.getSize(size);
-            bbox.getCenter(center);
-
-            const mMov = new THREE.Matrix4().makeTranslation(-center.x, -center.y, -center.z);
-            let q = bundleData.model3D.initialCamera?.quaternion;
-            if (q) {
-              rotationMatrix = new THREE.Matrix4().makeRotationFromQuaternion(new THREE.Quaternion(q.x, q.y, q.z, q.w));
-            } else {
-              rotationMatrix = new THREE.Matrix4().identity();
-            }
-            globalTransMatrix = new THREE.Matrix4().multiplyMatrices(rotationMatrix, mMov);
-
-            object3D.position.set(0, 0, 0);
-            object3D.rotation.set(0, 0, 0);
-            object3D.updateMatrix();
-            object3D.applyMatrix(globalTransMatrix);
-            scene.add(object3D);
-
-            if (bundleData.delivery === 'annotated') {
-              rebuildAnnotationLines();
-            }
-
-            const framing = getFrontFacingFraming();
-            camera.position.copy(framing.position);
-            controls.target.copy(framing.target);
-            camera.lookAt(framing.target);
+            setupLoadedObject(obj);
             resolve();
           }, undefined, (err) => {
-            console.error('Error loading OBJ:', err);
+            console.error('Error loading OBJ with materials:', err);
             resolve();
           });
         }, undefined, () => {
@@ -2553,12 +2569,63 @@
           const objLoader = new THREE.OBJLoader();
           objLoader.setPath(baseDir);
           objLoader.load(objRel.substring(objRel.lastIndexOf('/') + 1), (obj) => {
-            object3D = obj;
-            scene.add(object3D);
+            setupLoadedObject(obj);
+            resolve();
+          }, undefined, (err) => {
+            console.error('Error loading OBJ alone:', err);
             resolve();
           });
         });
       });
+    }
+
+    function setupLoadedObject(obj) {
+      object3D = obj;
+      object3D.traverse((child) => {
+        if (child.isMesh) {
+          originalMaterials.set(child.uuid, child.material);
+          if (child.material) {
+            child.material.shininess = 25;
+            child.material.specular = new THREE.Color(0x333333);
+          }
+        }
+      });
+
+      // Centering & Bounding Box
+      const bbox = new THREE.Box3().setFromObject(object3D);
+      const xlen = bbox.max.x - bbox.min.x;
+      const ylen = bbox.max.y - bbox.min.y;
+      const zlen = bbox.max.z - bbox.min.z;
+      const objectMovX = -(bbox.min.x + xlen / 2);
+      const objectMovY = -(bbox.min.y + ylen / 2);
+      const objectMovZ = -(bbox.min.z + zlen / 2);
+
+      // Apply initial camera quaternion from St Andrews metadata
+      let q = bundleData.model3D.initialCamera?.quaternion;
+      if (q) {
+        const quaternion = new THREE.Quaternion(q.x, q.y, q.z, q.w);
+        rotationMatrix = new THREE.Matrix4().makeRotationFromQuaternion(quaternion);
+      } else {
+        rotationMatrix = new THREE.Matrix4().identity();
+      }
+      const mMov = new THREE.Matrix4().makeTranslation(objectMovX, objectMovY, objectMovZ);
+      globalTransMatrix = new THREE.Matrix4().multiplyMatrices(rotationMatrix, mMov);
+
+      object3D.position.set(0, 0, 0);
+      object3D.rotation.set(0, 0, 0);
+      object3D.updateMatrix();
+      object3D.applyMatrix(globalTransMatrix);
+      scene.add(object3D);
+
+      if (bundleData.delivery === 'annotated') {
+        rebuildAnnotationLines();
+      }
+
+      // Initial upright front camera framing
+      const framing = getFrontFacingFraming();
+      camera.position.copy(framing.position);
+      controls.target.copy(framing.target);
+      camera.lookAt(framing.target);
     }
 
     function getFrontFacingFraming() {
@@ -2569,341 +2636,559 @@
       bbox.getSize(size);
       bbox.getCenter(center);
 
-      const maxDim = Math.max(size.x, size.y, size.z) || 2.5;
+      let frontNormal = new THREE.Vector3(0, 0, 1);
+      if (bundleData && bundleData.spatialAnnotations) {
+        const normals = [];
+        for (const [tag, area] of Object.entries(bundleData.spatialAnnotations)) {
+          if (area && area.viewDirection) {
+            const rawDir = new THREE.Vector3(area.viewDirection.x, area.viewDirection.y, area.viewDirection.z);
+            const outNorm = rawDir.clone().applyMatrix4(rotationMatrix).normalize().multiplyScalar(-1);
+            if (tag.startsWith('text:front') || tag.startsWith('text:nut') || tag.startsWith('text:name') || tag.startsWith('text:psamtik')) {
+              normals.push(outNorm.multiplyScalar(3));
+            } else {
+              normals.push(outNorm);
+            }
+          }
+        }
+        if (normals.length > 0) {
+          frontNormal.set(0, 0, 0);
+          normals.forEach(n => frontNormal.add(n));
+          frontNormal.normalize();
+        }
+      }
+
+      const maxDim = Math.max(size.y, size.x * 0.7, size.z * 0.7) || 2.5;
       const fovRad = (camera.fov * Math.PI) / 180;
-      const fitDist = (maxDim / 2) / Math.tan(fovRad / 2) * 1.35;
-      return { position: new THREE.Vector3(center.x, center.y, center.z + Math.max(3.2, fitDist)), target: center };
+      const fitDist = (maxDim / 2) / Math.tan(fovRad / 2) * 1.25;
+
+      const startPos = center.clone().add(frontNormal.clone().multiplyScalar(Math.max(3.0, fitDist)));
+      return { position: startPos, target: center };
     }
 
+    // --- 9. 3D Spatial Vector Annotation Lines ---
     function rebuildAnnotationLines() {
       if (!bundleData || !bundleData.spatialAnnotations) return;
       while (annotationGroup.children.length > 0) {
-        annotationGroup.remove(annotationGroup.children[0]);
+        const c = annotationGroup.children[0];
+        annotationGroup.remove(c);
+        if (c.geometry) c.geometry.dispose();
       }
 
       const thickness = parseInt(document.getElementById('line-thickness')?.value || 2);
       const opacity = parseFloat(document.getElementById('line-opacity')?.value || 0.85);
 
-      Object.entries(bundleData.spatialAnnotations).forEach(([tag, area]) => {
-        if (!area.lines || !area.lines.length) return;
-        const geom = new THREE.Geometry();
-        area.lines.forEach(l => {
-          const v1 = new THREE.Vector3(l.from.x, l.from.y, l.from.z).applyMatrix4(globalTransMatrix);
-          const v2 = new THREE.Vector3(l.to.x, l.to.y, l.to.z).applyMatrix4(globalTransMatrix);
-          geom.vertices.push(v1, v2);
-        });
+      for (const [tag, area] of Object.entries(bundleData.spatialAnnotations)) {
+        if (!area.lines || area.lines.length === 0) continue;
 
-        const mat = new THREE.LineBasicMaterial({
-          color: (tag === selectedAnnotationTag) ? 0x38bdf8 : 0xe5b842,
-          linewidth: thickness,
+        let outwardNormal = new THREE.Vector3(0, 0, 1);
+        if (area.viewDirection) {
+          const rawDir = new THREE.Vector3(area.viewDirection.x, area.viewDirection.y, area.viewDirection.z);
+          outwardNormal = rawDir.clone().applyMatrix4(rotationMatrix).normalize().multiplyScalar(-1);
+        }
+
+        const geometry = new THREE.Geometry();
+        const worldPoints = [];
+
+        const passes = [{ x: 0, y: 0 }];
+        const step = 0.0018;
+        if (thickness >= 2) passes.push({ x: step, y: 0 }, { x: -step, y: 0 });
+        if (thickness >= 3) passes.push({ x: 0, y: step }, { x: 0, y: -step });
+        if (thickness >= 4) passes.push({ x: step, y: step }, { x: -step, y: -step });
+
+        for (const line of area.lines) {
+          const baseFrom = new THREE.Vector3(line.from.x, line.from.y, line.from.z).applyMatrix4(globalTransMatrix);
+          const baseTo = new THREE.Vector3(line.to.x, line.to.y, line.to.z).applyMatrix4(globalTransMatrix);
+
+          // Normal offset to avoid Z-fighting
+          const normalOffset = outwardNormal.clone().multiplyScalar(0.008);
+          baseFrom.add(normalOffset);
+          baseTo.add(normalOffset);
+
+          worldPoints.push(baseFrom, baseTo);
+
+          passes.forEach(pass => {
+            const vFrom = baseFrom.clone().add(new THREE.Vector3(pass.x, pass.y, 0));
+            const vTo = baseTo.clone().add(new THREE.Vector3(pass.x, pass.y, 0));
+            geometry.vertices.push(vFrom, vTo);
+          });
+        }
+
+        const centroid = new THREE.Vector3();
+        worldPoints.forEach(p => centroid.add(p));
+        if (worldPoints.length > 0) centroid.multiplyScalar(1 / worldPoints.length);
+
+        let maxDist = 0.05;
+        worldPoints.forEach(p => maxDist = Math.max(maxDist, p.distanceTo(centroid)));
+
+        const material = new THREE.LineBasicMaterial({
+          color: 0x38bdf8,
           transparent: true,
-          opacity: (tag === selectedAnnotationTag) ? 1.0 : opacity
+          opacity: opacity,
+          depthTest: true
         });
 
-        const lineMesh = new THREE.LineSegments(geom, mat);
-        lineMesh.userData = { tag };
+        const lineMesh = new THREE.LineSegments(geometry, material);
+        lineMesh.name = tag;
+        lineMesh.userData = {
+          tag: tag,
+          centroid: centroid,
+          outwardNormal: outwardNormal,
+          radius: maxDist,
+          points: worldPoints
+        };
         annotationGroup.add(lineMesh);
+      }
+
+      if (!scene.children.includes(annotationGroup)) {
+        scene.add(annotationGroup);
+      }
+
+      updateAnnotationHighlight();
+    }
+
+    function updateAnnotationHighlight() {
+      const baseOpacity = parseFloat(document.getElementById('line-opacity')?.value || 0.85);
+
+      annotationGroup.children.forEach(child => {
+        const isSelected = selectedTag && (child.name === selectedTag || child.name.startsWith(selectedTag + ':') || child.name.startsWith(selectedTag));
+        const isHovered = hoveredSidebarTag && (child.name === hoveredSidebarTag || child.name.startsWith(hoveredSidebarTag + ':') || child.name.startsWith(hoveredSidebarTag));
+
+        if (isSelected) {
+          child.material.color.setHex(0xffd700);
+          child.material.opacity = 1.0;
+        } else if (isHovered) {
+          child.material.color.setHex(0x38bdf8);
+          child.material.opacity = 1.0;
+        } else if (selectedTag) {
+          child.material.color.setHex(0x38bdf8);
+          child.material.opacity = Math.max(0.18, baseOpacity * 0.22);
+        } else {
+          child.material.color.setHex(0x38bdf8);
+          child.material.opacity = baseOpacity;
+        }
       });
     }
 
-    function updateRakingLight() {
-      if (!directionalLight || !pointLight) return;
-      const deg = parseFloat(document.getElementById('light-angle').value);
-      const pitchDeg = parseFloat(document.getElementById('light-pitch')?.value || 20);
-      const intensity = parseFloat(document.getElementById('light-intensity').value);
+    function selectArea(tag, from3D = false) {
+      const isSameTag = (selectedTag === tag);
+      selectedTag = tag;
+      updateAnnotationHighlight();
 
-      document.getElementById('light-angle-val').innerText = `${deg}° (Pitch ${pitchDeg}°)`;
-
-      const rad = (deg * Math.PI) / 180;
-      const pitchRad = (pitchDeg * Math.PI) / 180;
-      const targetPos = controls ? controls.target : new THREE.Vector3(0, 0, 0);
-      lightTargetObj.position.copy(targetPos);
-
-      const torchDist = 1.6;
-      const dx = Math.cos(rad) * Math.cos(pitchRad) * torchDist;
-      const dy = Math.sin(rad) * Math.cos(pitchRad) * torchDist;
-      const dz = Math.sin(pitchRad) * torchDist;
-
-      directionalLight.position.set(targetPos.x + dx, targetPos.y + dy, targetPos.z + dz);
-      pointLight.position.set(targetPos.x + dx * 0.7, targetPos.y + dy * 0.7, targetPos.z + dz * 0.7);
-      directionalLight.intensity = intensity;
-      pointLight.intensity = intensity * 0.85;
-    }
-
-    function applyLightPreset(deg, pitch) {
-      autoLightOrbit = false;
-      document.getElementById('btn-auto-orbit').classList.remove('active');
-      document.getElementById('light-angle').value = deg;
-      if (pitch) document.getElementById('light-pitch').value = pitch;
-      updateRakingLight();
-    }
-
-    function toggleAutoLightOrbit() {
-      autoLightOrbit = !autoLightOrbit;
-      document.getElementById('btn-auto-orbit').classList.toggle('active', autoLightOrbit);
-      if (autoLightOrbit) autoLightAngle = parseFloat(document.getElementById('light-angle').value);
-    }
-
-    function animate() {
-      requestAnimationFrame(animate);
-      if (autoLightOrbit) {
-        autoLightAngle = (autoLightAngle + 0.5) % 360;
-        document.getElementById('light-angle').value = autoLightAngle;
-        updateRakingLight();
-      }
-      if (controls) controls.update();
-      if (renderer && scene && camera && document.getElementById('canvas3d').style.display !== 'none') {
-        renderer.render(scene, camera);
-      }
-    }
-
-    function onWindowResize() {
-      const container = document.getElementById('viewport-container');
-      if (!container || !renderer || !camera) return;
-      const w = container.clientWidth;
-      const h = container.clientHeight;
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-      renderer.setSize(w, h);
-    }
-
-    // --- 9. Raycasting & Picking ---
-    function handle3DClick(event) {
-      if (!scene || !camera || bundleData.delivery !== 'annotated') return;
-      const rect = renderer.domElement.getBoundingClientRect();
-      const mouse = new THREE.Vector2(
-        ((event.clientX - rect.left) / rect.width) * 2 - 1,
-        -((event.clientY - rect.top) / rect.height) * 2 + 1
-      );
-
-      const raycaster = new THREE.Raycaster();
-      raycaster.setFromCamera(mouse, camera);
-
-      let closestTag = null;
-      let closestDist = Infinity;
-
+      let targetMesh = null;
       annotationGroup.children.forEach(child => {
-        const intersects = raycaster.intersectObject(child);
-        if (intersects.length > 0 && intersects[0].distance < closestDist) {
-          closestDist = intersects[0].distance;
-          closestTag = child.userData.tag;
+        const isMatch = child.name === tag || (tag && child.name.startsWith(tag + ':')) || (tag && child.name.startsWith(tag));
+        if (isMatch && !targetMesh) targetMesh = child;
+      });
+
+      if (targetMesh && targetMesh.userData.centroid) {
+        const u = targetMesh.userData;
+        let currentTier = zoomTierMap.get(tag) || 0;
+        if (isSameTag && !from3D) {
+          currentTier = (currentTier + 1) % 3;
+          zoomTierMap.set(tag, currentTier);
+        } else {
+          if (!zoomTierMap.has(tag)) {
+            zoomTierMap.set(tag, from3D ? 1 : 0);
+            currentTier = from3D ? 1 : 0;
+          }
+        }
+
+        let zoomDist;
+        if (currentTier === 0) {
+          const currentCamDist = camera.position.distanceTo(controls.target);
+          zoomDist = Math.max(1.8, Math.min(3.8, currentCamDist));
+        } else if (currentTier === 1) {
+          zoomDist = Math.max(0.75, Math.min(2.2, u.radius * 2.8 + 0.45));
+        } else {
+          zoomDist = Math.max(0.28, Math.min(1.2, u.radius * 3.6 + 0.16));
+        }
+
+        targetLookAt = u.centroid.clone();
+        targetCameraPos = u.centroid.clone().add(u.outwardNormal.clone().multiplyScalar(zoomDist));
+      }
+
+      if (from3D && tag) {
+        syncSidebarToTag(tag);
+      }
+    }
+
+    function hoverSidebarArea(tag) {
+      hoveredSidebarTag = tag;
+      updateAnnotationHighlight();
+    }
+
+    function unhoverSidebarArea() {
+      hoveredSidebarTag = null;
+      updateAnnotationHighlight();
+    }
+
+    function syncSidebarToTag(tag) {
+      if (tag.startsWith('text:front') || tag.startsWith('text:right') || tag.startsWith('text:left') || tag.startsWith('text:bottom') || tag.startsWith('text:feet') || tag.startsWith('text:psamtik') || tag.startsWith('text:imset') || tag.startsWith('text:duamutef') || tag.startsWith('text:maitef') || tag.startsWith('text:horkhentyirty') || tag.startsWith('text:hapi') || tag.startsWith('text:qebehsenuef') || tag.startsWith('text:kherybaqef') || tag.startsWith('text:anubis')) {
+        switchTab('tab-epigraphy');
+        const card = document.querySelector(`.frag-card[data-tag*="${tag}"]`) || document.querySelector(`.frag-card[data-tag="${tag}"]`) || document.querySelector('.frag-card');
+        if (card) {
+          document.querySelectorAll('.frag-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      } else if (tag.startsWith('lex')) {
+        switchTab('tab-lexicon');
+        const row = document.querySelector(`.lex-item[data-tag="${tag}"]`);
+        if (row) {
+          document.querySelectorAll('.lex-item').forEach(r => r.classList.remove('selected'));
+          row.classList.add('selected');
+          row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      } else {
+        switchTab('tab-deities');
+        const chip = document.querySelector(`.entity-chip[data-tag*="${tag}"]`);
+        if (chip) {
+          document.querySelectorAll('.entity-chip').forEach(c => c.classList.remove('selected'));
+          chip.classList.add('selected');
+          chip.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+    }
+
+    function handle3DClick(event) {
+      const container = document.getElementById('viewport-container');
+      const rect = container.getBoundingClientRect();
+      const clientX = event.clientX !== undefined ? event.clientX : event.pageX;
+      const clientY = event.clientY !== undefined ? event.clientY : event.pageY;
+      const mouseX = ((clientX - rect.left) / container.clientWidth) * 2 - 1;
+      const mouseY = -((clientY - rect.top) / container.clientHeight) * 2 + 1;
+
+      let bestTag = null;
+      let minDistance = 0.08;
+
+      annotationGroup.children.forEach(mesh => {
+        if (!mesh.userData.centroid) return;
+        const screenPos = mesh.userData.centroid.clone().project(camera);
+        if (screenPos.z < 1) {
+          const d = Math.hypot(screenPos.x - mouseX, screenPos.y - mouseY);
+          if (d < minDistance) {
+            minDistance = d;
+            bestTag = mesh.name;
+          }
         }
       });
 
-      if (closestTag) {
-        selectArea(closestTag);
+      if (bestTag) {
+        selectArea(bestTag, true);
       }
     }
 
     function handle3DHover(event) {
-      if (!scene || !camera || bundleData?.delivery !== 'annotated') return;
-      const rect = renderer.domElement.getBoundingClientRect();
-      const mouse = new THREE.Vector2(
-        ((event.clientX - rect.left) / rect.width) * 2 - 1,
-        -((event.clientY - rect.top) / rect.height) * 2 + 1
-      );
+      if (window.innerWidth < 900) return;
+      const container = document.getElementById('viewport-container');
+      const rect = container.getBoundingClientRect();
+      const mouseX = ((event.clientX - rect.left) / container.clientWidth) * 2 - 1;
+      const mouseY = -((event.clientY - rect.top) / container.clientHeight) * 2 + 1;
 
-      const raycaster = new THREE.Raycaster();
-      raycaster.setFromCamera(mouse, camera);
+      let hoveredTag = null;
+      let minDistance = 0.06;
 
-      let hitTag = null;
-      annotationGroup.children.forEach(child => {
-        if (raycaster.intersectObject(child).length > 0) {
-          hitTag = child.userData.tag;
+      annotationGroup.children.forEach(mesh => {
+        if (!mesh.userData.centroid) return;
+        const screenPos = mesh.userData.centroid.clone().project(camera);
+        if (screenPos.z < 1) {
+          const d = Math.hypot(screenPos.x - mouseX, screenPos.y - mouseY);
+          if (d < minDistance) {
+            minDistance = d;
+            hoveredTag = mesh.name;
+          }
         }
       });
 
       const tooltip = document.getElementById('hover-tooltip');
-      if (hitTag) {
+      if (hoveredTag) {
         tooltip.style.display = 'block';
         tooltip.style.left = `${event.clientX - rect.left}px`;
         tooltip.style.top = `${event.clientY - rect.top}px`;
-        tooltip.innerText = hitTag;
+        tooltip.innerText = hoveredTag;
+        hoverSidebarArea(hoveredTag);
       } else {
         tooltip.style.display = 'none';
+        unhoverSidebarArea();
       }
     }
 
-    function selectArea(tag) {
-      selectedAnnotationTag = tag;
-      rebuildAnnotationLines();
+    // --- 10. RTI Lighting Math & Orbit Controls ---
+    function updateRakingLight() {
+      const dirDeg = parseFloat(document.getElementById('light-dir')?.value || 45);
+      const pitchDeg = parseFloat(document.getElementById('light-pitch')?.value || 30);
+      const intensity = parseFloat(document.getElementById('light-power')?.value || 1.6);
 
-      // Zoom camera to tag vertices if present
-      const area = bundleData.spatialAnnotations?.[tag];
-      if (area && area.lines && area.lines.length && controls) {
-        const avg = new THREE.Vector3();
-        let count = 0;
-        area.lines.forEach(l => {
-          avg.add(new THREE.Vector3(l.from.x, l.from.y, l.from.z));
-          count++;
-        });
-        avg.divideScalar(count).applyMatrix4(globalTransMatrix);
-        controls.target.copy(avg);
+      document.getElementById('light-dir-val').innerText = `${Math.round(dirDeg)}°`;
+      document.getElementById('light-pitch-val').innerText = `${Math.round(pitchDeg)}°`;
+      document.getElementById('light-power-val').innerText = `${intensity.toFixed(1)}x`;
+      document.getElementById('light-stats').innerText = `${Math.round(dirDeg)}° | ${Math.round(pitchDeg)}°`;
+
+      const dirRad = (dirDeg * Math.PI) / 180;
+      const pitchRad = (pitchDeg * Math.PI) / 180;
+      const distance = 4.0;
+
+      const lx = distance * Math.cos(pitchRad) * Math.sin(dirRad);
+      const ly = distance * Math.sin(pitchRad);
+      const lz = distance * Math.cos(pitchRad) * Math.cos(dirRad);
+
+      if (directionalLight && controls) {
+        directionalLight.position.set(lx + controls.target.x, ly + controls.target.y, lz + controls.target.z);
+        lightTargetObj.position.copy(controls.target);
+        directionalLight.intensity = intensity;
       }
-
-      // Highlight in sidebar tabs
-      document.querySelectorAll(`[data-tag="${tag}"]`).forEach(el => {
-        el.classList.add('selected');
-        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      });
+      if (pointLight && controls) {
+        pointLight.position.set(lx * 0.7 + controls.target.x, ly * 0.7 + controls.target.y, lz * 0.7 + controls.target.z);
+        pointLight.intensity = intensity * 0.8;
+      }
     }
 
-    // --- 10. Tab Content Rendering ---
+    function applyLightPreset(preset) {
+      const dirInput = document.getElementById('light-dir');
+      const pitchInput = document.getElementById('light-pitch');
+      if (preset === 'top') {
+        dirInput.value = 0;
+        pitchInput.value = 75;
+      } else if (preset === 'east') {
+        dirInput.value = 90;
+        pitchInput.value = 25;
+      } else if (preset === 'west') {
+        dirInput.value = 270;
+        pitchInput.value = 25;
+      }
+      updateRakingLight();
+    }
+
+    function resetCamera() {
+      const framing = getFrontFacingFraming();
+      targetCameraPos = framing.position;
+      targetLookAt = framing.target;
+      selectedTag = null;
+      updateAnnotationHighlight();
+      document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+    }
+
+    function toggleZenMode() {
+      document.body.classList.toggle('zen-mode');
+      const sidebar = document.getElementById('sidebar');
+      const isZen = document.body.classList.contains('zen-mode');
+      sidebar.style.display = isZen ? 'none' : 'flex';
+      setTimeout(onWindowResize, 50);
+    }
+
+    function onWindowResize() {
+      if (!camera || !renderer) return;
+      const container = document.getElementById('viewport-container');
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (targetCameraPos && targetLookAt) {
+        camera.position.lerp(targetCameraPos, 0.08);
+        controls.target.lerp(targetLookAt, 0.08);
+        if (camera.position.distanceTo(targetCameraPos) < 0.01 && controls.target.distanceTo(targetLookAt) < 0.01) {
+          camera.position.copy(targetCameraPos);
+          controls.target.copy(targetLookAt);
+          targetCameraPos = null;
+          targetLookAt = null;
+        }
+      }
+
+      if (autoLightOrbit) {
+        autoLightAngle = (autoLightAngle + 0.5) % 360;
+        document.getElementById('light-dir').value = autoLightAngle;
+        updateRakingLight();
+      }
+
+      if (controls) controls.update();
+      if (renderer && scene && camera) renderer.render(scene, camera);
+    }
+
+    // --- 11. Inspector Tabs Rendering ---
     function renderOverviewTab() {
       const meta = bundleData.metadata;
       document.getElementById('overview-card-title').innerText = meta.title;
       document.getElementById('overview-delivery-badge').innerText = bundleData.delivery.toUpperCase();
       document.getElementById('overview-delivery-badge').className = `badge-delivery badge-${bundleData.delivery}`;
-      
-      const narrativeText = bundleData.narrative?.scholarlyText || bundleData.narrative?.summary || meta.title;
-      document.getElementById('overview-narrative').innerText = narrativeText;
 
-      document.getElementById('overview-museum').innerText = meta.museum || 'PAHMA';
-      document.getElementById('overview-accession').innerText = meta.accession || '—';
-      document.getElementById('overview-class').innerText = bundleData.delivery.toUpperCase();
-      document.getElementById('overview-bag').innerText = bundleData.model3D?.sourceBag || 'verified bag';
-      document.getElementById('overview-credit').innerText = bundleData.rights?.credit || bundleData.narrative?.copyright || '';
+      const narr = bundleData.narrative || {};
+      document.getElementById('overview-summary-text').innerText = narr.scholarlyText || narr.summary || bundleData.status || '';
+
+      document.getElementById('meta-museum').innerText = meta.museum || 'Phoebe A. Hearst Museum of Anthropology';
+      document.getElementById('meta-accession').innerText = meta.accession || meta.drupalNid || '—';
+      document.getElementById('meta-source-bag').innerText = bundleData.model3D.sourceBag || 'standrews-latest';
+
+      const fnBox = document.getElementById('overview-footnotes-box');
+      const fnList = document.getElementById('overview-footnotes-list');
+      if (narr.footnotes && narr.footnotes.length) {
+        fnBox.style.display = 'block';
+        fnList.innerHTML = narr.footnotes.map(fn => `<div style="margin-bottom: 3px;"><strong>[${fn.id}]</strong> ${fn.text}</div>`).join('');
+      } else {
+        fnBox.style.display = 'none';
+      }
     }
 
     function renderEpigraphyTab() {
-      const list = document.getElementById('epigraphy-list');
       const pillsCont = document.getElementById('section-pills-container');
-      list.innerHTML = '';
+      const container = document.getElementById('epigraphy-list');
+      container.innerHTML = '';
       pillsCont.innerHTML = '';
 
-      const sections = bundleData.epigraphy?.textSections || [];
-      document.getElementById('count-epigraphy').innerText = sections.length;
+      const epi = bundleData.epigraphy || {};
+      const sections = epi.textSections || [];
 
       if (!sections.length) {
-        list.innerHTML = `
-          <div class="card">
-            <p style="color: var(--text-secondary); font-size: 0.84rem; line-height: 1.5;">
-              No inscription text tiers are recorded upstream for this monument. Explore the 3D model and Overview tab for historical context.
-            </p>
-          </div>`;
+        container.innerHTML = `
+          <div class="card" style="text-align: center; padding: 24px 16px; color: var(--text-secondary);">
+            <div style="font-size: 1.8rem; margin-bottom: 8px;">📜</div>
+            <div style="font-weight: 600; margin-bottom: 4px;">Photogrammetry 3D Model</div>
+            <div style="font-size: 0.82rem;">Epigraphic vector inscriptions and translation are currently underway.</div>
+          </div>
+        `;
         return;
       }
 
-      // Section Filter Pills
-      const allPill = document.createElement('button');
-      allPill.className = 'pill active';
-      allPill.innerText = 'All Inscriptions';
-      allPill.onclick = () => filterSections('all');
-      pillsCont.appendChild(allPill);
+      // Generate dynamic pills
+      pillsCont.innerHTML = `<button class="pill active" onclick="filterSections('all')">All Inscriptions</button>`;
+      sections.forEach(sec => {
+        const btn = document.createElement('button');
+        btn.className = 'pill';
+        btn.innerText = sec.title || sec.id;
+        btn.onclick = () => filterSections(sec.id);
+        pillsCont.appendChild(btn);
+      });
 
-      sections.forEach((sec, sIdx) => {
-        const pill = document.createElement('button');
-        pill.className = 'pill';
-        pill.innerText = sec.title || `Section ${sIdx + 1}`;
-        pill.onclick = () => filterSections(sec.id || sIdx);
-        pillsCont.appendChild(pill);
-
+      // Render section groups
+      sections.forEach((sec) => {
         const secDiv = document.createElement('div');
         secDiv.className = 'card section-group';
-        secDiv.dataset.secid = sec.id || sIdx;
+        secDiv.dataset.secid = sec.id;
         secDiv.innerHTML = `<div class="card-title">${sec.title || sec.id}</div>`;
 
         (sec.fragments || []).forEach((frag, fIdx) => {
+          const specificTag = fragmentTagMap[`${sec.id}_${fIdx}`] || frag.phraseRef || sec.id;
           const fragCard = document.createElement('div');
           fragCard.className = 'frag-card';
-          fragCard.dataset.tag = frag.phraseRef || sec.id || '';
+          fragCard.dataset.tag = specificTag;
           fragCard.innerHTML = `
             <div class="frag-card-header">
-              <span class="column-badge">Fragment ${fIdx + 1}</span>
-              ${frag.phraseRef ? `<button class="btn-breakdown" onclick="openPhraseModal('${frag.phraseRef}')">Word Breakdown ↗</button>` : ''}
+              <div>
+                <span class="column-badge">Fragment ${fIdx + 1}</span>
+                <span class="zoom-hint-badge">Click to zoom 🔍</span>
+              </div>
+              ${frag.phraseRef ? `<button class="btn-breakdown" onclick="event.stopPropagation(); openPhraseModal('${frag.phraseRef}')">Word Breakdown ↗</button>` : ''}
             </div>
             ${frag.resEncoding ? `<div class="hiero-box"><canvas class="res" data-res="${frag.resEncoding}">${frag.resEncoding}</canvas></div>` : ''}
             <div class="transliteration">${frag.transliteration || ''}</div>
             <div class="translation">${frag.translation || ''}</div>
           `;
-          fragCard.onclick = () => selectArea(fragCard.dataset.tag);
+          fragCard.onclick = () => {
+            document.querySelectorAll('.frag-card').forEach(c => c.classList.remove('selected'));
+            fragCard.classList.add('selected');
+            selectArea(specificTag);
+          };
+          fragCard.onmouseenter = () => hoverSidebarArea(specificTag);
+          fragCard.onmouseleave = () => unhoverSidebarArea();
           secDiv.appendChild(fragCard);
         });
 
-        list.appendChild(secDiv);
+        if (sec.parallels && sec.parallels.length) {
+          sec.parallels.forEach(par => {
+            const parDiv = document.createElement('div');
+            parDiv.className = 'parallel-citation';
+            parDiv.innerText = `Parallel: ${par.citation} — ${par.text}`;
+            secDiv.appendChild(parDiv);
+          });
+        }
+
+        container.appendChild(secDiv);
       });
     }
 
     function filterSections(secId) {
-      document.querySelectorAll('#section-pills-container .pill').forEach(p => p.classList.remove('active'));
-      event.target.classList.add('active');
-      document.querySelectorAll('.section-group').forEach(sg => {
-        sg.style.display = (secId === 'all' || sg.dataset.secid == secId) ? 'block' : 'none';
+      document.querySelectorAll('#section-pills-container .pill').forEach(p => {
+        p.classList.toggle('active', (secId === 'all' && p.innerText === 'All Inscriptions') || p.innerText.includes(secId));
       });
+      document.querySelectorAll('#epigraphy-list .section-group').forEach(group => {
+        if (secId === 'all' || group.dataset.secid === secId) {
+          group.style.display = 'block';
+        } else {
+          group.style.display = 'none';
+        }
+      });
+      setTimeout(() => renderAllHieroglyphs(true), 40);
+      selectArea(secId === 'all' ? 'text:front' : secId);
     }
 
     function renderDeitiesTab() {
       const famCont = document.getElementById('family-chips');
-      const deityCont = document.getElementById('deities-chips');
+      const deiCont = document.getElementById('deities-chips');
       famCont.innerHTML = '';
-      deityCont.innerHTML = '';
+      deiCont.innerHTML = '';
 
-      // Check entities if present, or extract from spatialAnnotations
-      const entities = bundleData.entities;
-      if (entities && entities.gods && entities.gods.length) {
-        entities.gods.forEach(g => addDeityChip(g.name, g.role, g.regionTags?.[0]));
-      } else if (bundleData.spatialAnnotations) {
-        const DEITY_MAP = {
-          'nut': 'Nut (Sky Goddess)',
-          'osiris': 'Osiris (Lord of the Underworld)',
-          'anubis': 'Anubis (Embalmer & Guide)',
-          'isis': 'Isis (Great Protectress)',
-          'nephthys': 'Nephthys (Mistress of the House)',
-          'hapi': 'Hapi (Son of Horus)',
-          'imset': 'Imsety (Son of Horus)',
-          'duamutef': 'Duamutef (Son of Horus)',
-          'qebehsenuef': 'Qebehsenuef (Son of Horus)',
-          'horus': 'Horus (Avenger & Protector)',
-          're': 'Re (Sun God)'
-        };
-        Object.keys(bundleData.spatialAnnotations).forEach(tag => {
-          for (let [k, label] of Object.entries(DEITY_MAP)) {
-            if (tag.toLowerCase().includes(k)) {
-              addDeityChip(label, 'Protective Entity', tag);
-              break;
-            }
-          }
+      const ent = bundleData.entities || {};
+      const family = ent.family || [];
+      const gods = ent.gods || [];
+
+      if (!family.length) {
+        famCont.innerHTML = `<div style="font-size: 0.8rem; color: var(--text-secondary);">Owner / funerary beneficiary.</div>`;
+      } else {
+        family.forEach(person => {
+          const chip = document.createElement('span');
+          chip.className = 'entity-chip';
+          chip.dataset.tag = person.regionTags?.[0] || '';
+          chip.innerText = `${person.name} (${person.relationship || 'Deceased'})`;
+          chip.onclick = () => {
+            document.querySelectorAll('.entity-chip').forEach(c => c.classList.remove('selected'));
+            chip.classList.add('selected');
+            if (person.regionTags && person.regionTags[0]) selectArea(person.regionTags[0]);
+          };
+          chip.onmouseenter = () => { if (person.regionTags && person.regionTags[0]) hoverSidebarArea(person.regionTags[0]); };
+          chip.onmouseleave = () => unhoverSidebarArea();
+          famCont.appendChild(chip);
         });
       }
 
-      if (!deityCont.children.length) {
-        deityCont.innerHTML = '<span style="color: var(--text-secondary); font-size: 0.8rem;">No explicit deity tags for this monument.</span>';
-      }
-
-      if (bundleData.narrative?.ownerName) {
-        const chip = document.createElement('span');
-        chip.className = 'entity-chip';
-        chip.innerText = bundleData.narrative.ownerName;
-        famCont.appendChild(chip);
+      if (!gods.length) {
+        deiCont.innerHTML = `<div style="font-size: 0.8rem; color: var(--text-secondary);">Protective deity invocations.</div>`;
       } else {
-        famCont.innerHTML = `<span style="color: var(--text-secondary); font-size: 0.8rem;">${bundleData.metadata.title}</span>`;
+        gods.forEach(deity => {
+          const chip = document.createElement('span');
+          chip.className = 'entity-chip';
+          chip.dataset.tag = deity.regionTags?.join(',') || '';
+          chip.innerText = `${deity.name} • ${deity.role}`;
+          chip.onclick = () => {
+            document.querySelectorAll('.entity-chip').forEach(c => c.classList.remove('selected'));
+            chip.classList.add('selected');
+            if (deity.regionTags && deity.regionTags[0]) selectArea(deity.regionTags[0]);
+          };
+          chip.onmouseenter = () => { if (deity.regionTags && deity.regionTags[0]) hoverSidebarArea(deity.regionTags[0]); };
+          chip.onmouseleave = () => unhoverSidebarArea();
+          deiCont.appendChild(chip);
+        });
       }
-    }
-
-    function addDeityChip(label, role, tag) {
-      const chip = document.createElement('span');
-      chip.className = 'entity-chip';
-      chip.dataset.tag = tag || '';
-      chip.innerText = label;
-      chip.onclick = () => {
-        if (tag) selectArea(tag);
-      };
-      document.getElementById('deities-chips').appendChild(chip);
     }
 
     function renderLexiconTab() {
-      const list = document.getElementById('lexicon-list');
-      list.innerHTML = '';
-      const entries = bundleData.lexicon?.entries || [];
-      document.getElementById('count-lexicon').innerText = entries.length;
+      const container = document.getElementById('lexicon-list');
+      container.innerHTML = '';
+      const lex = bundleData.lexicon || {};
+      const entries = lex.entries || [];
 
       if (!entries.length) {
-        list.innerHTML = `
-          <div class="card">
-            <p style="color: var(--text-secondary); font-size: 0.84rem;">
-              No vocabulary lexicon entries recorded for this monument.
-            </p>
-          </div>`;
+        container.innerHTML = `
+          <div class="card" style="text-align: center; padding: 24px 16px; color: var(--text-secondary);">
+            <div style="font-size: 1.8rem; margin-bottom: 8px;">📖</div>
+            <div style="font-weight: 600; margin-bottom: 4px;">Lexicon Glossary</div>
+            <div style="font-size: 0.82rem;">Lexical vocabulary collation in progress.</div>
+          </div>
+        `;
         return;
       }
 
@@ -2913,31 +3198,39 @@
         row.dataset.tag = item.id;
         row.innerHTML = `
           <div>
-            <span class="lex-translit">${item.transliteration}</span>
+            <span class="lex-translit">${item.transliteration || ''}</span>
             ${item.partOfSpeech ? `<span class="lex-pos">${item.partOfSpeech}</span>` : ''}
           </div>
-          <div class="lex-meaning">${item.translation}</div>
+          <div class="lex-meaning">${item.translation || ''}</div>
         `;
-        row.onclick = () => selectArea(item.id);
-        list.appendChild(row);
+        row.onclick = () => {
+          document.querySelectorAll('.lex-item').forEach(r => r.classList.remove('selected'));
+          row.classList.add('selected');
+          selectArea(item.id);
+        };
+        row.onmouseenter = () => hoverSidebarArea(item.id);
+        row.onmouseleave = () => unhoverSidebarArea();
+        container.appendChild(row);
       });
     }
 
     function renderProvenanceTab() {
-      const cont = document.getElementById('provenance-content');
-      cont.innerHTML = `
-        <p style="margin-bottom: 10px;">
-          ${bundleData.narrative?.summary || bundleData.status || 'Archival archaeological monument.'}
-        </p>
-        <p style="font-size: 0.78rem; color: var(--text-secondary);">
-          Accession ID: ${bundleData.metadata.accession || 'N/A'}<br>
-          Collection: ${bundleData.metadata.museum || 'UC Berkeley'}<br>
-          Preservation Source: ${bundleData.model3D?.sourceBag || 'BagIt Vault'}
-        </p>
-      `;
+      const narr = bundleData.narrative || {};
+      document.getElementById('provenance-context-text').innerText = narr.findspot || bundleData.status || 'Discovered at archaeological excavations.';
+      const bibList = document.getElementById('provenance-bib-list');
+      bibList.innerHTML = '';
+      const bibs = narr.bibliography || [
+        "M.A. Barsanti (1900), Fouilles autour de la pyramide d'Ounas, ASAE 1, 161–188.",
+        "L. Gestermann (2001), Grab und Stele von Psametich, RdE 52, 127–149."
+      ];
+      bibs.forEach(b => {
+        const li = document.createElement('li');
+        li.innerText = b;
+        bibList.appendChild(li);
+      });
     }
 
-    // --- 11. Hieroglyph Canvas Rasterization ---
+    // --- 12. Hieroglyphic Canvas Rendering via RESLite ---
     function renderAllHieroglyphs(force = false) {
       if (typeof parseResLite === 'undefined') return;
       document.querySelectorAll('canvas.res').forEach(hi => {
@@ -2969,266 +3262,449 @@
             document.fonts.load('16px Transliteration')
           ]);
         }
-      } catch (e) {}
+      } catch (e) {
+        console.warn('Font load error:', e);
+      }
 
       let attempts = 0;
-      function check() {
+      function checkAndRender() {
         attempts++;
-        if (typeof fontsLoaded !== 'function' || fontsLoaded() === '' || attempts > 20) {
+        const status = (typeof fontsLoaded === 'function') ? fontsLoaded() : '';
+        if (status === '' || attempts > 25) {
           renderAllHieroglyphs(true);
         } else {
-          setTimeout(check, 80);
+          setTimeout(checkAndRender, 80);
         }
       }
-      check();
+      checkAndRender();
     }
 
-    // --- 12. Phrase Modal ---
+    // --- 13. Word-by-Word Modal Analysis ---
     function openPhraseModal(phraseId) {
       const phrase = bundleData.epigraphy?.phrases?.[phraseId];
       if (!phrase) return;
-      document.getElementById('phrase-modal-title').innerText = `Breakdown: ${phraseId}`;
+      document.getElementById('phrase-modal-title').innerText = `Word Breakdown: ${phraseId.toUpperCase()}`;
       const cont = document.getElementById('phrase-words-list');
       cont.innerHTML = '';
 
       (phrase.words || []).forEach(w => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.style.marginBottom = '8px';
-        card.innerHTML = `
-          ${w.resEncoding ? `<div class="hiero-box"><canvas class="res" data-res="${w.resEncoding}">${w.resEncoding}</canvas></div>` : ''}
-          <div class="transliteration">${w.transliteration || ''}</div>
-          <div class="translation">${w.translation || ''}</div>
+        const row = document.createElement('div');
+        row.className = 'word-breakdown-row';
+        row.innerHTML = `
+          <div class="hiero-box" style="min-width: 90px; margin: 0; padding: 6px 10px;">
+            <canvas class="res" data-res="${w.resEncoding}">${w.resEncoding}</canvas>
+          </div>
+          <div>
+            <div class="transliteration" style="font-size: 1rem;">${w.transliteration || ''}</div>
+            <div class="translation">${w.translation || ''}</div>
+          </div>
         `;
-        cont.appendChild(card);
+        cont.appendChild(row);
       });
 
       document.getElementById('modal-phrase').style.display = 'flex';
       setTimeout(() => renderAllHieroglyphs(true), 50);
     }
 
-    // --- 13. Global Search & Autocomplete in Inspector ---
+    function closeModal() {
+      document.querySelectorAll('.modal-backdrop').forEach(m => m.style.display = 'none');
+    }
+
+    // --- 14. Context-Sensitive Search & Autocomplete ---
     function buildSearchIndex() {
       searchIndex = [];
-      document.querySelectorAll('#lexicon-list .lex-item').forEach(el => {
-        searchIndex.push({
-          el,
-          category: 'Lexicon',
-          primary: el.querySelector('.lex-translit')?.innerText || '',
-          secondary: el.querySelector('.lex-meaning')?.innerText || '',
-          text: (el.textContent || '').toLowerCase()
+      if (!bundleData) return;
+
+      (bundleData.epigraphy?.textSections || []).forEach(sec => {
+        (sec.fragments || []).forEach((frag, idx) => {
+          const tag = fragmentTagMap[`${sec.id}_${idx}`] || frag.phraseRef || sec.id;
+          const card = document.querySelector(`.frag-card[data-tag="${tag}"]`);
+          if (card) {
+            searchIndex.push({
+              primary: frag.transliteration || `Fragment ${idx + 1}`,
+              secondary: frag.translation || sec.title || '',
+              type: 'Fragment',
+              tab: 'tab-epigraphy',
+              tag: tag,
+              el: card
+            });
+          }
         });
       });
 
-      document.querySelectorAll('#epigraphy-list .frag-card').forEach(el => {
+      (bundleData.entities?.gods || []).forEach(god => {
+        const chip = document.querySelector(`.entity-chip[data-tag*="${god.regionTags?.[0]}"]`);
         searchIndex.push({
-          el,
-          category: 'Inscription',
-          primary: el.querySelector('.transliteration')?.innerText || '',
-          secondary: el.querySelector('.translation')?.innerText || '',
-          text: (el.textContent || '').toLowerCase()
+          primary: god.name,
+          secondary: god.role || 'Deity',
+          type: 'Deity',
+          tab: 'tab-deities',
+          tag: god.regionTags?.[0] || '',
+          el: chip
         });
       });
 
-      document.querySelectorAll('#deities-chips .entity-chip').forEach(el => {
-        searchIndex.push({
-          el,
-          category: 'Deity',
-          primary: el.innerText,
-          secondary: 'Protective Deity',
-          text: (el.textContent || '').toLowerCase()
-        });
+      (bundleData.lexicon?.entries || []).forEach(item => {
+        const row = document.querySelector(`.lex-item[data-tag="${item.id}"]`);
+        if (row) {
+          searchIndex.push({
+            primary: item.transliteration || '',
+            secondary: item.translation || '',
+            type: 'Lexicon',
+            tab: 'tab-lexicon',
+            tag: item.id,
+            el: row
+          });
+        }
       });
     }
 
     function initGlobalSearch() {
       const input = document.getElementById('global-search');
-      const popup = document.getElementById('autocomplete-popup');
       const clearBtn = document.getElementById('btn-clear-search');
+      const popup = document.getElementById('autocomplete-popup');
 
-      input.addEventListener('input', () => {
-        const q = input.value.trim().toLowerCase();
-        if (!q) {
-          popup.style.display = 'none';
-          document.getElementById('search-stats').style.display = 'none';
-          return;
-        }
-
-        searchMatches = searchIndex.filter(item => item.text.includes(q));
-        document.getElementById('search-match-count').innerText = `${searchMatches.length} matches`;
-        document.getElementById('search-stats').style.display = 'flex';
-
-        if (searchMatches.length > 0) {
-          popup.innerHTML = '';
-          searchMatches.slice(0, 8).forEach((item, idx) => {
-            const div = document.createElement('div');
-            div.className = 'autocomplete-item';
-            div.innerHTML = `
-              <div class="autocomplete-item-header">
-                <span class="autocomplete-primary">${item.primary}</span>
-                <span class="autocomplete-tag">${item.category}</span>
-              </div>
-              <div class="autocomplete-secondary">${item.secondary}</div>
-            `;
-            div.onclick = () => {
-              popup.style.display = 'none';
-              item.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              item.el.click();
-            };
-            popup.appendChild(div);
-          });
-          popup.style.display = 'block';
-        } else {
-          popup.style.display = 'none';
-        }
-      });
-
-      clearBtn.addEventListener('click', () => {
+      clearBtn.onclick = () => {
         input.value = '';
-        popup.style.display = 'none';
-        document.getElementById('search-stats').style.display = 'none';
-      });
+        clearSearch();
+        hideAutocomplete();
+      };
 
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          popup.style.display = 'none';
-          if (searchMatches.length > 0) {
-            currentSearchMatchIndex = (currentSearchMatchIndex + 1) % searchMatches.length;
-            const target = searchMatches[currentSearchMatchIndex];
-            target.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            target.el.click();
+      input.oninput = () => {
+        const val = input.value.trim();
+        clearBtn.style.display = val ? 'block' : 'none';
+        suppressAutocompleteUntilTyping = false;
+
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => filterGlobalSearch(val), 60);
+
+        clearTimeout(autocompleteDebounceTimer);
+        autocompleteDebounceTimer = setTimeout(() => showAutocompleteSuggestions(val), 80);
+      };
+
+      input.onkeydown = (e) => {
+        if (popup.style.display === 'block') {
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            navigateAutocomplete(1);
+            return;
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            navigateAutocomplete(-1);
+            return;
+          } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (activeAutocompleteIndex >= 0 && currentCompletions[activeAutocompleteIndex]) {
+              selectAutocompleteItem(currentCompletions[activeAutocompleteIndex]);
+            } else {
+              cycleSearchMatch();
+            }
+            return;
+          } else if (e.key === 'Escape') {
+            hideAutocomplete();
+            return;
           }
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          cycleSearchMatch();
         } else if (e.key === 'Escape') {
-          input.value = '';
-          popup.style.display = 'none';
-          document.getElementById('search-stats').style.display = 'none';
+          if (input.value) {
+            input.value = '';
+            clearSearch();
+          } else {
+            resetCamera();
+          }
+        }
+      };
+    }
+
+    function showAutocompleteSuggestions(query) {
+      if (suppressAutocompleteUntilTyping || !query || query.length < 2) {
+        hideAutocomplete();
+        return;
+      }
+      const q = query.toLowerCase();
+      currentCompletions = searchIndex.filter(item =>
+        item.primary.toLowerCase().includes(q) || item.secondary.toLowerCase().includes(q)
+      ).slice(0, 8);
+
+      if (!currentCompletions.length) {
+        hideAutocomplete();
+        return;
+      }
+
+      const popup = document.getElementById('autocomplete-popup');
+      popup.innerHTML = '';
+      currentCompletions.forEach((comp, idx) => {
+        const div = document.createElement('div');
+        div.className = 'autocomplete-item';
+        div.innerHTML = `<span class="autocomplete-badge">${comp.type}</span> <strong>${comp.primary}</strong> — <em>${comp.secondary}</em>`;
+        div.onclick = () => selectAutocompleteItem(comp);
+        popup.appendChild(div);
+      });
+      popup.style.display = 'block';
+    }
+
+    function navigateAutocomplete(dir) {
+      const items = document.querySelectorAll('.autocomplete-item');
+      if (!items.length) return;
+      activeAutocompleteIndex = (activeAutocompleteIndex + dir + items.length) % items.length;
+      items.forEach((item, idx) => {
+        item.classList.toggle('active', idx === activeAutocompleteIndex);
+      });
+    }
+
+    function selectAutocompleteItem(comp) {
+      suppressAutocompleteUntilTyping = true;
+      hideAutocomplete();
+      const input = document.getElementById('global-search');
+      input.value = comp.primary;
+      filterGlobalSearch(comp.primary);
+      switchTab(comp.tab);
+
+      if (comp.el) {
+        document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+        comp.el.classList.add('selected');
+        comp.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      if (comp.tag) selectArea(comp.tag);
+    }
+
+    function hideAutocomplete() {
+      const popup = document.getElementById('autocomplete-popup');
+      popup.style.display = 'none';
+      popup.innerHTML = '';
+      currentCompletions = [];
+      activeAutocompleteIndex = -1;
+    }
+
+    function clearSearch() {
+      document.getElementById('btn-clear-search').style.display = 'none';
+      hideAutocomplete();
+      searchMatches = [];
+      currentSearchIndex = -1;
+      searchIndex.forEach(item => {
+        if (item.el) item.el.style.display = '';
+      });
+      selectedTag = null;
+      updateAnnotationHighlight();
+      document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+    }
+
+    function filterGlobalSearch(query) {
+      if (!query) {
+        clearSearch();
+        return;
+      }
+      const q = query.toLowerCase().trim();
+      searchMatches = [];
+      currentSearchIndex = -1;
+
+      searchIndex.forEach(item => {
+        const matches = item.primary.toLowerCase().includes(q) || item.secondary.toLowerCase().includes(q);
+        if (item.el) item.el.style.display = matches ? '' : 'none';
+        if (matches) searchMatches.push(item);
+      });
+
+      if (searchMatches.length > 0) {
+        currentSearchIndex = 0;
+        focusSearchMatch(searchMatches[0]);
+      }
+    }
+
+    function cycleSearchMatch() {
+      if (!searchMatches.length) return;
+      currentSearchIndex = (currentSearchIndex + 1) % searchMatches.length;
+      focusSearchMatch(searchMatches[currentSearchIndex]);
+    }
+
+    function focusSearchMatch(item) {
+      switchTab(item.tab);
+      document.querySelectorAll('.selected').forEach(el => el.classList.remove('selected'));
+      if (item.el) {
+        item.el.classList.add('selected');
+        item.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      if (item.tag) selectArea(item.tag);
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === tabId));
+      if (tabId === 'tab-epigraphy') setTimeout(() => renderAllHieroglyphs(true), 40);
+    }
+
+    // --- 15. Keyboard & Touch Control Setup ---
+    function initKeyboardShortcuts() {
+      window.addEventListener('keydown', (e) => {
+        if (['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) return;
+
+        if (e.key === '/' || e.key === 's') {
+          e.preventDefault();
+          const inp = document.getElementById('global-search');
+          inp.focus();
+          inp.select();
+        } else if (e.key === '?' || e.key === 'F1') {
+          e.preventDefault();
+          document.getElementById('modal-shortcuts').style.display = 'flex';
+        } else if (e.key === 'h' || e.key === 'ArrowLeft') {
+          orbitCamera(0.18, 0);
+        } else if (e.key === 'l' || e.key === 'ArrowRight') {
+          orbitCamera(-0.18, 0);
+        } else if (e.key === 'k' || e.key === 'ArrowUp') {
+          orbitCamera(0, -0.15);
+        } else if (e.key === 'j' || e.key === 'ArrowDown') {
+          orbitCamera(0, 0.15);
+        } else if (e.key === '+' || e.key === '=' || e.key === 'i') {
+          zoomCamera(0.85);
+        } else if (e.key === '-' || e.key === '_' || e.key === 'o') {
+          zoomCamera(1.18);
+        } else if (e.key === 'r') {
+          resetCamera();
+        } else if (e.key === 'z') {
+          toggleZenMode();
+        } else if (e.key === 'a') {
+          showAnnotations = !showAnnotations;
+          annotationGroup.visible = showAnnotations;
+        } else if (e.key === 'm') {
+          const sel = document.getElementById('mat-mode');
+          sel.selectedIndex = (sel.selectedIndex + 1) % sel.options.length;
+          sel.dispatchEvent(new Event('change'));
+        } else if (['1', '2', '3', '4', '5'].includes(e.key)) {
+          const tabs = ['tab-overview', 'tab-epigraphy', 'tab-deities', 'tab-lexicon', 'tab-provenance'];
+          switchTab(tabs[parseInt(e.key) - 1]);
         }
       });
     }
 
-    // --- 14. Mobile Drawer Handling ---
-    function openMobileDrawer() {
-      document.getElementById('inspector-panel').classList.add('drawer-open');
-      document.getElementById('mobile-drawer-backdrop').classList.add('active');
+    function orbitCamera(theta, phi) {
+      if (!controls) return;
+      controls.autoRotate = false;
+      const offset = camera.position.clone().sub(controls.target);
+      const radius = offset.length();
+      let pol = Math.acos(Math.max(-1, Math.min(1, offset.y / radius))) + phi;
+      let az = Math.atan2(offset.x, offset.z) + theta;
+      pol = Math.max(0.05, Math.min(Math.PI - 0.05, pol));
+      camera.position.x = controls.target.x + radius * Math.sin(pol) * Math.sin(az);
+      camera.position.y = controls.target.y + radius * Math.cos(pol);
+      camera.position.z = controls.target.z + radius * Math.sin(pol) * Math.cos(az);
+      camera.lookAt(controls.target);
     }
 
-    function closeMobileDrawer() {
-      document.getElementById('inspector-panel').classList.remove('drawer-open');
-      document.getElementById('mobile-drawer-backdrop').classList.remove('active');
+    function zoomCamera(factor) {
+      if (!controls) return;
+      const offset = camera.position.clone().sub(controls.target).multiplyScalar(factor);
+      camera.position.copy(controls.target).add(offset);
     }
 
-    // --- 15. UI Listeners & Initialization ---
-    document.addEventListener('DOMContentLoaded', async () => {
-      populateObjectPicker();
-      renderGallery();
-      renderStatus();
+    // --- 16. Mobile Controls & Drawer ---
+    function initMobileControls() {
+      const btnLight = document.getElementById('btn-mobile-toggle-light');
+      const lightPanel = document.getElementById('viewport-controls-panel');
+      const btnTexts = document.getElementById('btn-mobile-open-drawer');
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('mobile-drawer-backdrop');
+      const dragHandle = document.getElementById('drawer-handle');
 
-      // View Buttons
-      document.getElementById('btn-gallery').onclick = () => navigate('gallery');
-      document.getElementById('btn-status').onclick = () => navigate('status');
-      document.getElementById('btn-mobile-light').onclick = () => {
-        document.getElementById('viewport-controls-panel').classList.toggle('mobile-open');
-      };
-      document.getElementById('btn-mobile-drawer').onclick = openMobileDrawer;
-      document.getElementById('btn-shortcuts').onclick = () => {
-        document.getElementById('modal-shortcuts').style.display = 'flex';
-      };
-      document.getElementById('btn-datasource').onclick = () => {
-        document.getElementById('current-datasource-text').innerText = getDataSource();
-        document.getElementById('modal-datasource').style.display = 'flex';
-      };
-      document.getElementById('btn-reset-cam').onclick = () => {
-        if (object3D && camera && controls) {
-          const framing = getFrontFacingFraming();
-          camera.position.copy(framing.position);
-          controls.target.copy(framing.target);
-          camera.lookAt(framing.target);
-        }
-      };
-      document.getElementById('btn-toggle-annotations').onclick = () => {
-        if (annotationGroup) annotationGroup.visible = !annotationGroup.visible;
-      };
-      document.getElementById('btn-toggle-zen').onclick = () => {
-        document.getElementById('inspector-panel').classList.toggle('collapsed');
-        setTimeout(onWindowResize, 200);
-      };
+      if (btnLight && lightPanel) {
+        btnLight.onclick = () => {
+          lightPanel.classList.toggle('mobile-visible');
+          btnLight.classList.toggle('btn-active', lightPanel.classList.contains('mobile-visible'));
+        };
+      }
 
-      // Tab Buttons
-      document.querySelectorAll('.tab-btn').forEach(btn => {
+      function openDrawer() {
+        sidebar.classList.add('drawer-open');
+        backdrop.classList.add('active');
+      }
+      function closeDrawer() {
+        sidebar.classList.remove('drawer-open');
+        backdrop.classList.remove('active');
+      }
+
+      if (btnTexts) btnTexts.onclick = openDrawer;
+      if (backdrop) backdrop.onclick = closeDrawer;
+      if (dragHandle) dragHandle.onclick = closeDrawer;
+    }
+
+    // --- 17. Setup Event Listeners ---
+    function setupEventListeners() {
+      // Gallery Filter Pills
+      document.querySelectorAll('.gallery-filter-pills .pill').forEach(btn => {
         btn.onclick = () => {
-          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          document.querySelectorAll('.gallery-filter-pills .pill').forEach(p => p.classList.remove('active'));
           btn.classList.add('active');
-          const targetTab = document.getElementById(btn.dataset.tab);
-          if (targetTab) targetTab.classList.add('active');
-          if (btn.dataset.tab === 'tab-epigraphy') setTimeout(() => renderAllHieroglyphs(true), 50);
+          renderGallery(btn.dataset.filter, document.getElementById('gallery-search-input').value);
         };
       });
 
-      // Gallery Filters & Search
-      let activeFilter = 'all';
-      document.querySelectorAll('#gallery-filter-pills .filter-pill').forEach(pill => {
-        pill.onclick = () => {
-          document.querySelectorAll('#gallery-filter-pills .filter-pill').forEach(p => p.classList.remove('active'));
-          pill.classList.add('active');
-          activeFilter = pill.dataset.filter;
-          renderGallery(activeFilter, document.getElementById('gallery-search').value);
+      // Gallery Search Input
+      document.getElementById('gallery-search-input').oninput = (e) => {
+        const activePill = document.querySelector('.gallery-filter-pills .pill.active');
+        const filter = activePill ? activePill.dataset.filter : 'all';
+        renderGallery(filter, e.target.value);
+      };
+
+      // Header Buttons
+      document.getElementById('btn-shortcuts').onclick = () => document.getElementById('modal-shortcuts').style.display = 'flex';
+      document.getElementById('btn-data-source').onclick = () => document.getElementById('modal-data-source').style.display = 'flex';
+      document.getElementById('btn-zen').onclick = toggleZenMode;
+
+      // RTI Controls
+      ['light-dir', 'light-pitch', 'light-power'].forEach(id => {
+        document.getElementById(id)?.addEventListener('input', updateRakingLight);
+      });
+
+      document.querySelectorAll('.btn-preset').forEach(btn => {
+        btn.onclick = () => {
+          if (btn.id === 'btn-light-orbit') {
+            autoLightOrbit = !autoLightOrbit;
+            btn.classList.toggle('btn-active', autoLightOrbit);
+          } else {
+            autoLightOrbit = false;
+            document.getElementById('btn-light-orbit').classList.remove('btn-active');
+            applyLightPreset(btn.dataset.preset);
+          }
         };
       });
 
-      document.getElementById('gallery-search').addEventListener('input', (e) => {
-        renderGallery(activeFilter, e.target.value);
-      });
-
-      // RTI Range inputs
-      document.getElementById('light-angle').addEventListener('input', updateRakingLight);
-      document.getElementById('light-pitch').addEventListener('input', updateRakingLight);
-      document.getElementById('light-intensity').addEventListener('input', updateRakingLight);
-      document.getElementById('ambient-intensity').addEventListener('input', (e) => {
-        if (ambientLight) ambientLight.intensity = parseFloat(e.target.value);
-      });
-
-      document.getElementById('mat-mode').addEventListener('change', (e) => {
-        if (!object3D) return;
+      // Material Mode Switch
+      document.getElementById('mat-mode').onchange = (e) => {
         const mode = e.target.value;
+        if (!object3D) return;
         object3D.traverse((child) => {
           if (child.isMesh) {
-            if (mode === 'wireframe') child.material = wireframeMaterial;
-            else if (mode === 'relief') child.material = reliefMaterial;
-            else {
+            if (mode === 'wireframe') {
+              child.material = wireframeMaterial;
+            } else if (mode === 'relief') {
+              child.material = reliefMaterial;
+            } else {
               const orig = originalMaterials.get(child.uuid);
               if (orig) child.material = orig;
             }
             child.material.needsUpdate = true;
           }
         });
+      };
+
+      // 3D Annotation Sliders
+      document.getElementById('line-thickness').oninput = (e) => {
+        const labels = ['Fine (1px)', 'Normal (2px)', 'Thick (3px)', 'Ultra (4px)'];
+        document.getElementById('line-thick-val').innerText = labels[parseInt(e.target.value) - 1];
+        rebuildAnnotationLines();
+      };
+      document.getElementById('line-opacity').oninput = () => updateAnnotationHighlight();
+
+      // Tab Buttons
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.onclick = () => switchTab(btn.dataset.tab);
       });
 
       initGlobalSearch();
+    }
 
-      // Keyboard Shortcuts
-      window.addEventListener('keydown', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
-        if (e.key === '?' || (e.key === '/' && (e.metaKey || e.ctrlKey))) {
-          document.getElementById('modal-shortcuts').style.display = 'flex';
-        } else if (e.key === 'g' || e.key === 'G') {
-          navigate('gallery');
-        } else if (e.key === 's' || e.key === 'S') {
-          navigate('status');
-        } else if (e.key === 'z' || e.key === 'Z') {
-          document.getElementById('inspector-panel').classList.toggle('collapsed');
-          setTimeout(onWindowResize, 200);
-        } else if (e.key === 'r' || e.key === 'R') {
-          document.getElementById('btn-reset-cam').click();
-        } else if (e.key === 'a' || e.key === 'A') {
-          document.getElementById('btn-toggle-annotations').click();
-        }
-      });
-
-      // Initial Route Parse & Boot
-      const route = parseRouteParams();
-      navigate(route.view, route.object, false);
-    });
+    // Initialize application on DOMContentLoaded
+    window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
